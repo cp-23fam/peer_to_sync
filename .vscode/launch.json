@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Peer to Sync",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib\\main.dart"
+        }
+    ]
+}
