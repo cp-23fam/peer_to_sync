@@ -3,15 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
+import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class RoomCard extends StatefulWidget {
-  const RoomCard({
-    // required this.room,
-    super.key,
-  });
+  const RoomCard({required this.room, super.key});
 
-  // final Room room;
+  final Room room;
 
   @override
   State<RoomCard> createState() => _RoomCardState();
@@ -27,7 +25,7 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
     super.initState();
     _arrowAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
     _arrowAnimation = Tween(
       begin: 0.0,
@@ -66,7 +64,7 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                         ),
                       ),
                       gapW12,
-                      StyledText('RoomName', 32.0, bold: true),
+                      StyledText(widget.room.name, 32.0, bold: true),
                     ],
                   ),
                   IconButton(
@@ -98,9 +96,9 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          StyledText('RoomType', 24.0),
+                          StyledText(widget.room.type.name, 24.0),
                           gapH8,
-                          StyledText('HostName', 20.0),
+                          StyledText(widget.room.hostId, 20.0),
                           gapH8,
 
                           Row(
@@ -126,18 +124,19 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                                           ),
                                         ),
                                       );
-                                    } else if (index == 7 - 1) {
+                                    } else if (index ==
+                                        widget.room.users.length - 1) {
                                       return CircleAvatar(
                                         radius: Sizes.p16,
                                         backgroundColor:
                                             AppColors.backgroundIconAccent,
                                         child: StyledText(
-                                          '${7 - 3}+',
+                                          '${widget.room.users.length - 3}+',
                                           Sizes.p16,
                                         ),
                                       );
                                     } else {
-                                      return SizedBox.shrink();
+                                      return const SizedBox.shrink();
                                     }
                                   },
                                   itemCount: 7,
@@ -163,7 +162,7 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                             ),
                             child: Center(
                               child: StyledText(
-                                'libre',
+                                widget.room.status.name,
                                 16.0,
                                 bold: true,
                                 upper: true,
@@ -188,8 +187,8 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                                     ),
                                   ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(Sizes.p8),
+                            child: const Padding(
+                              padding: EdgeInsets.all(Sizes.p8),
                               child: StyledText('Rejoindre', 24.0, bold: true),
                             ),
                           ),
@@ -198,7 +197,7 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                     ],
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
     );
