@@ -3,20 +3,21 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 
 // Black
 class AppColors {
-  static Color firstColor = const Color(0x00303030);
-  static Color secondColor = const Color(0x002A2A2A);
-  static Color thirdColor = const Color(0x00222222);
-  static Color fourthColor = const Color(0x00242424);
-  static Color fifthColor = const Color(0x001a1a1a);
-  static Color navBackgroundColor = const Color(0x00121212);
+  static Color firstColor = const Color(0xFF303030);
+  static Color secondColor = const Color(0xFF2A2A2A);
+  static Color thirdColor = const Color(0xFF222222);
+  static Color fourthColor = const Color(0xFF242424);
+  static Color fifthColor = const Color(0xFF1a1a1a);
 
-  static Color whiteColor = const Color(0x00FFFFFF);
-  static Color backgroundIconColor = const Color(0x00A0A0A0);
-  static Color backgroundIconAccent = const Color(0x00606060);
+  static Color navBackgroundColor = const Color(0xFF121212);
 
-  static Color greenColor = const Color(0x001BA300);
-  static Color redColor = const Color(0x00A30000);
-  static Color goldColor = const Color(0x00FFB753);
+  static Color whiteColor = const Color(0xFFFFFFFF);
+  static Color backgroundIconColor = const Color(0xFFA0A0A0);
+  static Color backgroundIconAccent = const Color(0xFF606060);
+
+  static Color greenColor = const Color(0xFF1BA300);
+  static Color redColor = const Color(0xFFA30000);
+  static Color goldColor = const Color(0xFFFFB753);
 }
 
 ThemeData blackTheme = ThemeData(
