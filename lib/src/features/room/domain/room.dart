@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
-import 'package:peer_to_sync/src/features/users/domain/user.dart';
+import 'package:peer_to_sync/src/features/user/domain/user.dart';
 
 typedef RoomId = String;
 
