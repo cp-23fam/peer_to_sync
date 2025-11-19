@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
+import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
+import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_list/room_card.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -13,6 +16,17 @@ class RoomListScreen extends StatefulWidget {
 }
 
 class _RoomListScreenState extends State<RoomListScreen> {
+  List<Room> filteredRooms = [];
+
+  Widget roomsList() {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemBuilder: (context, index) => RoomCard(room: filteredRooms[index]),
+      separatorBuilder: (context, index) => gapH8,
+      itemCount: filteredRooms.length,
+    );
+  }
+
   // String _searchQuery = '';
   @override
   Widget build(BuildContext context) {
@@ -40,7 +54,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     hintStyle: TextStyle(
                       color: AppColors.whiteColor.withAlpha(150),
                     ),
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(Sizes.p32),
                     ),
@@ -53,16 +67,22 @@ class _RoomListScreenState extends State<RoomListScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(Sizes.p16),
-                child: Column(
-                  children: [
-                    RoomCard(),
-                    gapH8,
-                    RoomCard(),
-                    gapH8,
-                    RoomCard(),
-                    gapH8,
-                    RoomCard(),
-                  ],
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final roomsData = ref.watch(roomListProvider);
+
+                    return roomsData.when(
+                      data: (rooms) {
+                        filteredRooms = rooms;
+
+                        return roomsList();
+                      },
+                      error: (error, stackTrace) =>
+                          Center(child: Text(error.toString())),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                    );
+                  },
                 ),
               ),
             ],
