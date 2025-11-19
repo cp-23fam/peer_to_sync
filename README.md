@@ -31,5 +31,3 @@ La liste des routes disponible et leur cas d'utilisation est généré par _Swag
 
 ### Flutter
 L'organisation du code et le fonctionnement de celui ci est détaillé dans le Wiki du GitHub.
-
-## Classes
