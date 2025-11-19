@@ -53,7 +53,17 @@ class _RoomListScreenState extends State<RoomListScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(Sizes.p16),
-                child: RoomCard(onClick: () {}),
+                child: Column(
+                  children: [
+                    RoomCard(),
+                    gapH8,
+                    RoomCard(),
+                    gapH8,
+                    RoomCard(),
+                    gapH8,
+                    RoomCard(),
+                  ],
+                ),
               ),
             ],
           ),

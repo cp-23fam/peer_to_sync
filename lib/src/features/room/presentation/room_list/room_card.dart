@@ -8,12 +8,10 @@ import 'package:peer_to_sync/src/theme/theme.dart';
 class RoomCard extends StatefulWidget {
   const RoomCard({
     // required this.room,
-    required this.onClick,
     super.key,
   });
 
   // final Room room;
-  final VoidCallback? onClick;
 
   @override
   State<RoomCard> createState() => _RoomCardState();
@@ -45,7 +43,6 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
         color: AppColors.thirdColor,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             decoration: BoxDecoration(
@@ -96,9 +93,9 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
               ? Padding(
                   padding: const EdgeInsets.all(Sizes.p12),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           StyledText('RoomType', 24.0),
@@ -114,23 +111,28 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                                 child: ListView.builder(
                                   itemBuilder: (context, index) {
                                     if (index < 3) {
-                                      return CircleAvatar(
-                                        radius: Sizes.p16,
-                                        backgroundColor:
-                                            AppColors.backgroundIconColor,
-                                        child: Icon(
-                                          Icons.person_outline,
-                                          size: Sizes.p24,
-                                          color: AppColors.whiteColor,
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: Sizes.p4,
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: Sizes.p16,
+                                          backgroundColor:
+                                              AppColors.backgroundIconColor,
+                                          child: Icon(
+                                            Icons.person_outline,
+                                            size: Sizes.p24,
+                                            color: AppColors.whiteColor,
+                                          ),
                                         ),
                                       );
-                                    } else if (index == 2 - 1) {
+                                    } else if (index == 7 - 1) {
                                       return CircleAvatar(
                                         radius: Sizes.p16,
                                         backgroundColor:
                                             AppColors.backgroundIconAccent,
                                         child: StyledText(
-                                          '${2 - 3}+',
+                                          '${7 - 3}+',
                                           Sizes.p16,
                                         ),
                                       );
@@ -138,11 +140,58 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                                       return SizedBox.shrink();
                                     }
                                   },
-                                  itemCount: 2,
+                                  itemCount: 7,
                                   scrollDirection: Axis.horizontal,
                                 ),
                               ),
                             ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(Sizes.p24),
+                              ),
+                              color: AppColors.greenColor.withAlpha(150),
+                            ),
+                            child: Center(
+                              child: StyledText(
+                                'libre',
+                                16.0,
+                                bold: true,
+                                upper: true,
+                              ),
+                            ),
+                          ),
+                          gapH24,
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                AppColors.greenColor,
+                              ),
+                              shape:
+                                  WidgetStateProperty.all<
+                                    RoundedRectangleBorder
+                                  >(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        Sizes.p24,
+                                      ),
+                                    ),
+                                  ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(Sizes.p8),
+                              child: StyledText('Rejoindre', 24.0, bold: true),
+                            ),
                           ),
                         ],
                       ),

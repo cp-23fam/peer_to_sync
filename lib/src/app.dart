@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peer_to_sync/src/features/room/presentation/room_list/room_list_screen.dart';
+import 'package:peer_to_sync/src/nav_screen.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Peer to Sync',
       theme: blackTheme,
-      home: RoomListScreen(),
+      home: NavScreen(),
       // routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
