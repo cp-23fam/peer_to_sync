@@ -37,20 +37,10 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       ),
                     ),
                     const ProfilePicture(),
-                    if (user != null)
-                      Padding(
-                        padding: const EdgeInsets.all(Sizes.p8),
-                        child: StyledText(user.username, 32.0, bold: true),
-                      )
-                    else
-                      Padding(
-                        padding: const EdgeInsets.all(Sizes.p8),
-                        child: StyledText(
-                          'User not logged in'.hardcoded,
-                          32.0,
-                          bold: true,
-                        ),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(Sizes.p8),
+                      child: StyledText(user!.username, 32.0, bold: true),
+                    ),
                     gapH16,
                     Padding(
                       padding: const EdgeInsets.all(Sizes.p12),

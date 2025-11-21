@@ -1,17 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 
 class RoomRepository {
-  RoomRepository({@visibleForTesting Dio? dioClient}) {
-    dio = dioClient ?? Dio();
+  RoomRepository({
+    @visibleForTesting FlutterSecureStorage? storageClient,
+    @visibleForTesting Dio? dioClient,
+  }) {
+    storage = storageClient ?? const FlutterSecureStorage();
+    dio = dioClient ?? Dio(BaseOptions(validateStatus: (status) => true));
   }
 
   final _mainRoute = '$apiUrl/rooms';
 
+  late final FlutterSecureStorage storage;
   late final Dio dio;
 
   Future<List<Room>> fetchRoomList() async {
@@ -43,13 +50,30 @@ class RoomRepository {
     int maxPlayers,
     RoomType type,
   ) async {
+    final String? token = await storage.read(key: 'token');
+    debugPrint('Token successfully fetched');
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
     final res = await dio.post(
       _mainRoute,
-      data: {name: name, hostId: hostId, maxPlayers: maxPlayers, type: type},
+      data: {
+        'name': name,
+        'hostId': hostId,
+        'maxPlayers': maxPlayers,
+        'type': type.name,
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
-    debugPrint('Room ${res.data._id} sucessfully created from $this');
-    return Room.fromMap(res.data);
+    if (res.statusCode! == 200) {
+      debugPrint('Room ${res.data['_id']} sucessfully created from $this');
+      return Room.fromMap(res.data);
+    }
+
+    throw UnimplementedError('Unimplemented statusCode');
   }
 
   @override

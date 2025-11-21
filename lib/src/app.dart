@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peer_to_sync/src/nav_screen.dart';
+import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -7,11 +7,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Peer to Sync',
       theme: blackTheme,
-      home: NavScreen(),
-      // routerConfig: router,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
   }

@@ -35,7 +35,7 @@ class NoUserCard extends StatelessWidget {
               ),
             ),
             gapW16,
-            StyledText('. . .', Sizes.p32, bold: true),
+            const StyledText('. . .', Sizes.p32, bold: true),
           ],
         ),
       ),

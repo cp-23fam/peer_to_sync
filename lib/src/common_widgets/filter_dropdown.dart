@@ -29,18 +29,18 @@ class _FilterDropdownState extends State<FilterDropdown> {
             decoration: BoxDecoration(
               color: AppColors.secondColor,
               border: Border.all(color: AppColors.firstColor, width: 2.0),
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             ),
             child: DropdownButton<String>(
               value: widget.selected,
-              hint: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const StyledText('Type de la room', 20.0),
+              hint: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: StyledText('Type de la room', 20.0),
               ),
               dropdownColor: AppColors.secondColor,
               style: TextStyle(color: AppColors.whiteColor),
               underline: const SizedBox(),
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               items: widget.list.map((String? type) {
                 return DropdownMenuItem<String>(
                   value: type,

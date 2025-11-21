@@ -1,0 +1,1 @@
+class PasswordException implements Exception {}
