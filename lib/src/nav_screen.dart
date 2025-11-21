@@ -27,7 +27,11 @@ class _NavScreenState extends State<NavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: selectedTab == 0 ? RoomListScreen() : UserSettingsScreen(),
+      body: selectedTab == 0
+          ?
+            // TODO : Changement de la page si le user n'est pas connecté
+            RoomListScreen()
+          : UserSettingsScreen(),
       bottomNavigationBar: NavBar(
         pageIndex: selectedTab,
         onTap: (index) {

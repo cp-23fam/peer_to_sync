@@ -92,6 +92,27 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               ),
                             ),
                           ),
+                          gapH16,
+                          Center(
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              height: 48,
+                              width: 250,
+                              child: FloatingActionButton(
+                                backgroundColor: AppColors.fourthColor,
+                                elevation: 0,
+                                onPressed: () {},
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: StyledText(
+                                  'Log out'.hardcoded,
+                                  20.0,
+                                  bold: true,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

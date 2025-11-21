@@ -98,7 +98,8 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                         children: [
                           StyledText(widget.room.type.name, 24.0),
                           gapH8,
-                          StyledText(widget.room.hostId, 20.0),
+                          // StyledText(widget.room.hostId, 20.0),
+                          StyledText('UserName', 20.0),
                           gapH8,
 
                           Row(

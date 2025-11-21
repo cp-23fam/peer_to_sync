@@ -5,8 +5,8 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 class AppColors {
   static Color firstColor = const Color(0xFF303030);
   static Color secondColor = const Color(0xFF2A2A2A);
-  static Color thirdColor = const Color(0xFF222222);
-  static Color fourthColor = const Color(0xFF242424);
+  static Color thirdColor = const Color(0xFF242424);
+  static Color fourthColor = const Color(0xFF222222);
   static Color fifthColor = const Color(0xFF1a1a1a);
 
   static Color navBackgroundColor = const Color(0xFF121212);

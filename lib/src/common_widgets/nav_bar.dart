@@ -19,7 +19,8 @@ class NavBar extends StatelessWidget {
             navItem(Icons.home_outlined, pageIndex == 0, onTap: () => onTap(0)),
             const SizedBox(width: 80),
             navItem(
-              Icons.person_outline,
+              // TODO : Changement d'icon si le user n'est pas connecté
+              Icons.person_outline, // login
               pageIndex == 1,
               onTap: () => onTap(1),
             ),
@@ -36,6 +37,7 @@ class NavBar extends StatelessWidget {
         child: Icon(
           icon,
           color: selected ? Colors.white : Colors.white.withAlpha(100),
+          size: 40.0,
         ),
       ),
     );
