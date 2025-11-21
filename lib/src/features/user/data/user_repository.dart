@@ -6,9 +6,18 @@ import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 
 class UserRepository {
+  UserRepository({
+    @visibleForTesting FlutterSecureStorage? storageClient,
+    @visibleForTesting Dio? dioClient,
+  }) {
+    storage = storageClient ?? const FlutterSecureStorage();
+    dio = dioClient ?? Dio();
+  }
+
   final _mainRoute = '$apiUrl/user';
 
-  final storage = const FlutterSecureStorage();
+  late final FlutterSecureStorage storage;
+  late final Dio dio;
 
   Future<User?> fetchCurrentUser() async {
     final String? token = await storage.read(key: 'token');
@@ -22,12 +31,14 @@ class UserRepository {
       options: Options(headers: {'Autorization': token}),
     );
 
-    if (res.data.message != null && res.statusCode! == 401) {
-      debugPrint('User could not get fetched from $this : ${res.data.message}');
+    if (res.data['message'] != null && res.statusCode! == 401) {
+      debugPrint(
+        'User could not get fetched from $this : ${res.data['message']}',
+      );
       return null;
     }
 
-    debugPrint('User ${res.data._id} sucessfully fetched from $this');
+    debugPrint('User ${res.data['_id']} sucessfully fetched from $this');
     return User.fromMap(res.data);
   }
 
@@ -36,11 +47,11 @@ class UserRepository {
 
     if (res.statusCode! / 100 == 2) {
       debugPrint('User sucessfully logged in ($email)');
-      return res.data.token;
+      return res.data['token'];
     }
 
     if (res.statusCode! == 401) {
-      debugPrint('User could not log in : ${res.data.message}');
+      debugPrint('User could not log in : ${res.data['message']}');
       return null;
     }
 

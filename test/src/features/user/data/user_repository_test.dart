@@ -1,0 +1,99 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/domain/user.dart';
+
+import '../../../mocks.dart';
+
+void main() {
+  const String apiPath = 'http://localhost:3000';
+
+  final dio = Dio(BaseOptions(validateStatus: (status) => true));
+  final dioAdapter = DioAdapter(dio: dio);
+
+  late MockFlutterSecureStorage storage;
+  late UserRepository userRepository;
+
+  setUp(() {
+    storage = MockFlutterSecureStorage();
+    userRepository = UserRepository(storageClient: storage, dioClient: dio);
+  });
+
+  group('fetchCurrentUser', () {
+    final user = {
+      '_id': '691d822e15ab08bf78780ba1',
+      'email': 'test@example.com',
+      'username': 'Fabrioche',
+    };
+    const token = 'abcd';
+
+    void prepareStorageMockToReturnTokenIfProvided(String? token) {
+      when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
+    }
+
+    test(
+      'should return null when statusCode is 401 and message is not empty',
+      () async {
+        prepareStorageMockToReturnTokenIfProvided(token);
+
+        dioAdapter.onGet(
+          '$apiPath/user',
+          (server) => server.reply(401, {'message': 'Not authenticated'}),
+        );
+
+        final res = await userRepository.fetchCurrentUser();
+        expect(res, null);
+      },
+    );
+
+    test('should return a User when status is 200', () async {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onGet('$apiPath/user', (server) => server.reply(200, user));
+
+      final res = await userRepository.fetchCurrentUser();
+      final result = User.fromMap(user);
+      expect(res, result);
+    });
+  });
+
+  group('logIn', () {
+    test('should return token string when status is 200', () async {
+      dioAdapter.onPost(
+        '$apiPath/user/login',
+        (server) => server.reply(200, {'token': 'abcd'}),
+      );
+      final result = await userRepository.logIn(
+        'test@example.com',
+        'Pa\$\$w0rd',
+      );
+      expect(result, 'abcd');
+    });
+
+    test('should return null when status is 401', () async {
+      dioAdapter.onPost(
+        '$apiPath/user/login',
+        (server) => server.reply(401, {'message': 'Wrong password'}),
+      );
+      final result = await userRepository.logIn(
+        'test@example.com',
+        'Pa\$\$w0rd',
+      );
+      expect(result, null);
+    });
+
+    test('should throw an error when status code is not handled', () {
+      dioAdapter.onPost(
+        '$apiPath/user/login',
+        (server) => server.reply(500, {}),
+      );
+
+      expect(
+        () async =>
+            await userRepository.logIn('test@example.com', 'Pa\$\$w0rd'),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+}

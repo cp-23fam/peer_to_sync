@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
@@ -5,7 +6,13 @@ import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 
 class RoomRepository {
+  RoomRepository({@visibleForTesting Dio? dioClient}) {
+    dio = dioClient ?? Dio();
+  }
+
   final _mainRoute = '$apiUrl/rooms';
+
+  late final Dio dio;
 
   Future<List<Room>> fetchRoomList() async {
     final rooms = <Room>[];
