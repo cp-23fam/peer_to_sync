@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
-import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 import 'package:peer_to_sync/src/utils/fetch_token.dart';

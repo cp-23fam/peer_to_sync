@@ -11,8 +11,7 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       name: RouteNames.home.name,
-      builder: (context, state) => RoomDetailScreen(),
-      // RoomListScreen(),
+      builder: (context, state) => RoomListScreen(),
     ),
     GoRoute(
       path: '/create',
