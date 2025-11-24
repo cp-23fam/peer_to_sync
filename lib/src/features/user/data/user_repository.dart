@@ -54,7 +54,7 @@ class UserRepository {
 
     if (res.statusCode! / 100 == 2) {
       debugPrint('User sucessfully logged in ($email)');
-      storage.write(key: 'token', value: res.data['token']);
+      await storage.write(key: 'token', value: res.data['token']);
       return res.data['token'];
     }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
@@ -8,7 +9,7 @@ import 'package:peer_to_sync/src/features/user/domain/user.dart';
 
 typedef RoomId = String;
 
-class Room {
+class Room extends Equatable {
   factory Room.fromJson(String source) => Room.fromMap(json.decode(source));
 
   factory Room.fromMap(Map<String, dynamic> map) {
@@ -16,7 +17,7 @@ class Room {
     final type = RoomType.values.firstWhere((s) => s.name == map['type']);
 
     return Room(
-      id: map['id'] ?? '',
+      id: map['_id'] ?? '',
       name: map['name'] ?? '',
       hostId: map['hostId'] ?? '',
       users: List<String>.from(map['users']),
@@ -26,7 +27,8 @@ class Room {
       redirectionId: map['redirectionId'],
     );
   }
-  Room({
+
+  const Room({
     required this.id,
     required this.name,
     required this.hostId,
@@ -72,7 +74,7 @@ class Room {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'hostId': hostId,
       'users': users,
@@ -89,4 +91,16 @@ class Room {
   String toString() {
     return 'Room(id: $id, name: $name, hostId: $hostId, users: $users, status: $status, maxPlayers: $maxPlayers, type: $type, redirectionId: $redirectionId)';
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    hostId,
+    users,
+    status,
+    maxPlayers,
+    type,
+    redirectionId,
+  ];
 }

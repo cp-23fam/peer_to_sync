@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 
 import '../../../mocks.dart';
@@ -11,7 +13,7 @@ void main() {
   const String apiPath = 'http://localhost:3000';
 
   final dio = Dio(BaseOptions(validateStatus: (status) => true));
-  final dioAdapter = DioAdapter(dio: dio);
+  final dioAdapter = DioAdapter(dio: dio, matcher: const UrlRequestMatcher());
 
   late MockFlutterSecureStorage storage;
   late UserRepository userRepository;
@@ -59,7 +61,15 @@ void main() {
   });
 
   group('logIn', () {
+    void prepareStorageMockToHandleWriteOn(String token) {
+      when(
+        () => storage.write(key: 'token', value: token),
+      ).thenAnswer((_) async {});
+    }
+
     test('should return token string when status is 200', () async {
+      prepareStorageMockToHandleWriteOn('abcd');
+
       dioAdapter.onPost(
         '$apiPath/user/login',
         (server) => server.reply(200, {'token': 'abcd'}),
@@ -71,17 +81,35 @@ void main() {
       expect(result, 'abcd');
     });
 
-    test('should return null when status is 401', () async {
-      dioAdapter.onPost(
-        '$apiPath/user/login',
-        (server) => server.reply(401, {'message': 'Wrong password'}),
-      );
-      final result = await userRepository.logIn(
-        'test@example.com',
-        'Pa\$\$w0rd',
-      );
-      expect(result, null);
-    });
+    test(
+      'should throw EmailException when status is 401 and message is "Unknown email"',
+      () {
+        dioAdapter.onPost(
+          '$apiPath/user/login',
+          (server) => server.reply(401, {'message': 'Unknown email'}),
+        );
+        expect(
+          () async =>
+              await userRepository.logIn('test@example.com', 'Pa\$\$w0rd'),
+          throwsA(isA<EmailException>()),
+        );
+      },
+    );
+
+    test(
+      'should throw PasswordException when status is 401 and message is "Wrong password"',
+      () {
+        dioAdapter.onPost(
+          '$apiPath/user/login',
+          (server) => server.reply(401, {'message': 'Wrong password'}),
+        );
+        expect(
+          () async =>
+              await userRepository.logIn('test@example.com', 'Pa\$\$w0rd'),
+          throwsA(isA<PasswordException>()),
+        );
+      },
+    );
 
     test('should throw an error when status code is not handled', () {
       dioAdapter.onPost(

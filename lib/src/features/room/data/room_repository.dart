@@ -68,7 +68,7 @@ class RoomRepository {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
-    if (res.statusCode! == 200) {
+    if (res.statusCode! == 201) {
       debugPrint('Room ${res.data['_id']} sucessfully created from $this');
       return Room.fromMap(res.data);
     }
