@@ -174,7 +174,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                           .read(userRepositoryProvider)
                           .fetchCurrentUser();
 
-                      await ref
+                      final room = await ref
                           .read(roomRepositoryProvider)
                           .createRoom(
                             nameTextController.text,
@@ -184,8 +184,10 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                           );
 
                       if (context.mounted) {
-                        // TODO path parameters
-                        context.goNamed(RouteNames.detail.name);
+                        context.goNamed(
+                          RouteNames.detail.name,
+                          pathParameters: {'id': room.id},
+                        );
                       }
                     }
                   },

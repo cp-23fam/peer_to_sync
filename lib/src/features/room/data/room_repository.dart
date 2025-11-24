@@ -76,6 +76,74 @@ class RoomRepository {
     throw UnimplementedError('Unimplemented statusCode');
   }
 
+  Future<void> joinRoom(RoomId id) async {
+    final String? token = await storage.read(key: 'token');
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final res = await dio.post(
+      '$_mainRoute/$id/join',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('User joined room $id');
+      return;
+    }
+
+    debugPrint('User could not join room $id');
+    throw UnimplementedError;
+  }
+
+  Future<void> quitRoom(RoomId id) async {
+    final String? token = await storage.read(key: 'token');
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final res = await dio.post(
+      '$_mainRoute/$id/quit',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    final updatedRoom = await fetchRoom(id);
+
+    if (res.statusCode! == 200) {
+      debugPrint('User quited room $id');
+      if (updatedRoom!.users.isEmpty) {
+        await deleteRoom(id);
+      }
+      return;
+    }
+
+    debugPrint('User could not quit room $id');
+    throw UnimplementedError;
+  }
+
+  Future<void> deleteRoom(RoomId id) async {
+    final String? token = await storage.read(key: 'token');
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final res = await dio.delete(
+      '$_mainRoute/$id',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 204) {
+      debugPrint('User deleted room $id');
+      return;
+    }
+
+    debugPrint('User could not delete room $id');
+    throw UnimplementedError;
+  }
+
   @override
   String toString() {
     return 'RoomRepository';
@@ -88,6 +156,12 @@ final roomRepositoryProvider = Provider((ref) {
 
 final roomListProvider = FutureProvider<List<Room>>((ref) {
   final provider = ref.watch(roomRepositoryProvider).fetchRoomList();
+
+  return provider;
+});
+
+final roomProvider = FutureProvider.family<Room?, RoomId>((ref, id) async {
+  final provider = await ref.watch(roomRepositoryProvider).fetchRoom(id);
 
   return provider;
 });

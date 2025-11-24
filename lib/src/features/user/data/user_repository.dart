@@ -35,15 +35,16 @@ class UserRepository {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
-    if (res.data['message'] != null && res.statusCode! == 401) {
-      debugPrint(
-        'User could not get fetched from $this : ${res.data['message']}',
-      );
-      return null;
+    if (res.data['message'] == null && res.statusCode! == 200) {
+      debugPrint('User ${res.data['_id']} sucessfully fetched from $this');
+      return User.fromMap(res.data);
     }
 
-    debugPrint('User ${res.data['_id']} sucessfully fetched from $this');
-    return User.fromMap(res.data);
+    debugPrint(
+      'User could not get fetched from $this : ${res.data['message']}',
+    );
+
+    return null;
   }
 
   Future<String> logIn(String email, String password) async {
@@ -73,8 +74,19 @@ class UserRepository {
     throw UnimplementedError('Status code not handled');
   }
 
-  Future<void> signUp(String username, String email, String password) async {
-    //
+  Future<User?> signUp(String username, String email, String password) async {
+    final res = await dio.post(
+      '$_mainRoute/signup',
+      data: {'username': username, 'email': email, 'password': password},
+    );
+
+    if (res.statusCode! == 201) {
+      debugPrint('User created account : $email');
+      return User.fromMap(res.data);
+    }
+
+    debugPrint('User could not create account');
+    return null;
   }
 
   @override

@@ -1,9 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
+import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class RoomCard extends StatefulWidget {
@@ -171,27 +175,47 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                             ),
                           ),
                           gapH24,
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.all<Color>(
-                                AppColors.greenColor,
-                              ),
-                              shape:
-                                  WidgetStateProperty.all<
-                                    RoundedRectangleBorder
-                                  >(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        Sizes.p24,
+                          Consumer(
+                            builder: (context, ref, child) {
+                              return ElevatedButton(
+                                onPressed: () async {
+                                  await ref
+                                      .read(roomRepositoryProvider)
+                                      .joinRoom(widget.room.id);
+
+                                  if (context.mounted) {
+                                    context.goNamed(
+                                      RouteNames.detail.name,
+                                      pathParameters: {'id': widget.room.id},
+                                    );
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      WidgetStateProperty.all<Color>(
+                                        AppColors.greenColor,
                                       ),
-                                    ),
+                                  shape:
+                                      WidgetStateProperty.all<
+                                        RoundedRectangleBorder
+                                      >(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            Sizes.p24,
+                                          ),
+                                        ),
+                                      ),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(Sizes.p8),
+                                  child: StyledText(
+                                    'Rejoindre',
+                                    24.0,
+                                    bold: true,
                                   ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(Sizes.p8),
-                              child: StyledText('Rejoindre', 24.0, bold: true),
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
