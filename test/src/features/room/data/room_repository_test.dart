@@ -6,6 +6,7 @@ import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 
 import '../../../mocks.dart';
 
@@ -100,13 +101,13 @@ void main() {
       },
     );
   });
+  const token = 'abcd';
+
+  void prepareStorageMockToReturnTokenIfProvided(String? token) {
+    when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
+  }
+
   group('createRoom', () {
-    const token = 'abcd';
-
-    void prepareStorageMockToReturnTokenIfProvided(String? token) {
-      when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
-    }
-
     test('should return created room when status is 201', () async {
       prepareStorageMockToReturnTokenIfProvided(token);
 
@@ -144,5 +145,103 @@ void main() {
         ),
       );
     });
+  });
+
+  group('joinRoom', () {
+    test('should throw LoggedOutException if token from storage is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+      expect(
+        () async => await roomRepository.joinRoom('abcd'),
+        throwsA(LoggedOutException),
+      );
+    });
+
+    test(
+      'should throw Unimplemented error if status code is different from 200',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(token);
+        const id = 'abcd';
+
+        dioAdapter.onPost(
+          '$apiPath/rooms/$id/join',
+          (server) => server.reply(500, {}),
+        );
+
+        expect(
+          () async => await roomRepository.joinRoom(id),
+          throwsA(UnimplementedError),
+        );
+      },
+    );
+  });
+  group('quitRoom', () {
+    test('should throw LoggedOutException if token from storage is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+      expect(
+        () async => await roomRepository.quitRoom('abcd'),
+        throwsA(LoggedOutException),
+      );
+    });
+
+    test(
+      'should throw Unimplemented error if status code is different from 200',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(token);
+        const id = 'abcd';
+
+        dioAdapter.onPost(
+          '$apiPath/rooms/$id/quit',
+          (server) => server.reply(500, {}),
+        );
+
+        dioAdapter.onGet(
+          '$apiPath/rooms/$id',
+          (server) => server.reply(200, {
+            '_id': '1',
+            'name': 'Test room',
+            'hostId': 'user-1',
+            'users': ['user-1'],
+            'status': 'waiting',
+            'maxPlayers': 20,
+            'type': 'game',
+            'redirectionId': null,
+          }),
+        );
+
+        expect(
+          () async => await roomRepository.quitRoom(id),
+          throwsA(UnimplementedError),
+        );
+      },
+    );
+    //
+  });
+  group('deleteRoom', () {
+    test('should throw LoggedOutException if token from storage is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+      expect(
+        () async => await roomRepository.deleteRoom('abcd'),
+        throwsA(LoggedOutException),
+      );
+    });
+
+    test(
+      'should throw Unimplemented error if status code is different from 204',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(token);
+        const id = 'abcd';
+
+        dioAdapter.onDelete(
+          '$apiPath/rooms/$id',
+          (server) => server.reply(500, {}),
+        );
+
+        expect(
+          () async => await roomRepository.deleteRoom(id),
+          throwsA(UnimplementedError),
+        );
+      },
+    );
+    //
   });
 }

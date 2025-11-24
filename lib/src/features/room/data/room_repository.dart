@@ -37,10 +37,10 @@ class RoomRepository {
     final res = await dio.get('$_mainRoute/$id');
 
     try {
-      debugPrint('Room $id was sucessfully fetched from $this');
+      debugPrint('$this fetched room $id');
       return Room.fromMap(res.data);
     } catch (e) {
-      debugPrint('Room $id failed to fetch from $this : ${e.toString()}');
+      debugPrint('$this couldn\'t fetch room $id : ${e.toString()}');
       return null;
     }
   }
@@ -69,7 +69,7 @@ class RoomRepository {
     );
 
     if (res.statusCode! == 201) {
-      debugPrint('Room ${res.data['_id']} sucessfully created from $this');
+      debugPrint('$this created room ${res.data['_id']}');
       return Room.fromMap(res.data);
     }
 
