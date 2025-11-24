@@ -167,6 +167,11 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                             .read(userRepositoryProvider)
                             .fetchCurrentUser();
 
+                        if (currentUser == null && context.mounted) {
+                          context.goNamed(RouteNames.user.name);
+                          return;
+                        }
+
                         final room = await ref
                             .read(roomRepositoryProvider)
                             .createRoom(

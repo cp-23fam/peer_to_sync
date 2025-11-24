@@ -76,6 +76,7 @@ class UserRepository {
   }
 
   Future<void> logOut() async {
+    debugPrint('$this made user log out');
     await storage.delete(key: 'token');
   }
 

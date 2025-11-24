@@ -18,6 +18,11 @@ class UserSettingsScreen extends StatefulWidget {
 
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
