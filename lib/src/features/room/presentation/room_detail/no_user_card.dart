@@ -4,14 +4,7 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class NoUserCard extends StatelessWidget {
-  const NoUserCard({
-    // required this.userId,
-    required this.isHost,
-    super.key,
-  });
-
-  // final String userId;
-  final bool isHost;
+  const NoUserCard({super.key});
 
   @override
   Widget build(BuildContext context) {

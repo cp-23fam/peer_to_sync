@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
+import 'package:peer_to_sync/src/utils/fetch_token.dart';
 
 class UserRepository {
   UserRepository({
@@ -22,8 +24,7 @@ class UserRepository {
   late final Dio dio;
 
   Future<User?> fetchCurrentUser() async {
-    final String? token = await storage.read(key: 'token');
-    debugPrint('Token successfully fetched');
+    final String? token = await fetchToken(storage);
 
     if (token == null) {
       return null;
@@ -35,15 +36,16 @@ class UserRepository {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
-    if (res.data['message'] != null && res.statusCode! == 401) {
-      debugPrint(
-        'User could not get fetched from $this : ${res.data['message']}',
-      );
-      return null;
+    if (res.data['message'] == null && res.statusCode! == 200) {
+      debugPrint('User ${res.data['_id']} sucessfully fetched from $this');
+      return User.fromMap(res.data);
     }
 
-    debugPrint('User ${res.data['_id']} sucessfully fetched from $this');
-    return User.fromMap(res.data);
+    debugPrint(
+      'User could not get fetched from $this : ${res.data['message']}',
+    );
+
+    throw UnimplementedError;
   }
 
   Future<String> logIn(String email, String password) async {
@@ -73,8 +75,23 @@ class UserRepository {
     throw UnimplementedError('Status code not handled');
   }
 
-  Future<void> signUp(String username, String email, String password) async {
-    //
+  Future<void> logOut() async {
+    await storage.delete(key: 'token');
+  }
+
+  Future<User?> signUp(String username, String email, String password) async {
+    final res = await dio.post(
+      '$_mainRoute/signup',
+      data: {'username': username, 'email': email, 'password': password},
+    );
+
+    if (res.statusCode! == 201) {
+      debugPrint('User created account : $email');
+      return User.fromMap(res.data);
+    }
+
+    debugPrint('User could not create account');
+    return null;
   }
 
   @override

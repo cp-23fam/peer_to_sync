@@ -8,6 +8,7 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -167,7 +168,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                             .read(userRepositoryProvider)
                             .fetchCurrentUser();
 
-                        await ref
+                        final room = await ref
                             .read(roomRepositoryProvider)
                             .createRoom(
                               nameTextController.text,
@@ -177,8 +178,10 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                             );
 
                         if (context.mounted) {
-                          // TODO path parameters
-                          context.goNamed(RouteNames.detail.name);
+                          context.goNamed(
+                            RouteNames.detail.name,
+                            pathParameters: {'id': room.id},
+                          );
                         }
                       }
                     },

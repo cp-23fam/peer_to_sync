@@ -20,9 +20,10 @@ final router = GoRouter(
       builder: (context, state) => RoomCreationScreen(),
     ),
     GoRoute(
-      path: '/detail',
+      path: '/detail/:id',
       name: RouteNames.detail.name,
-      builder: (context, state) => RoomDetailScreen(),
+      builder: (context, state) =>
+          RoomDetailScreen(roomId: state.pathParameters['id']!),
     ),
     GoRoute(
       path: '/signup',
