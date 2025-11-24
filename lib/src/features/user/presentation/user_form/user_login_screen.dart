@@ -175,7 +175,9 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                                 passwordTextController.text,
                               );
 
-                          setState(() {});
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            context.goNamed(RouteNames.home.name);
+                          });
                         } on EmailException {
                           setState(() {
                             emailError = 'Email inconnu'.hardcoded;

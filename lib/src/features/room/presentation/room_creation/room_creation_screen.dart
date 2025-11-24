@@ -178,7 +178,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                             .read(roomRepositoryProvider)
                             .createRoom(
                               nameTextController.text,
-                              currentUser!.uid,
+                              currentUser.uid,
                               int.parse(numberTextController.text),
                               selectedType!,
                             );

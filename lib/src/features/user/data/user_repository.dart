@@ -48,6 +48,32 @@ class UserRepository {
     throw UnimplementedError;
   }
 
+  Future<User?> fetchUser(UserId uid) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      return null;
+    }
+
+    final res = await dio.get(
+      '$_mainRoute/$uid',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.data['message'] == null && res.statusCode! == 200) {
+      debugPrint('$this has fetched User ${res.data['_id']}');
+      return User.fromMap(res.data);
+    }
+
+    if (res.data['message'] != null && res.statusCode! == 401) {
+      debugPrint('$this could not fetch user : ${res.data['message']}');
+      return null;
+    }
+
+    debugPrint('$this fetchCurrentUser has unknown response : $res');
+    throw UnimplementedError;
+  }
+
   Future<String> logIn(String email, String password) async {
     final res = await dio.post(
       '$_mainRoute/login',
@@ -107,6 +133,12 @@ final userRepositoryProvider = Provider((ref) {
 
 final userInfosProvider = FutureProvider<User?>((ref) {
   final provider = ref.watch(userRepositoryProvider).fetchCurrentUser();
+
+  return provider;
+});
+
+final userProvider = FutureProvider.family<User?, String>((ref, uid) {
+  final provider = ref.watch(userRepositoryProvider).fetchUser(uid);
 
   return provider;
 });

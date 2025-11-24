@@ -24,11 +24,11 @@ class RoomDetailScreen extends StatefulWidget {
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
   Widget createCard(Room room, int index) {
     if (index == 0) {
-      return const UserCard(isHost: true);
+      return UserCard(isHost: true, userId: room.users[index]);
     }
 
     if (index < room.users.length) {
-      return const UserCard(isHost: false);
+      return UserCard(isHost: false, userId: room.users[index]);
     }
 
     return const NoUserCard();
