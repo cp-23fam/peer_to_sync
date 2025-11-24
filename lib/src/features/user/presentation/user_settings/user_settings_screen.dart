@@ -111,9 +111,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                       .read(userRepositoryProvider)
                                       .logOut();
 
-                                  if (context.mounted) {
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) {
                                     context.goNamed(RouteNames.home.name);
-                                  }
+                                  });
                                 },
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(4),

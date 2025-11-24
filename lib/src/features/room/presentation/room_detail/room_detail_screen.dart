@@ -112,9 +112,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           .read(roomRepositoryProvider)
                           .quitRoom(widget.roomId);
 
-                      if (context.mounted) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
                         context.goNamed(RouteNames.home.name);
-                      }
+                      });
                     },
                   );
                 },

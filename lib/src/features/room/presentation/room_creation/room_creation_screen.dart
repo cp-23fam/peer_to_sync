@@ -167,8 +167,10 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                             .read(userRepositoryProvider)
                             .fetchCurrentUser();
 
-                        if (currentUser == null && context.mounted) {
-                          context.goNamed(RouteNames.user.name);
+                        if (currentUser == null) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            context.goNamed(RouteNames.user.name);
+                          });
                           return;
                         }
 
@@ -181,12 +183,12 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                               selectedType!,
                             );
 
-                        if (context.mounted) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
                           context.goNamed(
                             RouteNames.detail.name,
                             pathParameters: {'id': room.id},
                           );
-                        }
+                        });
                       }
                     },
                   );

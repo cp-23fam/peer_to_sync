@@ -178,7 +178,7 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                 text: 'Annuler',
                 color: AppColors.redColor,
                 onPressed: () {
-                  context.goNamed(RouteNames.home.name);
+                  context.goNamed(RouteNames.user.name);
                 },
               ),
               gapW16,
@@ -197,9 +197,9 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                               passwordTextController.text,
                             );
 
-                        if (context.mounted) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
                           context.goNamed(RouteNames.home.name);
-                        }
+                        });
                       }
                     },
                   );

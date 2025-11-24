@@ -127,16 +127,16 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                                   .read(roomRepositoryProvider)
                                   .joinRoom(widget.room.id);
 
-                              if (context.mounted) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
                                 context.goNamed(
                                   RouteNames.detail.name,
                                   pathParameters: {'id': widget.room.id},
                                 );
-                              }
+                              });
                             } on LoggedOutException {
-                              if (context.mounted) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
                                 context.goNamed(RouteNames.signup.name);
-                              }
+                              });
                             }
                           },
                           style: ButtonStyle(
