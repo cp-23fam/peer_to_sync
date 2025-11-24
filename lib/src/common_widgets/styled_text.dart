@@ -18,12 +18,12 @@ class StyledText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       upper ? text.toUpperCase() : text,
-      style: GoogleFonts.kanit(
+      style: GoogleFonts.lato(
         color: AppColors.whiteColor,
         fontSize: fontSize,
-        textStyle: TextStyle(
-          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-        ),
+        // textStyle: TextStyle(
+        // fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        // ),
       ),
     );
   }

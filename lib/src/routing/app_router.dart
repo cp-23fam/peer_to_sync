@@ -1,17 +1,18 @@
 import 'package:go_router/go_router.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_creation_screen.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/room_detail_screen.dart';
+import 'package:peer_to_sync/src/features/room/presentation/room_list/room_list_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_form/user_creation_screen.dart';
-import 'package:peer_to_sync/src/nav_screen.dart';
+import 'package:peer_to_sync/src/features/user/presentation/user_form/user_login_screen.dart';
 
-enum RouteNames { home, create, detail, signup }
+enum RouteNames { home, create, detail, signup, user }
 
 final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
       name: RouteNames.home.name,
-      builder: (context, state) => NavScreen(),
+      builder: (context, state) => RoomListScreen(),
     ),
     GoRoute(
       path: '/create',
@@ -23,6 +24,11 @@ final router = GoRouter(
       name: RouteNames.detail.name,
       builder: (context, state) =>
           RoomDetailScreen(roomId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/user',
+      name: RouteNames.user.name,
+      builder: (context, state) => UserLoginScreen(),
     ),
     GoRoute(
       path: '/signup',

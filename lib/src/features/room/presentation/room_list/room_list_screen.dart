@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_list/room_card.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
+import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class RoomListScreen extends StatefulWidget {
@@ -37,27 +40,47 @@ class _RoomListScreenState extends State<RoomListScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
+                Container(
+                  height: 80,
                   padding: const EdgeInsets.all(Sizes.p12),
-                  child: StyledText(
-                    'Home'.hardcoded,
-                    40.0,
-                    bold: true,
-                    upper: true,
+                  color: AppColors.navBackgroundColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      StyledText(
+                        'Rooms'.hardcoded,
+                        40.0,
+                        bold: true,
+                        upper: true,
+                      ),
+                      GestureDetector(
+                        onTap: () => context.goNamed(RouteNames.user.name),
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.backgroundIconColor,
+                          radius: 28.0,
+                          child: Icon(
+                            Icons.person_outline,
+                            color: AppColors.whiteColor,
+                            size: 40.0,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                gapH12,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Sizes.p12),
                   child: TextField(
                     style: TextStyle(color: AppColors.whiteColor),
                     decoration: InputDecoration(
-                      hintText: 'Rechercher une salle...',
+                      hintText: 'Rechercher une room...',
                       hintStyle: TextStyle(
                         color: AppColors.whiteColor.withAlpha(150),
                       ),
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Sizes.p32),
+                        borderRadius: BorderRadius.circular(Sizes.p4),
                       ),
                       fillColor: AppColors.firstColor,
                     ),
@@ -88,6 +111,24 @@ class _RoomListScreenState extends State<RoomListScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: ClipRRect(
+        child: Container(
+          height: 64,
+          color: AppColors.navBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChooseButton(
+                text: 'Créer une Room',
+                color: AppColors.greenColor,
+                onPressed: () {
+                  context.goNamed(RouteNames.create.name);
+                },
+              ),
+            ],
           ),
         ),
       ),

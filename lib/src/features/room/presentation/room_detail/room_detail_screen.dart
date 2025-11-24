@@ -56,9 +56,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
                 return Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(Sizes.p16),
-                      child: StyledText('RoomName', 36.0, bold: true),
+                    Container(
+                      height: 80,
+                      padding: const EdgeInsets.all(Sizes.p12),
+                      color: AppColors.navBackgroundColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+
+                        children: [StyledText(room.name, 36.0, bold: true)],
+                      ),
                     ),
                     Text('${room.users.length} / ${room.maxPlayers}'.hardcoded),
                     gapH12,

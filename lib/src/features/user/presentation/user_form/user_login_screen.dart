@@ -49,13 +49,15 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
+            Container(
+              height: 80,
               padding: const EdgeInsets.all(Sizes.p12),
-              child: StyledText(
-                'Login'.hardcoded,
-                38.0,
-                bold: true,
-                upper: true,
+              color: AppColors.navBackgroundColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StyledText('Login'.hardcoded, 30.0, bold: true, upper: true),
+                ],
               ),
             ),
             gapH16,

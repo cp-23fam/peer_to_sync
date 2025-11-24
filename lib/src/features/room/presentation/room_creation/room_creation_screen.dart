@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/filter_dropdown.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -48,13 +49,20 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
+            Container(
+              height: 80,
               padding: const EdgeInsets.all(Sizes.p12),
-              child: StyledText(
-                'Création de Room'.hardcoded,
-                40.0,
-                bold: true,
-                upper: true,
+              color: AppColors.navBackgroundColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StyledText(
+                    'Création de Room'.hardcoded,
+                    30.0,
+                    bold: true,
+                    upper: true,
+                  ),
+                ],
               ),
             ),
             gapH16,
@@ -80,7 +88,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                         fillColor: AppColors.secondColor,
                         labelText: 'Nom de la room'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -103,13 +111,12 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                         }
                         return 'Veuillez remplir ce champ'.hardcoded;
                       },
-                      // maxLength: 20,
                       style: TextStyle(color: AppColors.whiteColor),
                       decoration: InputDecoration(
                         fillColor: AppColors.secondColor,
                         labelText: 'Nombre de participants'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -134,78 +141,55 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
         ),
       ),
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(height: 60, color: AppColors.navBackgroundColor),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: 60,
-            width: 180,
-            child: FloatingActionButton(
-              backgroundColor: AppColors.redColor,
-              elevation: 0,
-              onPressed: () {
-                context.goNamed(RouteNames.home.name);
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+        child: Container(
+          height: 64,
+          color: AppColors.navBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChooseButton(
+                text: 'Annuler',
+                color: AppColors.redColor,
+                onPressed: () {
+                  context.goNamed(RouteNames.home.name);
+                },
               ),
-              child: StyledText('Annuler'.hardcoded, 40.0, bold: true),
-            ),
-          ),
-          gapW16,
-          Consumer(
-            builder: (context, ref, child) {
-              return Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 60,
-                width: 180,
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.greenColor,
-                  elevation: 0,
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate() &&
-                        selectedType != null) {
-                      final currentUser = await ref
-                          .read(userRepositoryProvider)
-                          .fetchCurrentUser();
+              gapW16,
+              Consumer(
+                builder: (context, ref, child) {
+                  return ChooseButton(
+                    text: 'Créer',
+                    color: AppColors.greenColor,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate() &&
+                          selectedType != null) {
+                        final currentUser = await ref
+                            .read(userRepositoryProvider)
+                            .fetchCurrentUser();
 
-                      if (currentUser == null && context.mounted) {
-                        // TODO: Go to login route
-                        context.goNamed(RouteNames.home.name);
-                        return;
-                      }
+                        final room = await ref
+                            .read(roomRepositoryProvider)
+                            .createRoom(
+                              nameTextController.text,
+                              currentUser!.uid,
+                              int.parse(numberTextController.text),
+                              selectedType!,
+                            );
 
-                      final room = await ref
-                          .read(roomRepositoryProvider)
-                          .createRoom(
-                            nameTextController.text,
-                            currentUser!.uid,
-                            int.parse(numberTextController.text),
-                            selectedType!,
+                        if (context.mounted) {
+                          context.goNamed(
+                            RouteNames.detail.name,
+                            pathParameters: {'id': room.id},
                           );
-
-                      if (context.mounted) {
-                        context.goNamed(
-                          RouteNames.detail.name,
-                          pathParameters: {'id': room.id},
-                        );
+                        }
                       }
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: StyledText('Créer'.hardcoded, 40.0, bold: true),
-                ),
-              );
-            },
+                    },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

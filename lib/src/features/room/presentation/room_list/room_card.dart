@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,216 +19,152 @@ class RoomCard extends StatefulWidget {
 }
 
 class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
-  bool _showData = false;
-  late Animation _arrowAnimation;
-  late AnimationController _arrowAnimationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _arrowAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    );
-    _arrowAnimation = Tween(
-      begin: 0.0,
-      end: pi / 2,
-    ).animate(_arrowAnimationController);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(Sizes.p20)),
+        borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
         color: AppColors.thirdColor,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.navBackgroundColor,
+            spreadRadius: 2,
+            blurRadius: 2,
+            offset: Offset(3, 3),
+          ),
+        ],
       ),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(Sizes.p20)),
-              color: AppColors.secondColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(Sizes.p16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: Sizes.p24,
-                        backgroundColor: AppColors.backgroundIconColor,
-                        child: Icon(
-                          Icons.person_outline,
-                          size: 38.0,
-                          color: AppColors.whiteColor,
-                        ),
+      child: Padding(
+        padding: const EdgeInsets.all(Sizes.p16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundIconColor,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
-                      gapW12,
-                      StyledText(widget.room.name, 32.0, bold: true),
-                    ],
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() => _showData = !_showData);
-                      _arrowAnimationController.toggle();
-                    },
-                    icon: AnimatedBuilder(
-                      animation: _arrowAnimationController,
-                      builder: (context, child) => Transform.rotate(
-                        angle: _arrowAnimation.value,
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppColors.whiteColor,
+                      child: Icon(
+                        Icons.person_outline,
+                        size: 38.0,
+                        color: AppColors.whiteColor,
+                      ),
+                    ),
+                    gapW12,
+                    StyledText(widget.room.name, 32.0, bold: true),
+                  ],
+                ),
+              ],
+            ),
+            gapH8,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // StyledText(widget.room.hostId, 20.0),
+                    StyledText('UserName', 24.0),
+                    gapH4,
+                    StyledText(widget.room.type.name, 20.0),
+                    gapH8,
+                    Container(
+                      padding: EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundIconAccent,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: Row(
+                        children: [
+                          gapW4,
+                          Icon(
+                            Icons.group,
+                            size: Sizes.p32,
+                            color: AppColors.whiteColor,
+                          ),
+                          gapW8,
+                          StyledText('2 / 4', 20.0),
+                          gapW8,
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    gapH32,
+                    Container(
+                      width: 140,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(Sizes.p4),
+                        ),
+                        color: AppColors.greenColor.withAlpha(150),
+                      ),
+                      child: Center(
+                        child: StyledText(
+                          widget.room.status.name,
+                          16.0,
+                          bold: true,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          _showData
-              ? Padding(
-                  padding: const EdgeInsets.all(Sizes.p12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          StyledText(widget.room.type.name, 24.0),
-                          gapH8,
-                          // StyledText(widget.room.hostId, 20.0),
-                          StyledText('UserName', 20.0),
-                          gapH8,
+                    gapH12,
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              await ref
+                                  .read(roomRepositoryProvider)
+                                  .joinRoom(widget.room.id);
 
-                          Row(
-                            children: [
-                              SizedBox(
-                                height: 30,
-                                width: 200,
-                                child: ListView.builder(
-                                  itemBuilder: (context, index) {
-                                    if (index < 3) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: Sizes.p4,
-                                        ),
-                                        child: CircleAvatar(
-                                          radius: Sizes.p16,
-                                          backgroundColor:
-                                              AppColors.backgroundIconColor,
-                                          child: Icon(
-                                            Icons.person_outline,
-                                            size: Sizes.p24,
-                                            color: AppColors.whiteColor,
-                                          ),
-                                        ),
-                                      );
-                                    } else if (index ==
-                                        widget.room.users.length - 1) {
-                                      return CircleAvatar(
-                                        radius: Sizes.p16,
-                                        backgroundColor:
-                                            AppColors.backgroundIconAccent,
-                                        child: StyledText(
-                                          '${widget.room.users.length - 3}+',
-                                          Sizes.p16,
-                                        ),
-                                      );
-                                    } else {
-                                      return const SizedBox.shrink();
-                                    }
-                                  },
-                                  itemCount: 7,
-                                  scrollDirection: Axis.horizontal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(Sizes.p24),
-                              ),
-                              color: AppColors.greenColor.withAlpha(150),
+                              if (context.mounted) {
+                                context.goNamed(
+                                  RouteNames.detail.name,
+                                  pathParameters: {'id': widget.room.id},
+                                );
+                              }
+                            } on LoggedOutException {
+                              if (context.mounted) {
+                                context.goNamed(RouteNames.signup.name);
+                              }
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all<Color>(
+                              AppColors.greenColor,
                             ),
-                            child: Center(
-                              child: StyledText(
-                                widget.room.status.name,
-                                16.0,
-                                bold: true,
-                                upper: true,
-                              ),
-                            ),
-                          ),
-                          gapH24,
-                          Consumer(
-                            builder: (context, ref, child) {
-                              return ElevatedButton(
-                                onPressed: () async {
-                                  try {
-                                    await ref
-                                        .read(roomRepositoryProvider)
-                                        .joinRoom(widget.room.id);
-
-                                    if (context.mounted) {
-                                      context.goNamed(
-                                        RouteNames.detail.name,
-                                        pathParameters: {'id': widget.room.id},
-                                      );
-                                    }
-                                  } on LoggedOutException {
-                                    if (context.mounted) {
-                                      context.goNamed(RouteNames.signup.name);
-                                    }
-                                  }
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                        AppColors.greenColor,
-                                      ),
-                                  shape:
-                                      WidgetStateProperty.all<
-                                        RoundedRectangleBorder
-                                      >(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            Sizes.p24,
-                                          ),
-                                        ),
-                                      ),
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(Sizes.p8),
-                                  child: StyledText(
-                                    'Rejoindre',
-                                    24.0,
-                                    bold: true,
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      Sizes.p4,
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              : const SizedBox(),
-        ],
+                          child: const Padding(
+                            padding: EdgeInsets.all(Sizes.p8),
+                            child: StyledText('Rejoindre', 18.0, bold: true),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
