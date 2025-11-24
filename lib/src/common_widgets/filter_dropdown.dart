@@ -29,7 +29,7 @@ class _FilterDropdownState extends State<FilterDropdown> {
             decoration: BoxDecoration(
               color: AppColors.secondColor,
               border: Border.all(color: AppColors.firstColor, width: 2.0),
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
             ),
             child: DropdownButton<String>(
               value: widget.selected,
@@ -40,7 +40,7 @@ class _FilterDropdownState extends State<FilterDropdown> {
               dropdownColor: AppColors.secondColor,
               style: TextStyle(color: AppColors.whiteColor),
               underline: const SizedBox(),
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               items: widget.list.map((String? type) {
                 return DropdownMenuItem<String>(
                   value: type,

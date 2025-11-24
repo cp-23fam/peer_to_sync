@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_creation_screen.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/room_detail_screen.dart';
+import 'package:peer_to_sync/src/features/room/presentation/room_list/room_list_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_form/user_creation_screen.dart';
-import 'package:peer_to_sync/src/nav_screen.dart';
 
 enum RouteNames { home, create, detail, signup }
 
@@ -11,7 +11,8 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       name: RouteNames.home.name,
-      builder: (context, state) => NavScreen(),
+      builder: (context, state) => RoomDetailScreen(),
+      // RoomListScreen(),
     ),
     GoRoute(
       path: '/create',

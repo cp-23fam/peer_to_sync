@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -52,13 +53,20 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
           key: _formKey,
           child: Column(
             children: [
-              Padding(
+              Container(
+                height: 80,
                 padding: const EdgeInsets.all(Sizes.p12),
-                child: StyledText(
-                  'Création d\'utilisateur'.hardcoded,
-                  38.0,
-                  bold: true,
-                  upper: true,
+                color: AppColors.navBackgroundColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StyledText(
+                      'Création d\'utilisateur'.hardcoded,
+                      30.0,
+                      bold: true,
+                      upper: true,
+                    ),
+                  ],
                 ),
               ),
               gapH16,
@@ -84,7 +92,7 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                         fillColor: AppColors.secondColor,
                         labelText: 'Nom d\'utilisateur'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -104,7 +112,7 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                         fillColor: AppColors.secondColor,
                         labelText: 'Adresse mail'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -125,7 +133,7 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                         fillColor: AppColors.secondColor,
                         labelText: 'Mot de passe'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -148,7 +156,7 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                         fillColor: AppColors.secondColor,
                         labelText: 'Confirmer le mot de passe'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -160,63 +168,46 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
         ),
       ),
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(height: 60, color: AppColors.navBackgroundColor),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: 60,
-            width: 180,
-            child: FloatingActionButton(
-              backgroundColor: AppColors.redColor,
-              elevation: 0,
-              onPressed: () {
-                context.goNamed(RouteNames.home.name);
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+        child: Container(
+          height: 64,
+          color: AppColors.navBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChooseButton(
+                text: 'Annuler',
+                color: AppColors.redColor,
+                onPressed: () {
+                  context.goNamed(RouteNames.home.name);
+                },
               ),
-              child: StyledText('Annuler'.hardcoded, 40.0, bold: true),
-            ),
-          ),
-          gapW16,
-          Consumer(
-            builder: (context, ref, child) {
-              return Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 60,
-                width: 180,
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.greenColor,
-                  elevation: 0,
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await ref
-                          .read(userRepositoryProvider)
-                          .signUp(
-                            usernameTextController.text,
-                            emailTextController.text,
-                            passwordTextController.text,
-                          );
+              gapW16,
+              Consumer(
+                builder: (context, ref, child) {
+                  return ChooseButton(
+                    text: 'Créer',
+                    color: AppColors.greenColor,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await ref
+                            .read(userRepositoryProvider)
+                            .signUp(
+                              usernameTextController.text,
+                              emailTextController.text,
+                              passwordTextController.text,
+                            );
 
-                      if (context.mounted) {
-                        context.goNamed(RouteNames.home.name);
+                        if (context.mounted) {
+                          context.goNamed(RouteNames.home.name);
+                        }
                       }
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: StyledText('Créer'.hardcoded, 40.0, bold: true),
-                ),
-              );
-            },
+                    },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

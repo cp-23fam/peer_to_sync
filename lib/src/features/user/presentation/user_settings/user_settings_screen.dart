@@ -27,13 +27,20 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               data: (user) {
                 return Column(
                   children: [
-                    Padding(
+                    Container(
+                      height: 80,
                       padding: const EdgeInsets.all(Sizes.p12),
-                      child: StyledText(
-                        'User'.hardcoded,
-                        40.0,
-                        bold: true,
-                        upper: true,
+                      color: AppColors.navBackgroundColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StyledText(
+                            'User'.hardcoded,
+                            30.0,
+                            bold: true,
+                            upper: true,
+                          ),
+                        ],
                       ),
                     ),
                     const ProfilePicture(),
