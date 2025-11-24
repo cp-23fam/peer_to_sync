@@ -44,10 +44,12 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundIconColor,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(5),
+                        ),
                       ),
                       child: Icon(
                         Icons.person_outline,
@@ -74,10 +76,12 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                     StyledText(widget.room.type.name, 20.0),
                     gapH8,
                     Container(
-                      padding: EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundIconAccent,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(5),
+                        ),
                       ),
                       child: Row(
                         children: [

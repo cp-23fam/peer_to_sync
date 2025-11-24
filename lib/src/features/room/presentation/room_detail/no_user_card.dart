@@ -27,10 +27,10 @@ class NoUserCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(Sizes.p8),
+              padding: const EdgeInsets.all(Sizes.p8),
               decoration: BoxDecoration(
                 color: AppColors.backgroundIconAccent,
-                borderRadius: BorderRadius.all(Radius.circular(Sizes.p4)),
+                borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
               ),
               child: Icon(
                 Icons.person_outline,
