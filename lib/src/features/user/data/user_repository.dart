@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
+import 'package:peer_to_sync/src/utils/fetch_token.dart';
 
 class UserRepository {
   UserRepository({
@@ -22,8 +24,7 @@ class UserRepository {
   late final Dio dio;
 
   Future<User?> fetchCurrentUser() async {
-    final String? token = await storage.read(key: 'token');
-    debugPrint('Token successfully fetched');
+    final String? token = await fetchToken(storage);
 
     if (token == null) {
       return null;
@@ -44,7 +45,7 @@ class UserRepository {
       'User could not get fetched from $this : ${res.data['message']}',
     );
 
-    return null;
+    throw UnimplementedError;
   }
 
   Future<String> logIn(String email, String password) async {
@@ -72,6 +73,10 @@ class UserRepository {
     }
 
     throw UnimplementedError('Status code not handled');
+  }
+
+  Future<void> logOut() async {
+    await storage.delete(key: 'token');
   }
 
   Future<User?> signUp(String username, String email, String password) async {

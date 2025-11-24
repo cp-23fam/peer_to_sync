@@ -7,6 +7,7 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
@@ -179,15 +180,21 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                             builder: (context, ref, child) {
                               return ElevatedButton(
                                 onPressed: () async {
-                                  await ref
-                                      .read(roomRepositoryProvider)
-                                      .joinRoom(widget.room.id);
+                                  try {
+                                    await ref
+                                        .read(roomRepositoryProvider)
+                                        .joinRoom(widget.room.id);
 
-                                  if (context.mounted) {
-                                    context.goNamed(
-                                      RouteNames.detail.name,
-                                      pathParameters: {'id': widget.room.id},
-                                    );
+                                    if (context.mounted) {
+                                      context.goNamed(
+                                        RouteNames.detail.name,
+                                        pathParameters: {'id': widget.room.id},
+                                      );
+                                    }
+                                  } on LoggedOutException {
+                                    if (context.mounted) {
+                                      context.goNamed(RouteNames.signup.name);
+                                    }
                                   }
                                 },
                                 style: ButtonStyle(

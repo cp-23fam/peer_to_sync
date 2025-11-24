@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_settings/profile_picture.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
+import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class UserSettingsScreen extends StatefulWidget {
@@ -91,7 +93,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               child: FloatingActionButton(
                                 backgroundColor: AppColors.fourthColor,
                                 elevation: 0,
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await ref
+                                      .read(userRepositoryProvider)
+                                      .logOut();
+
+                                  if (context.mounted) {
+                                    context.goNamed(RouteNames.home.name);
+                                  }
+                                },
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),

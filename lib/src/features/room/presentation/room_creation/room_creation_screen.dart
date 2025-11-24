@@ -7,6 +7,7 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -173,6 +174,12 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                       final currentUser = await ref
                           .read(userRepositoryProvider)
                           .fetchCurrentUser();
+
+                      if (currentUser == null && context.mounted) {
+                        // TODO: Go to login route
+                        context.goNamed(RouteNames.home.name);
+                        return;
+                      }
 
                       final room = await ref
                           .read(roomRepositoryProvider)

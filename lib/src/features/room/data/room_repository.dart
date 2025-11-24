@@ -6,6 +6,7 @@ import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
+import 'package:peer_to_sync/src/utils/fetch_token.dart';
 
 class RoomRepository {
   RoomRepository({
@@ -50,8 +51,7 @@ class RoomRepository {
     int maxPlayers,
     RoomType type,
   ) async {
-    final String? token = await storage.read(key: 'token');
-    debugPrint('Token successfully fetched');
+    final String? token = await fetchToken(storage);
 
     if (token == null) {
       throw LoggedOutException;
@@ -77,7 +77,7 @@ class RoomRepository {
   }
 
   Future<void> joinRoom(RoomId id) async {
-    final String? token = await storage.read(key: 'token');
+    final String? token = await fetchToken(storage);
 
     if (token == null) {
       throw LoggedOutException;
@@ -98,7 +98,7 @@ class RoomRepository {
   }
 
   Future<void> quitRoom(RoomId id) async {
-    final String? token = await storage.read(key: 'token');
+    final String? token = await fetchToken(storage);
 
     if (token == null) {
       throw LoggedOutException;
@@ -124,7 +124,7 @@ class RoomRepository {
   }
 
   Future<void> deleteRoom(RoomId id) async {
-    final String? token = await storage.read(key: 'token');
+    final String? token = await fetchToken(storage);
 
     if (token == null) {
       throw LoggedOutException;
