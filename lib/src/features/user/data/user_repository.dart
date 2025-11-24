@@ -28,7 +28,6 @@ class UserRepository {
     if (token == null) {
       return null;
     }
-    debugPrint('Token is not null');
 
     final res = await dio.get(
       _mainRoute,
@@ -36,14 +35,16 @@ class UserRepository {
     );
 
     if (res.data['message'] == null && res.statusCode! == 200) {
-      debugPrint('User ${res.data['_id']} sucessfully fetched from $this');
+      debugPrint('$this has fetched user User ${res.data['_id']}');
       return User.fromMap(res.data);
     }
 
-    debugPrint(
-      'User could not get fetched from $this : ${res.data['message']}',
-    );
+    if (res.data['message'] != null && res.statusCode! == 401) {
+      debugPrint('$this could not fetch user : ${res.data['message']}');
+      return null;
+    }
 
+    debugPrint('$this fetchCurrentUser has unknown response : $res');
     throw UnimplementedError;
   }
 
@@ -54,7 +55,7 @@ class UserRepository {
     );
 
     if (res.statusCode! / 100 == 2) {
-      debugPrint('User sucessfully logged in ($email)');
+      debugPrint('$this made User log in ($email)');
       await storage.write(key: 'token', value: res.data['token']);
       return res.data['token'];
     }
@@ -71,7 +72,7 @@ class UserRepository {
       }
     }
 
-    throw UnimplementedError('Status code not handled');
+    throw UnimplementedError('$this logIn has unknown response : $res');
   }
 
   Future<void> logOut() async {
@@ -85,12 +86,12 @@ class UserRepository {
     );
 
     if (res.statusCode! == 201) {
-      debugPrint('User created account : $email');
+      debugPrint('$this made User create an account ($email)');
       return User.fromMap(res.data);
     }
 
-    debugPrint('User could not create account');
-    return null;
+    debugPrint('$this signUp has unknown response : $res');
+    throw UnimplementedError;
   }
 
   @override

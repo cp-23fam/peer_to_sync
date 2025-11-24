@@ -35,6 +35,13 @@ void main() {
       when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
     }
 
+    test('should return null when token is empty', () async {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      final res = await userRepository.fetchCurrentUser();
+      expect(res, null);
+    });
+
     test(
       'should return null when statusCode is 401 and message is not empty',
       () async {
@@ -57,6 +64,16 @@ void main() {
       final res = await userRepository.fetchCurrentUser();
       final result = User.fromMap(user);
       expect(res, result);
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onGet('$apiPath/user', (server) => server.reply(600, {}));
+
+      expect(
+        () async => await userRepository.fetchCurrentUser(),
+        throwsA(UnimplementedError),
+      );
     });
   });
 
