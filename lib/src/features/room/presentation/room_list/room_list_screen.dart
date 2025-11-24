@@ -54,7 +54,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         upper: true,
                       ),
                       GestureDetector(
-                        onTap: () => context.goNamed(RouteNames.signup.name),
+                        onTap: () => context.goNamed(RouteNames.user.name),
                         child: CircleAvatar(
                           backgroundColor: AppColors.backgroundIconColor,
                           radius: 28.0,
