@@ -98,7 +98,8 @@ class UserRepository {
       }
     }
 
-    throw UnimplementedError('$this logIn has unknown response : $res');
+    debugPrint('$this logIn has unknown response : $res');
+    throw UnimplementedError;
   }
 
   Future<void> logOut() async {

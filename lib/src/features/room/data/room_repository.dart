@@ -73,7 +73,8 @@ class RoomRepository {
       return Room.fromMap(res.data);
     }
 
-    throw UnimplementedError('Unimplemented statusCode');
+    debugPrint('$this createRoom has unknown response : $res');
+    throw UnimplementedError;
   }
 
   Future<void> joinRoom(RoomId id) async {
