@@ -19,6 +19,7 @@ class ChooseButton extends StatelessWidget {
       height: 40,
       width: 180,
       child: FloatingActionButton(
+        heroTag: text,
         backgroundColor: color,
         elevation: 0,
         onPressed: onPressed,

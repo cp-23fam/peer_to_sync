@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -56,7 +57,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  StyledText('Login'.hardcoded, 30.0, bold: true, upper: true),
+                  StyledText(
+                    'Connexion'.hardcoded,
+                    30.0,
+                    bold: true,
+                    upper: true,
+                  ),
                 ],
               ),
             ),
@@ -85,7 +91,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                         labelText:
                             'Adresse mail / Nom d\'utilisateur'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -100,7 +106,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                         fillColor: AppColors.secondColor,
                         labelText: 'Mot de passe'.hardcoded,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(Sizes.p12),
+                          borderRadius: BorderRadius.circular(Sizes.p4),
                         ),
                       ),
                     ),
@@ -117,7 +123,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                             context.goNamed(RouteNames.signup.name);
                           },
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           child: StyledText(
                             'Créer un utilisateur'.hardcoded,
@@ -135,75 +141,60 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
         ),
       ),
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(height: 60, color: AppColors.navBackgroundColor),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: 60,
-            width: 180,
-            child: FloatingActionButton(
-              backgroundColor: AppColors.redColor,
-              elevation: 0,
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+        child: Container(
+          height: 64,
+          color: AppColors.navBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChooseButton(
+                text: 'Annuler',
+                color: AppColors.redColor,
+                onPressed: () {
+                  context.goNamed(RouteNames.home.name);
+                },
               ),
-              child: StyledText('Annuler'.hardcoded, 40.0, bold: true),
-            ),
-          ),
-          gapW16,
-          Consumer(
-            builder: (context, ref, child) {
-              return Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 60,
-                width: 180,
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.greenColor,
-                  elevation: 0,
-                  onPressed: () async {
-                    setState(() {
-                      passwordError = null;
-                      emailError = null;
-                    });
+              gapW16,
+              Consumer(
+                builder: (context, ref, child) {
+                  return ChooseButton(
+                    text: 'Connexion',
+                    color: AppColors.greenColor,
+                    onPressed: () async {
+                      setState(() {
+                        passwordError = null;
+                        emailError = null;
+                      });
 
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        await ref
-                            .read(userRepositoryProvider)
-                            .logIn(
-                              emailTextController.text,
-                              passwordTextController.text,
-                            );
+                      if (_formKey.currentState!.validate()) {
+                        try {
+                          await ref
+                              .read(userRepositoryProvider)
+                              .logIn(
+                                emailTextController.text,
+                                passwordTextController.text,
+                              );
 
-                        setState(() {});
-                      } on EmailException {
-                        setState(() {
-                          emailError = 'Email inconnu'.hardcoded;
-                        });
-                      } on PasswordException {
-                        setState(() {
-                          passwordError = 'Mot de passe invalide'.hardcoded;
-                        });
-                      } catch (error) {
-                        rethrow;
+                          setState(() {});
+                        } on EmailException {
+                          setState(() {
+                            emailError = 'Email inconnu'.hardcoded;
+                          });
+                        } on PasswordException {
+                          setState(() {
+                            passwordError = 'Mot de passe invalide'.hardcoded;
+                          });
+                        } catch (error) {
+                          rethrow;
+                        }
                       }
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: StyledText('Login'.hardcoded, 40.0, bold: true),
-                ),
-              );
-            },
+                    },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

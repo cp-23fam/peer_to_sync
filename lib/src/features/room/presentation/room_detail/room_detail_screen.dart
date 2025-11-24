@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
@@ -66,18 +67,22 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         children: [StyledText(room.name, 36.0, bold: true)],
                       ),
                     ),
+                    gapH12,
                     Text('${room.users.length} / ${room.maxPlayers}'.hardcoded),
                     gapH12,
                     Expanded(
-                      child: ListView.separated(
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.p8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(Sizes.p8),
+                        child: ListView.separated(
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Sizes.p8,
+                            ),
+                            child: createCard(room, index),
                           ),
-                          child: createCard(room, index),
+                          separatorBuilder: (context, index) => gapH16,
+                          itemCount: room.maxPlayers,
                         ),
-                        separatorBuilder: (context, index) => gapH16,
-                        itemCount: room.maxPlayers,
                       ),
                     ),
                   ],
@@ -91,55 +96,38 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         ),
       ),
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Container(height: 60, color: AppColors.navBackgroundColor),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Consumer(
-            builder: (context, ref, child) {
-              return Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 60,
-                width: 180,
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.redColor,
-                  elevation: 0,
-                  onPressed: () async {
-                    await ref
-                        .read(roomRepositoryProvider)
-                        .quitRoom(widget.roomId);
+        child: Container(
+          height: 64,
+          color: AppColors.navBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Consumer(
+                builder: (context, ref, child) {
+                  return ChooseButton(
+                    text: 'Quitter',
+                    color: AppColors.redColor,
+                    onPressed: () async {
+                      await ref
+                          .read(roomRepositoryProvider)
+                          .quitRoom(widget.roomId);
 
-                    if (context.mounted) {
-                      context.goNamed(RouteNames.home.name);
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: StyledText('Quitter'.hardcoded, 40.0, bold: true),
-                ),
-              );
-            },
-          ),
-          gapW16,
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: 60,
-            width: 180,
-            child: FloatingActionButton(
-              backgroundColor: AppColors.greenColor,
-              elevation: 0,
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                      if (context.mounted) {
+                        context.goNamed(RouteNames.home.name);
+                      }
+                    },
+                  );
+                },
               ),
-              child: StyledText('Lancer'.hardcoded, 40.0, bold: true),
-            ),
+              gapW16,
+              ChooseButton(
+                text: 'Lancer',
+                color: AppColors.greenColor,
+                onPressed: () {},
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

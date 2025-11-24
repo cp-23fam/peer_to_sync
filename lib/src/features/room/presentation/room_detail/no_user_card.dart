@@ -10,17 +10,28 @@ class NoUserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(Sizes.p20)),
+        borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
         color: AppColors.thirdColor,
         border: Border.all(width: 3.0, color: AppColors.goldColor.withAlpha(0)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.navBackgroundColor,
+            spreadRadius: 2,
+            blurRadius: 2,
+            offset: const Offset(3, 3),
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(Sizes.p8),
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: AppColors.backgroundIconAccent,
-              radius: 25.0,
+            Container(
+              padding: EdgeInsets.all(Sizes.p8),
+              decoration: BoxDecoration(
+                color: AppColors.backgroundIconAccent,
+                borderRadius: BorderRadius.all(Radius.circular(Sizes.p4)),
+              ),
               child: Icon(
                 Icons.person_outline,
                 color: AppColors.whiteColor,
