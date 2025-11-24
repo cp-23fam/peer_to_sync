@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -63,7 +64,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               fillColor: AppColors.secondColor,
                               labelText: 'Nom d\'utilisateur'.hardcoded,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p12),
+                                borderRadius: BorderRadius.circular(Sizes.p4),
                               ),
                             ),
                           ),
@@ -75,7 +76,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               fillColor: AppColors.secondColor,
                               labelText: 'Adresse mail'.hardcoded,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p12),
+                                borderRadius: BorderRadius.circular(Sizes.p4),
                               ),
                             ),
                           ),
@@ -87,7 +88,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               fillColor: AppColors.secondColor,
                               labelText: 'Mot de passe'.hardcoded,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p12),
+                                borderRadius: BorderRadius.circular(Sizes.p4),
                               ),
                             ),
                           ),
@@ -110,7 +111,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                   }
                                 },
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: StyledText(
                                   'Log out'.hardcoded,
@@ -131,6 +132,34 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               loading: () => const Center(child: CircularProgressIndicator()),
             );
           },
+        ),
+      ),
+      bottomNavigationBar: ClipRRect(
+        child: Container(
+          height: 64,
+          color: AppColors.navBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ChooseButton(
+                text: 'Annuler',
+                color: AppColors.redColor,
+                onPressed: () {
+                  context.goNamed(RouteNames.home.name);
+                },
+              ),
+              gapW16,
+              Consumer(
+                builder: (context, ref, child) {
+                  return ChooseButton(
+                    text: 'Modifier',
+                    color: AppColors.greenColor,
+                    onPressed: () {},
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
