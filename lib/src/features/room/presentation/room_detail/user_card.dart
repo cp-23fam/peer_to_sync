@@ -37,7 +37,7 @@ class UserCard extends StatelessWidget {
         padding: const EdgeInsets.all(Sizes.p8),
         child: Consumer(
           builder: (context, ref, child) {
-            final userData = ref.read(userProvider(userId));
+            final userData = ref.watch(userProvider(userId));
 
             return userData.when(
               data: (user) {
@@ -80,7 +80,31 @@ class UserCard extends StatelessWidget {
               },
               error: (error, stackTrace) =>
                   Center(child: Text(error.toString())),
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () {
+                return Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(Sizes.p8),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundIconColor,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(Sizes.p4),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.person_outline,
+                        color: AppColors.whiteColor,
+                        size: 35.0,
+                      ),
+                    ),
+                    gapW16,
+                    const StyledText('. . .', Sizes.p32, bold: true),
+                    const Expanded(child: SizedBox()),
+                    if (isHost)
+                      Icon(Icons.star, color: AppColors.goldColor, size: 45.0),
+                  ],
+                );
+              },
             );
           },
         ),

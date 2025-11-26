@@ -97,7 +97,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   child: Expanded(
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final roomsData = ref.watch(roomListProvider);
+                        final roomsData = ref.watch(roomListStreamProvider);
 
                         return roomsData.when(
                           data: (rooms) {

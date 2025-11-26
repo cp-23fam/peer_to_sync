@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -155,14 +157,45 @@ final roomRepositoryProvider = Provider((ref) {
   return RoomRepository();
 });
 
-final roomListProvider = FutureProvider<List<Room>>((ref) {
+final roomListProvider = FutureProvider.autoDispose<List<Room>>((ref) {
   final provider = ref.watch(roomRepositoryProvider).fetchRoomList();
 
   return provider;
 });
 
-final roomProvider = FutureProvider.family<Room?, RoomId>((ref, id) async {
+final roomListStreamProvider = StreamProvider.autoDispose<List<Room>>((ref) {
+  var provider = ref.read(roomRepositoryProvider).fetchRoomList();
+
+  final timer = Timer.periodic(const Duration(seconds: 3), (_) {
+    provider = ref.read(roomRepositoryProvider).fetchRoomList();
+    ref.invalidateSelf();
+  });
+  ref.onDispose(timer.cancel);
+
+  return provider.asStream();
+});
+
+final roomProvider = FutureProvider.family.autoDispose<Room?, RoomId>((
+  ref,
+  id,
+) async {
   final provider = await ref.watch(roomRepositoryProvider).fetchRoom(id);
 
   return provider;
+});
+
+final roomStreamProvider = StreamProvider.family.autoDispose<Room?, RoomId>((
+  ref,
+  id,
+) {
+  var provider = ref.read(roomRepositoryProvider).fetchRoom(id);
+
+  final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    provider = ref.read(roomRepositoryProvider).fetchRoom(id);
+    ref.invalidateSelf();
+  });
+
+  ref.onDispose(timer.cancel);
+
+  return provider.asStream();
 });
