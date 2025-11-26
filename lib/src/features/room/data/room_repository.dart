@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
+import 'package:peer_to_sync/src/features/room/domain/no_space_left_exception.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
@@ -95,6 +96,11 @@ class RoomRepository {
     if (res.statusCode! == 200) {
       debugPrint('User joined room $id');
       return;
+    }
+
+    if (res.statusCode! == 403) {
+      debugPrint('$this prevented user to joins room $id : Room is full');
+      throw NoSpaceLeftException;
     }
 
     debugPrint('User could not join room $id');
