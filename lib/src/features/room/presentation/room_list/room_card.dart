@@ -32,7 +32,7 @@ class _RoomCardState extends State<RoomCard> {
             color: AppColors.navBackgroundColor,
             spreadRadius: 2,
             blurRadius: 2,
-            offset: const Offset(3, 3),
+            offset: const Offset(3, 2),
           ),
         ],
       ),
