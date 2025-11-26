@@ -5,6 +5,7 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
@@ -130,7 +131,11 @@ class _RoomCardState extends State<RoomCard> {
                         borderRadius: const BorderRadius.all(
                           Radius.circular(Sizes.p4),
                         ),
-                        color: AppColors.greenColor.withAlpha(150),
+                        color: widget.room.status == RoomStatus.playing
+                            ? AppColors.redColor.withAlpha(150)
+                            : widget.room.status == RoomStatus.waiting
+                            ? AppColors.orangeColor.withAlpha(150)
+                            : AppColors.greenColor.withAlpha(150),
                       ),
                       child: Center(
                         child: StyledText(
