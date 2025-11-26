@@ -7,7 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/room/domain/no_space_left_exception.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 import 'package:peer_to_sync/src/utils/fetch_token.dart';
@@ -54,7 +56,9 @@ class RoomRepository {
     String hostId,
     int maxPlayers,
     RoomType type,
-  ) async {
+    RoomVisibility visibility, {
+    String? password,
+  }) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
@@ -67,7 +71,10 @@ class RoomRepository {
         'name': name,
         'hostId': hostId,
         'maxPlayers': maxPlayers,
+        'status': RoomStatus.waiting.name,
         'type': type.name,
+        'visibility': visibility.name,
+        'password': password,
       },
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );

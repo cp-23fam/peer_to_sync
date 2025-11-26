@@ -6,6 +6,7 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_type_list.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
@@ -187,6 +188,8 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                               currentUser.uid,
                               int.parse(numberTextController.text),
                               selectedType!,
+                              RoomVisibility.public,
+                              password: null,
                             );
 
                         WidgetsBinding.instance.addPostFrameCallback((_) {
