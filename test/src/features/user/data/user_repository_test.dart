@@ -28,6 +28,8 @@ void main() {
       '_id': '691d822e15ab08bf78780ba1',
       'email': 'test@example.com',
       'username': 'Fabrioche',
+      'friends': [],
+      'pending': [],
     };
     const token = 'abcd';
 
@@ -82,6 +84,8 @@ void main() {
       '_id': '691d822e15ab08bf78780ba1',
       'email': 'test@example.com',
       'username': 'Fabrioche',
+      'friends': [],
+      'pending': [],
     };
     const token = 'abcd';
 
