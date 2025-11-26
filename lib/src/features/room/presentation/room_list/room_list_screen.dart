@@ -103,8 +103,9 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         },
                         error: (error, stackTrace) =>
                             Center(child: Text(error.toString())),
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
+                        loading: () => const Expanded(
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
                       );
                     },
                   ),

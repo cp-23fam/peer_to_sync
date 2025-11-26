@@ -5,7 +5,9 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
+import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
@@ -18,7 +20,7 @@ class RoomCard extends StatefulWidget {
   State<RoomCard> createState() => _RoomCardState();
 }
 
-class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
+class _RoomCardState extends State<RoomCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -70,8 +72,22 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // StyledText(widget.room.hostId, 20.0),
-                    StyledText('UserName', 24.0),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final userData = ref.read(
+                          userProvider(widget.room.hostId),
+                        );
+
+                        return userData.when(
+                          data: (user) => user != null
+                              ? StyledText(user.username, 20.0)
+                              : StyledText('Inconnu'.hardcoded, 20.0),
+                          error: (error, stackTrace) =>
+                              StyledText(error.toString(), 20.0),
+                          loading: () => const StyledText('...', 20.0),
+                        );
+                      },
+                    ),
                     gapH4,
                     StyledText(widget.room.type.name, 20.0),
                     gapH8,
@@ -92,7 +108,10 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                             color: AppColors.whiteColor,
                           ),
                           gapW8,
-                          StyledText('2 / 4', 20.0),
+                          StyledText(
+                            '${widget.room.users.length} / ${widget.room.maxPlayers}',
+                            20.0,
+                          ),
                           gapW8,
                         ],
                       ),
