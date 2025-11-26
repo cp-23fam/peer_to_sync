@@ -5,6 +5,35 @@
             "type": "dart",
             "request": "launch",
             "program": "lib\\main.dart"
+        },
+        {
+            "name": "User1",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib\\main.dart",
+            "args": [
+                "--web-port",
+                "10000",
+            ]
+        },
+        {
+            "name": "User2",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib\\main.dart",
+            "args": [
+                "--web-port",
+                "10001",
+            ]
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Two users",
+            "configurations": [
+                "User1",
+                "User2"
+            ]
         }
     ]
 }
