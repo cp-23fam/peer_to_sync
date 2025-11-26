@@ -7,6 +7,7 @@ import 'package:peer_to_sync/src/features/room/domain/no_space_left_exception.da
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 
 import '../../../mocks.dart';
@@ -35,6 +36,7 @@ void main() {
           users: ['user-1'],
           status: RoomStatus.waiting,
           maxPlayers: 20,
+          visibility: RoomVisibility.public,
           type: RoomType.game,
         ),
         Room(
@@ -44,6 +46,7 @@ void main() {
           users: ['user-2', 'user-3', 'user-4'],
           status: RoomStatus.waiting,
           maxPlayers: 4,
+          visibility: RoomVisibility.friends,
           type: RoomType.game,
         ),
         Room(
@@ -51,8 +54,10 @@ void main() {
           name: 'Room 3',
           hostId: 'user-5',
           users: ['user-5'],
-          status: RoomStatus.creating,
+          status: RoomStatus.playing,
           maxPlayers: 2,
+          visibility: RoomVisibility.private,
+          password: '1234',
           type: RoomType.game,
         ),
       ];
@@ -82,6 +87,7 @@ void main() {
             'users': ['user-1', 'user-2'],
             'status': 'waiting',
             'maxPlayers': 20,
+            'visibility': 'public',
             'type': 'game',
           }),
         );
@@ -96,6 +102,7 @@ void main() {
             users: ['user-1', 'user-2'],
             status: RoomStatus.waiting,
             maxPlayers: 20,
+            visibility: RoomVisibility.public,
             type: RoomType.game,
           ),
         );
@@ -119,9 +126,10 @@ void main() {
           'name': 'Test room',
           'hostId': 'user-1',
           'users': ['user-1'],
-          'status': 'creating',
+          'status': 'waiting',
           'maxPlayers': 20,
           'type': 'game',
+          'visibility': 'public',
           'redirectionId': null,
         }),
       );
@@ -140,8 +148,9 @@ void main() {
           name: 'Test room',
           hostId: 'user-1',
           users: ['user-1'],
-          status: RoomStatus.creating,
+          status: RoomStatus.waiting,
           maxPlayers: 20,
+          visibility: RoomVisibility.public,
           type: RoomType.game,
         ),
       );

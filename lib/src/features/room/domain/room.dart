@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 
 typedef RoomId = String;
@@ -14,7 +15,10 @@ class Room extends Equatable {
 
   factory Room.fromMap(Map<String, dynamic> map) {
     final status = RoomStatus.values.firstWhere((s) => s.name == map['status']);
-    final type = RoomType.values.firstWhere((s) => s.name == map['type']);
+    final type = RoomType.values.firstWhere((t) => t.name == map['type']);
+    final visibility = RoomVisibility.values.firstWhere(
+      (v) => v.name == map['visibility'],
+    );
 
     return Room(
       id: map['_id'] ?? '',
@@ -24,6 +28,8 @@ class Room extends Equatable {
       status: status,
       maxPlayers: map['maxPlayers']?.toInt() ?? 0,
       type: type,
+      visibility: visibility,
+      password: map['password'],
       redirectionId: map['redirectionId'],
     );
   }
@@ -36,6 +42,8 @@ class Room extends Equatable {
     required this.status,
     required this.maxPlayers,
     required this.type,
+    required this.visibility,
+    this.password,
     this.redirectionId,
   });
 
@@ -46,6 +54,8 @@ class Room extends Equatable {
   final RoomStatus status;
   final int maxPlayers;
   final RoomType type;
+  final RoomVisibility visibility;
+  final String? password;
   final String? redirectionId;
 
   Room copyWith({
@@ -56,6 +66,8 @@ class Room extends Equatable {
     RoomStatus? status,
     int? maxPlayers,
     RoomType? type,
+    RoomVisibility? visibility,
+    String? password,
     ValueGetter<String?>? redirectionId,
   }) {
     return Room(
@@ -66,6 +78,8 @@ class Room extends Equatable {
       status: status ?? this.status,
       maxPlayers: maxPlayers ?? this.maxPlayers,
       type: type ?? this.type,
+      visibility: visibility ?? this.visibility,
+      password: password ?? this.password,
       redirectionId: redirectionId != null
           ? redirectionId()
           : this.redirectionId,
@@ -81,16 +95,13 @@ class Room extends Equatable {
       'status': status.name,
       'maxPlayers': maxPlayers,
       'type': type.name,
+      'visibility': visibility.name,
+      'password': password,
       'redirectionId': redirectionId,
     };
   }
 
   String toJson() => json.encode(toMap());
-
-  @override
-  String toString() {
-    return 'Room(id: $id, name: $name, hostId: $hostId, users: $users, status: $status, maxPlayers: $maxPlayers, type: $type, redirectionId: $redirectionId)';
-  }
 
   @override
   List<Object?> get props => [
@@ -101,6 +112,8 @@ class Room extends Equatable {
     status,
     maxPlayers,
     type,
+    visibility,
+    password,
     redirectionId,
   ];
 }

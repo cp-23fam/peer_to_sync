@@ -7,12 +7,16 @@ void main() {
     username: 'User1',
     email: 'test@example.com',
     imageUrl: null,
+    friends: [],
+    pending: [],
   );
   const userMap = {
     '_id': 'user-1',
     'username': 'User1',
     'email': 'test@example.com',
     'imageUrl': null,
+    'friends': [],
+    'pending': [],
   };
 
   group('fromMap', () {

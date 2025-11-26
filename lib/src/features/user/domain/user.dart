@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 
 typedef UserId = String;
 
@@ -10,6 +9,8 @@ class User extends Equatable {
       username: map['username'] ?? '',
       email: map['email'] ?? '',
       imageUrl: map['imageUrl'],
+      friends: List<String>.from(map['friends']),
+      pending: List<String>.from(map['pending']),
     );
   }
 
@@ -18,24 +19,32 @@ class User extends Equatable {
     required this.username,
     required this.email,
     required this.imageUrl,
+    required this.friends,
+    required this.pending,
   });
 
   final UserId uid;
   final String username;
   final String email;
   final String? imageUrl;
+  final List<UserId> friends;
+  final List<UserId> pending;
 
   User copyWith({
     String? uid,
     String? username,
     String? email,
-    ValueGetter<String?>? imageUrl,
+    String? imageUrl,
+    List<String>? friends,
+    List<String>? pending,
   }) {
     return User(
       uid: uid ?? this.uid,
       username: username ?? this.username,
       email: email ?? this.email,
-      imageUrl: imageUrl != null ? imageUrl() : this.imageUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
+      friends: friends ?? this.friends,
+      pending: pending ?? this.pending,
     );
   }
 
@@ -45,14 +54,11 @@ class User extends Equatable {
       'username': username,
       'email': email,
       'imageUrl': imageUrl,
+      'friends': friends,
+      'pending': pending,
     };
   }
 
   @override
-  String toString() {
-    return 'User(uid: $uid, username: $username, email: $email, imageUrl: $imageUrl)';
-  }
-
-  @override
-  List<Object?> get props => [uid, username, email, imageUrl];
+  List<Object?> get props => [uid, username, email, imageUrl, friends, pending];
 }
