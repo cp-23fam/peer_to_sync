@@ -1,1 +1,1 @@
-enum RoomStatus { creating, waiting, playing }
+enum RoomStatus { waiting, playing }
