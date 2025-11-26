@@ -43,7 +43,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  StyledText('Rooms'.hardcoded, 40.0, bold: true, upper: true),
+                  StyledText('Salles'.hardcoded, 30.0, bold: true, upper: true),
                   GestureDetector(
                     onTap: () => context.goNamed(RouteNames.user.name),
                     child: CircleAvatar(
@@ -65,7 +65,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
               child: TextField(
                 style: TextStyle(color: AppColors.whiteColor),
                 decoration: InputDecoration(
-                  hintText: 'Rechercher une room...',
+                  hintText: 'Rechercher une salle...',
                   hintStyle: TextStyle(
                     color: AppColors.whiteColor.withAlpha(150),
                   ),
@@ -102,7 +102,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         return rooms.isEmpty
                             ? Center(
                                 child: StyledText(
-                                  'Aucune room trouvée.'.hardcoded,
+                                  'Aucune salle trouvée.'.hardcoded,
                                   20.0,
                                 ),
                               )
@@ -127,7 +127,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ChooseButton(
-              text: 'Créer une Room',
+              text: 'Créer une salle',
               color: AppColors.greenColor,
               onPressed: () => context.goNamed(RouteNames.create.name),
             ),

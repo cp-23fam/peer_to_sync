@@ -123,7 +123,8 @@ class RoomRepository {
 
     if (res.statusCode! == 200) {
       debugPrint('User quited room $id');
-      if (updatedRoom!.users.isEmpty) {
+      if (updatedRoom!.users.isEmpty ||
+          !updatedRoom.users.contains(updatedRoom.hostId)) {
         await deleteRoom(id);
       }
       return;

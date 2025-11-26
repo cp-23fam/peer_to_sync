@@ -56,14 +56,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             return roomData.when(
               data: (room) {
                 if (room == null) {
-                  return Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.goNamed(RouteNames.home.name);
-                      },
-                      child: Text('Salle inconnue'.hardcoded),
-                    ),
-                  );
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.goNamed(RouteNames.home.name);
+                  });
+
+                  return const Center(child: SizedBox());
                 }
 
                 return Column(
