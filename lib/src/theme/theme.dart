@@ -16,6 +16,7 @@ class AppColors {
   static Color backgroundIconAccent = const Color(0xFF606060);
 
   static Color greenColor = const Color(0xFF1BA300);
+  static Color orangeColor = const Color(0xFFD77D00);
   static Color redColor = const Color(0xFFA30000);
   static Color goldColor = const Color(0xFFFFB753);
 }
