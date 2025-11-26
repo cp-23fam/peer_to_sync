@@ -77,6 +77,66 @@ void main() {
     });
   });
 
+  group('fetchUser', () {
+    final user = {
+      '_id': '691d822e15ab08bf78780ba1',
+      'email': 'test@example.com',
+      'username': 'Fabrioche',
+    };
+    const token = 'abcd';
+
+    void prepareStorageMockToReturnTokenIfProvided(String? token) {
+      when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
+    }
+
+    test('should return null when token is empty', () async {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      final res = await userRepository.fetchUser('abcd');
+      expect(res, null);
+    });
+
+    test(
+      'should return null when statusCode is 401 and message is not empty',
+      () async {
+        prepareStorageMockToReturnTokenIfProvided(token);
+
+        dioAdapter.onGet(
+          '$apiPath/user/$token',
+          (server) => server.reply(401, {'message': 'Not authenticated'}),
+        );
+
+        final res = await userRepository.fetchUser('abcd');
+        expect(res, null);
+      },
+    );
+
+    test('should return a User when status is 200', () async {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onGet(
+        '$apiPath/user/$token',
+        (server) => server.reply(200, user),
+      );
+
+      final res = await userRepository.fetchUser('abcd');
+      final result = User.fromMap(user);
+      expect(res, result);
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onGet(
+        '$apiPath/user/$token',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.fetchUser('abcd'),
+        throwsA(UnimplementedError),
+      );
+    });
+  });
+
   group('logIn', () {
     void prepareStorageMockToHandleWriteOn(String token) {
       when(
@@ -137,7 +197,7 @@ void main() {
       expect(
         () async =>
             await userRepository.logIn('test@example.com', 'Pa\$\$w0rd'),
-        throwsA(isA<UnimplementedError>()),
+        throwsA(UnimplementedError),
       );
     });
   });

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
+import 'package:peer_to_sync/src/features/room/domain/no_space_left_exception.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
@@ -173,6 +174,21 @@ void main() {
         );
       },
     );
+
+    test('should throw NoSpaceLeftException error when status code is 403', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      const id = 'abcd';
+
+      dioAdapter.onPost(
+        '$apiPath/rooms/$id/join',
+        (server) => server.reply(403, {}),
+      );
+
+      expect(
+        () async => await roomRepository.joinRoom(id),
+        throwsA(NoSpaceLeftException),
+      );
+    });
   });
   group('quitRoom', () {
     test('should throw LoggedOutException if token from storage is null', () {
@@ -216,6 +232,36 @@ void main() {
     );
     //
   });
+
+  group('kickPlayer', () {
+    test('should throw LoggedOutException if token from storage is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+      expect(
+        () async => await roomRepository.kickUser('abcd', 'user-1'),
+        throwsA(LoggedOutException),
+      );
+    });
+
+    test(
+      'should throw Unimplemented error if status code is different from 204',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(token);
+        const id = 'abcd';
+        const userId = 'user-1';
+
+        dioAdapter.onPost(
+          '$apiPath/rooms/$id/kick/$userId',
+          (server) => server.reply(500, {}),
+        );
+
+        expect(
+          () async => await roomRepository.kickUser(id, userId),
+          throwsA(UnimplementedError),
+        );
+      },
+    );
+  });
+
   group('deleteRoom', () {
     test('should throw LoggedOutException if token from storage is null', () {
       prepareStorageMockToReturnTokenIfProvided(null);
@@ -242,6 +288,5 @@ void main() {
         );
       },
     );
-    //
   });
 }
