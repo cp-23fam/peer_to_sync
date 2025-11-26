@@ -189,8 +189,6 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                               selectedType!,
                             );
 
-                        print(selectedType);
-
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           context.goNamed(
                             RouteNames.detail.name,
