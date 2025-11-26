@@ -40,7 +40,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
       body: SafeArea(
         child: Consumer(
           builder: (context, ref, child) {
-            final roomData = ref.watch(roomProvider(widget.roomId));
+            final roomData = ref.watch(roomStreamProvider(widget.roomId));
 
             return roomData.when(
               data: (room) {

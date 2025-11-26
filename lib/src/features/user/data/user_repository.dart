@@ -132,13 +132,16 @@ final userRepositoryProvider = Provider((ref) {
   return UserRepository();
 });
 
-final userInfosProvider = FutureProvider<User?>((ref) {
+final userInfosProvider = FutureProvider.autoDispose<User?>((ref) {
   final provider = ref.watch(userRepositoryProvider).fetchCurrentUser();
 
   return provider;
 });
 
-final userProvider = FutureProvider.family<User?, String>((ref, uid) {
+final userProvider = FutureProvider.family.autoDispose<User?, String>((
+  ref,
+  uid,
+) {
   final provider = ref.watch(userRepositoryProvider).fetchUser(uid);
 
   return provider;

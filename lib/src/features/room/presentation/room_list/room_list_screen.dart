@@ -93,7 +93,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   padding: const EdgeInsets.all(Sizes.p16),
                   child: Consumer(
                     builder: (context, ref, child) {
-                      final roomsData = ref.watch(roomListProvider);
+                      final roomsData = ref.watch(roomListStreamProvider);
 
                       return roomsData.when(
                         data: (rooms) {
@@ -103,9 +103,8 @@ class _RoomListScreenState extends State<RoomListScreen> {
                         },
                         error: (error, stackTrace) =>
                             Center(child: Text(error.toString())),
-                        loading: () => const Expanded(
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
                       );
                     },
                   ),

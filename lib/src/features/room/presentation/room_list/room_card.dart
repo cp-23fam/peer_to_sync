@@ -6,7 +6,6 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
-import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -145,22 +144,28 @@ class _RoomCardState extends State<RoomCard> {
                       builder: (context, ref, child) {
                         return ElevatedButton(
                           onPressed: () async {
-                            try {
-                              await ref
-                                  .read(roomRepositoryProvider)
-                                  .joinRoom(widget.room.id);
-
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                context.goNamed(
-                                  RouteNames.detail.name,
-                                  pathParameters: {'id': widget.room.id},
+                            await ref
+                                .read(roomRepositoryProvider)
+                                .joinRoom(widget.room.id)
+                                .then(
+                                  (value) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          context.goNamed(
+                                            RouteNames.detail.name,
+                                            pathParameters: {
+                                              'id': widget.room.id,
+                                            },
+                                          );
+                                        });
+                                  },
+                                  onError: (e) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          context.goNamed(RouteNames.user.name);
+                                        });
+                                  },
                                 );
-                              });
-                            } on LoggedOutException {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                context.goNamed(RouteNames.signup.name);
-                              });
-                            }
                           },
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all<Color>(
