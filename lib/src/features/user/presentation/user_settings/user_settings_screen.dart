@@ -43,7 +43,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           StyledText(
-                            'User'.hardcoded,
+                            'Paramètres utilisateur'.hardcoded,
                             30.0,
                             bold: true,
                             upper: true,
@@ -122,7 +122,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: StyledText(
-                                  'Log out'.hardcoded,
+                                  'Déconnexion'.hardcoded,
                                   20.0,
                                   bold: true,
                                 ),

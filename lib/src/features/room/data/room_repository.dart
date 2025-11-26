@@ -167,7 +167,6 @@ final roomListStreamProvider = StreamProvider.autoDispose<List<Room>>((ref) {
   var provider = ref.read(roomRepositoryProvider).fetchRoomList();
 
   final timer = Timer.periodic(const Duration(seconds: 3), (_) {
-    provider = ref.read(roomRepositoryProvider).fetchRoomList();
     ref.invalidateSelf();
   });
   ref.onDispose(timer.cancel);
@@ -191,7 +190,6 @@ final roomStreamProvider = StreamProvider.family.autoDispose<Room?, RoomId>((
   var provider = ref.read(roomRepositoryProvider).fetchRoom(id);
 
   final timer = Timer.periodic(const Duration(seconds: 1), (_) {
-    provider = ref.read(roomRepositoryProvider).fetchRoom(id);
     ref.invalidateSelf();
   });
 
