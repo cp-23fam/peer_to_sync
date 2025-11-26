@@ -165,10 +165,41 @@ class _RoomCardState extends State<RoomCard> {
                                         });
                                   },
                                   onError: (e) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                          context.goNamed(RouteNames.user.name);
-                                        });
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          backgroundColor:
+                                              AppColors.secondColor,
+                                          title: StyledText(
+                                            'Erreur'.hardcoded,
+                                            30.0,
+                                          ),
+                                          content: Text(
+                                            'Vous n\'êtes pas connecté. Veuillez d\'abord vous connecter avant de pouvoir utiliser cette fonctionnalitée.'
+                                                .hardcoded,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => WidgetsBinding
+                                                  .instance
+                                                  .addPostFrameCallback((_) {
+                                                    context.goNamed(
+                                                      RouteNames.user.name,
+                                                    );
+                                                  }),
+
+                                              child: const Text('Connexion'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                 );
                           },
