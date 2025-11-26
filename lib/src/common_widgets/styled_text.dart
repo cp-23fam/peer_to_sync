@@ -22,7 +22,7 @@ class StyledText extends StatelessWidget {
         color: AppColors.whiteColor,
         fontSize: fontSize,
         // textStyle: TextStyle(
-        // fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        //   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
         // ),
       ),
     );

@@ -11,6 +11,7 @@ import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
+import 'package:peer_to_sync/src/utils/logged_out_dialog.dart';
 
 class RoomCreationScreen extends StatefulWidget {
   const RoomCreationScreen({super.key});
@@ -173,33 +174,8 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                             .fetchCurrentUser();
 
                         if (currentUser == null) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                backgroundColor: AppColors.secondColor,
-                                title: StyledText('Erreur'.hardcoded, 30.0),
-                                content: Text(
-                                  'Vous n\'êtes pas connecté. Veuillez d\'abord vous connecter avant de pouvoir utiliser cette fonctionnalitée.'
-                                      .hardcoded,
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                          context.goNamed(RouteNames.user.name);
-                                        }),
-
-                                    child: const Text('Connexion'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
+                          WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => loggedOutDialog(context),
                           );
                           return;
                         }
