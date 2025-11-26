@@ -96,7 +96,7 @@ class _UserCreationScreenState extends State<UserCreationScreen> {
                         ),
                       ),
                     ),
-                    gapH16,
+                    gapH4,
                     TextFormField(
                       controller: emailTextController,
                       validator: (value) {

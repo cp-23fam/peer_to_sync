@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
-import 'package:peer_to_sync/src/common_widgets/filter_dropdown.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_type_list.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
@@ -21,7 +21,7 @@ class RoomCreationScreen extends StatefulWidget {
 }
 
 class _RoomCreationScreenState extends State<RoomCreationScreen> {
-  RoomType? selectedType;
+  RoomType? selectedType = RoomType.values.map((e) => e).toList().first;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -122,18 +122,23 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                       ),
                     ),
                     gapH16,
-                    FilterDropdown(
-                      title: 'Type'.hardcoded,
-                      selected: selectedType?.name,
-                      isSelected: (String? newValue) {
-                        setState(() {
-                          for (RoomType type in RoomType.values) {
-                            if (type.name == newValue) selectedType = type;
-                          }
-                        });
-                      },
-                      list: RoomType.values.map((e) => e.name).toList(),
-                    ),
+                    RoomTypeList((newValue) {
+                      for (RoomType type in RoomType.values) {
+                        if (type == newValue) selectedType = type;
+                      }
+                    }),
+                    // FilterDropdown(
+                    //   title: 'Type'.hardcoded,
+                    //   selected: selectedType?.name,
+                    //   isSelected: (String? newValue) {
+                    //     setState(() {
+                    //       for (RoomType type in RoomType.values) {
+                    //         if (type.name == newValue) selectedType = type;
+                    //       }
+                    //     });
+                    //   },
+                    //   list: RoomType.values.map((e) => e.name).toList(),
+                    // ),
                   ],
                 ),
               ),
@@ -183,6 +188,8 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                               int.parse(numberTextController.text),
                               selectedType!,
                             );
+
+                        print(selectedType);
 
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           context.goNamed(
