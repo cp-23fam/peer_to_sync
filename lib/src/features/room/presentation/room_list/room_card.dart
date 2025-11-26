@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
-import 'package:peer_to_sync/src/features/room/domain/no_space_left_exception.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -171,15 +170,16 @@ class _RoomCardState extends State<RoomCard> {
                                               });
                                         },
                                         onError: (e) {
-                                          if (e is LoggedOutException) {
+                                          if (e == LoggedOutException) {
                                             WidgetsBinding.instance
                                                 .addPostFrameCallback(
                                                   (_) =>
                                                       loggedOutDialog(context),
                                                 );
+                                            return;
                                           }
 
-                                          if (e is NoSpaceLeftException) {}
+                                          throw e;
                                         },
                                       );
                                 },
