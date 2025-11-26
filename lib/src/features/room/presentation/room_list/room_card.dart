@@ -77,7 +77,7 @@ class _RoomCardState extends State<RoomCard> {
                   children: [
                     Consumer(
                       builder: (context, ref, child) {
-                        final userData = ref.read(
+                        final userData = ref.watch(
                           userProvider(widget.room.hostId),
                         );
 
@@ -218,11 +218,9 @@ class _RoomCardState extends State<RoomCard> {
                                                 );
                                               },
                                             );
-                                          } else if (e
-                                              is NoSpaceLeftException) {
-                                          } else {
-                                            throw e;
                                           }
+
+                                          if (e is NoSpaceLeftException) {}
                                         },
                                       );
                                 },
