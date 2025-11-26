@@ -57,7 +57,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   StyledText(
-                    'Création de Room'.hardcoded,
+                    'Création de salle'.hardcoded,
                     30.0,
                     bold: true,
                     upper: true,
@@ -86,7 +86,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                       style: TextStyle(color: AppColors.whiteColor),
                       decoration: InputDecoration(
                         fillColor: AppColors.secondColor,
-                        labelText: 'Nom de la room'.hardcoded,
+                        labelText: 'Nom de la salle'.hardcoded,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Sizes.p4),
                         ),

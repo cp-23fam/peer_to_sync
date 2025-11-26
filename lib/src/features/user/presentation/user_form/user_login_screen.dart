@@ -180,7 +180,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                           });
                         } on EmailException {
                           setState(() {
-                            emailError = 'Email inconnu'.hardcoded;
+                            emailError = 'Mail inconnu'.hardcoded;
                           });
                         } on PasswordException {
                           setState(() {

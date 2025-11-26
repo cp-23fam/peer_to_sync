@@ -8,6 +8,7 @@ import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/user.dart';
 import 'package:peer_to_sync/src/utils/fetch_token.dart';
 
 class RoomRepository {
@@ -126,6 +127,27 @@ class RoomRepository {
     throw UnimplementedError;
   }
 
+  Future<void> kickUser(RoomId id, UserId uid) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final res = await dio.post(
+      '$_mainRoute/$id/kick/$uid',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('User kicked $uid from room $id');
+      return;
+    }
+
+    debugPrint('User could not quit room $id');
+    throw UnimplementedError;
+  }
+
   Future<void> deleteRoom(RoomId id) async {
     final String? token = await fetchToken(storage);
 
@@ -167,7 +189,6 @@ final roomListStreamProvider = StreamProvider.autoDispose<List<Room>>((ref) {
   var provider = ref.read(roomRepositoryProvider).fetchRoomList();
 
   final timer = Timer.periodic(const Duration(seconds: 3), (_) {
-    provider = ref.read(roomRepositoryProvider).fetchRoomList();
     ref.invalidateSelf();
   });
   ref.onDispose(timer.cancel);
@@ -191,7 +212,6 @@ final roomStreamProvider = StreamProvider.family.autoDispose<Room?, RoomId>((
   var provider = ref.read(roomRepositoryProvider).fetchRoom(id);
 
   final timer = Timer.periodic(const Duration(seconds: 1), (_) {
-    provider = ref.read(roomRepositoryProvider).fetchRoom(id);
     ref.invalidateSelf();
   });
 

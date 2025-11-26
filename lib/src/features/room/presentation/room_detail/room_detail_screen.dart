@@ -8,6 +8,7 @@ import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/no_user_card.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/user_card.dart';
+import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -22,13 +23,23 @@ class RoomDetailScreen extends StatefulWidget {
 }
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
-  Widget createCard(Room room, int index) {
+  Widget createCard(
+    Room room,
+    int index, {
+    required bool canControl,
+    VoidCallback? onKick,
+  }) {
     if (index == 0) {
       return UserCard(isHost: true, userId: room.users[index]);
     }
 
     if (index < room.users.length) {
-      return UserCard(isHost: false, userId: room.users[index]);
+      return UserCard(
+        isHost: false,
+        userId: room.users[index],
+        canControl: canControl,
+        onKick: onKick,
+      );
     }
 
     return const NoUserCard();
@@ -70,20 +81,63 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                     gapH12,
                     Text('${room.users.length} / ${room.maxPlayers}'.hardcoded),
                     gapH12,
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(Sizes.p8),
-                        child: ListView.separated(
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: Sizes.p8,
-                            ),
-                            child: createCard(room, index),
-                          ),
-                          separatorBuilder: (context, index) => gapH16,
-                          itemCount: room.maxPlayers,
-                        ),
-                      ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final userData = ref.watch(userInfosProvider);
+
+                        return userData.when(
+                          data: (user) {
+                            if (!room.users.contains(user!.uid)) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                context.goNamed(RouteNames.home.name);
+                              });
+                            }
+
+                            return Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(Sizes.p8),
+                                child: ListView.separated(
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: Sizes.p8,
+                                    ),
+                                    child: createCard(
+                                      room,
+                                      index,
+                                      canControl: user.uid == room.hostId,
+                                      onKick: () async => await ref
+                                          .read(roomRepositoryProvider)
+                                          .kickUser(room.id, room.users[index]),
+                                    ),
+                                  ),
+                                  separatorBuilder: (context, index) => gapH16,
+                                  itemCount: room.maxPlayers,
+                                ),
+                              ),
+                            );
+                          },
+                          error: (error, stackTrace) =>
+                              Center(child: Text(error.toString())),
+                          loading: () {
+                            return Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(Sizes.p8),
+                                child: ListView.separated(
+                                  itemBuilder: (context, index) =>
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: Sizes.p8,
+                                        ),
+                                        child: NoUserCard(),
+                                      ),
+                                  separatorBuilder: (context, index) => gapH16,
+                                  itemCount: room.maxPlayers,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 );

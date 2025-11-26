@@ -7,10 +7,18 @@ import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 class UserCard extends StatelessWidget {
-  const UserCard({required this.userId, required this.isHost, super.key});
+  const UserCard({
+    required this.userId,
+    required this.isHost,
+    this.canControl = false,
+    this.onKick,
+    super.key,
+  });
 
   final String userId;
   final bool isHost;
+  final bool canControl;
+  final VoidCallback? onKick;
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +74,9 @@ class UserCard extends StatelessWidget {
                     const Expanded(child: SizedBox()),
                     if (isHost)
                       Icon(Icons.star, color: AppColors.goldColor, size: 45.0)
-                    else if (!isHost)
+                    else if (canControl)
                       IconButton(
-                        onPressed: () {},
+                        onPressed: onKick,
                         icon: Icon(
                           Icons.delete,
                           color: AppColors.redColor,
