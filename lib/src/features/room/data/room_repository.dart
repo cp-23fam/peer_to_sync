@@ -8,6 +8,7 @@ import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/user.dart';
 import 'package:peer_to_sync/src/utils/fetch_token.dart';
 
 class RoomRepository {
@@ -119,6 +120,27 @@ class RoomRepository {
       if (updatedRoom!.users.isEmpty) {
         await deleteRoom(id);
       }
+      return;
+    }
+
+    debugPrint('User could not quit room $id');
+    throw UnimplementedError;
+  }
+
+  Future<void> kickUser(RoomId id, UserId uid) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final res = await dio.post(
+      '$_mainRoute/$id/kick/$uid',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('User kicked $uid from room $id');
       return;
     }
 
