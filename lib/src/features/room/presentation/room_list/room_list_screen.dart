@@ -30,87 +30,107 @@ class _RoomListScreenState extends State<RoomListScreen> {
     );
   }
 
-  // String _searchQuery = '';
+  String _searchQuery = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: 80,
-                  padding: const EdgeInsets.all(Sizes.p12),
-                  color: AppColors.navBackgroundColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      StyledText(
-                        'Rooms'.hardcoded,
-                        40.0,
-                        bold: true,
-                        upper: true,
-                      ),
-                      GestureDetector(
-                        onTap: () => context.goNamed(RouteNames.user.name),
-                        child: CircleAvatar(
-                          backgroundColor: AppColors.backgroundIconColor,
-                          radius: 28.0,
-                          child: Icon(
-                            Icons.person_outline,
-                            color: AppColors.whiteColor,
-                            size: 40.0,
-                          ),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                height: 80,
+                padding: const EdgeInsets.all(Sizes.p12),
+                color: AppColors.navBackgroundColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StyledText(
+                      'Rooms'.hardcoded,
+                      40.0,
+                      bold: true,
+                      upper: true,
+                    ),
+                    GestureDetector(
+                      onTap: () => context.goNamed(RouteNames.user.name),
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.backgroundIconColor,
+                        radius: 28.0,
+                        child: Icon(
+                          Icons.person_outline,
+                          color: AppColors.whiteColor,
+                          size: 40.0,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                gapH12,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Sizes.p12),
-                  child: TextField(
-                    style: TextStyle(color: AppColors.whiteColor),
-                    decoration: InputDecoration(
-                      hintText: 'Rechercher une room...',
-                      hintStyle: TextStyle(
-                        color: AppColors.whiteColor.withAlpha(150),
-                      ),
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Sizes.p4),
-                      ),
-                      fillColor: AppColors.firstColor,
                     ),
-                    // onChanged: (value) {
-                    //   _searchQuery = value;
-                    // },
+                  ],
+                ),
+              ),
+              gapH12,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Sizes.p12),
+                child: TextField(
+                  style: TextStyle(color: AppColors.whiteColor),
+                  decoration: InputDecoration(
+                    hintText: 'Rechercher une room...',
+                    hintStyle: TextStyle(
+                      color: AppColors.whiteColor.withAlpha(150),
+                    ),
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(Sizes.p4),
+                    ),
+                    fillColor: AppColors.firstColor,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(Sizes.p12),
+                  child: Expanded(
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final roomsData = ref.watch(roomListProvider);
+
+                        return roomsData.when(
+                          data: (rooms) {
+                            if (_searchQuery.isNotEmpty) {
+                              // rooms = searchInRooms(rooms, _searchQuery);
+
+                              rooms = rooms.where((room) {
+                                final fullName = room.name.toLowerCase();
+                                return fullName.contains(_searchQuery);
+                              }).toList();
+                            }
+                            filteredRooms = rooms;
+
+                            return rooms.isEmpty
+                                ? Center(
+                                    child: StyledText(
+                                      'Aucune room trouvée.'.hardcoded,
+                                      20.0,
+                                    ),
+                                  )
+                                : roomsList();
+                          },
+                          error: (error, stackTrace) =>
+                              Center(child: Text(error.toString())),
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                        );
+                      },
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(Sizes.p16),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final roomsData = ref.watch(roomListProvider);
-
-                      return roomsData.when(
-                        data: (rooms) {
-                          filteredRooms = rooms;
-
-                          return roomsList();
-                        },
-                        error: (error, stackTrace) =>
-                            Center(child: Text(error.toString())),
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

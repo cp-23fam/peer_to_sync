@@ -92,7 +92,10 @@ class _RoomCardState extends State<RoomCard> with TickerProviderStateMixin {
                             color: AppColors.whiteColor,
                           ),
                           gapW8,
-                          StyledText('2 / 4', 20.0),
+                          StyledText(
+                            '${widget.room.users.length} / ${widget.room.maxPlayers}',
+                            20.0,
+                          ),
                           gapW8,
                         ],
                       ),
