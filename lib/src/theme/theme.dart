@@ -21,74 +21,161 @@ class AppColors {
   static Color goldColor = const Color(0xFFFFB753);
 }
 
-ThemeData blackTheme = ThemeData(
-  // seed color
-  colorScheme: ColorScheme.fromSeed(seedColor: AppColors.firstColor),
+ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
 
   // scaffold color
   scaffoldBackgroundColor: AppColors.fifthColor,
-
-  // app bar theme colors
-  appBarTheme: AppBarTheme(
-    backgroundColor: AppColors.fourthColor,
-    foregroundColor: AppColors.whiteColor,
-    surfaceTintColor: Colors.transparent,
-    centerTitle: true,
-  ),
-
-  // text
-  textTheme: const TextTheme().copyWith(
-    bodyMedium: TextStyle(
-      color: AppColors.whiteColor,
-      fontSize: 16,
-      letterSpacing: 1,
-    ),
-    headlineMedium: TextStyle(
-      color: AppColors.whiteColor,
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-      letterSpacing: 1,
-    ),
-    titleMedium: TextStyle(
-      color: AppColors.whiteColor,
-      fontSize: 18,
-      fontWeight: FontWeight.bold,
-      letterSpacing: 2,
-    ),
-  ),
-
-  // card theme
-  cardTheme: CardThemeData(
-    color: AppColors.thirdColor,
-    surfaceTintColor: Colors.transparent,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadiusGeometry.circular(Sizes.p4),
-    ),
-    shadowColor: Colors.transparent,
-    margin: const EdgeInsets.only(bottom: Sizes.p16),
-  ),
-
-  // input decoration theme
-  inputDecorationTheme: InputDecorationTheme(
-    filled: true,
-    fillColor: AppColors.thirdColor.withValues(alpha: 0.5),
-    border: InputBorder.none,
-    labelStyle: TextStyle(color: AppColors.whiteColor),
-    prefixIconColor: AppColors.whiteColor,
-  ),
-
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all<Color>(AppColors.fourthColor),
-      // textStyle: TextStyle(color: )
-    ),
-  ),
-
-  iconTheme: IconThemeData(color: AppColors.whiteColor, size: Sizes.p32),
-  iconButtonTheme: IconButtonThemeData(
-    style: ButtonStyle(
-      iconColor: WidgetStateProperty.all<Color>(AppColors.whiteColor),
-      iconSize: WidgetStateProperty.all<double>(Sizes.p32),
-    ),
-  ),
 );
+
+ThemeData lightTheme = ThemeData(
+  brightness: Brightness.light,
+
+  // scaffold color
+  scaffoldBackgroundColor: AppColors.whiteColor,
+);
+
+
+// ThemeData darkTheme = ThemeData(
+//   // seed color
+//   colorScheme: ColorScheme.fromSeed(seedColor: AppColors.firstColor),
+
+//   // scaffold color
+//   scaffoldBackgroundColor: AppColors.fifthColor,
+
+//   // app bar theme colors
+//   appBarTheme: AppBarTheme(
+//     backgroundColor: AppColors.fourthColor,
+//     foregroundColor: AppColors.whiteColor,
+//     surfaceTintColor: Colors.transparent,
+//     centerTitle: true,
+//   ),
+
+//   // text
+//   textTheme: const TextTheme().copyWith(
+//     bodyMedium: TextStyle(
+//       color: AppColors.whiteColor,
+//       fontSize: 16,
+//       letterSpacing: 1,
+//     ),
+//     headlineMedium: TextStyle(
+//       color: AppColors.whiteColor,
+//       fontSize: 16,
+//       fontWeight: FontWeight.bold,
+//       letterSpacing: 1,
+//     ),
+//     titleMedium: TextStyle(
+//       color: AppColors.whiteColor,
+//       fontSize: 18,
+//       fontWeight: FontWeight.bold,
+//       letterSpacing: 2,
+//     ),
+//   ),
+
+//   // card theme
+//   cardTheme: CardThemeData(
+//     color: AppColors.thirdColor,
+//     surfaceTintColor: Colors.transparent,
+//     shape: RoundedRectangleBorder(
+//       borderRadius: BorderRadiusGeometry.circular(Sizes.p4),
+//     ),
+//     shadowColor: Colors.transparent,
+//     margin: const EdgeInsets.only(bottom: Sizes.p16),
+//   ),
+
+//   // input decoration theme
+//   inputDecorationTheme: InputDecorationTheme(
+//     filled: true,
+//     fillColor: AppColors.thirdColor.withValues(alpha: 0.5),
+//     border: InputBorder.none,
+//     labelStyle: TextStyle(color: AppColors.whiteColor),
+//     prefixIconColor: AppColors.whiteColor,
+//   ),
+
+//   elevatedButtonTheme: ElevatedButtonThemeData(
+//     style: ButtonStyle(
+//       backgroundColor: WidgetStateProperty.all<Color>(AppColors.fourthColor),
+//       // textStyle: TextStyle(color: )
+//     ),
+//   ),
+
+//   iconTheme: IconThemeData(color: AppColors.whiteColor, size: Sizes.p32),
+//   iconButtonTheme: IconButtonThemeData(
+//     style: ButtonStyle(
+//       iconColor: WidgetStateProperty.all<Color>(AppColors.whiteColor),
+//       iconSize: WidgetStateProperty.all<double>(Sizes.p32),
+//     ),
+//   ),
+// );
+
+// ThemeData lightTheme = ThemeData(
+//   // seed color
+//   colorScheme: ColorScheme.fromSeed(seedColor: AppColors.firstColor),
+
+//   // scaffold color
+//   scaffoldBackgroundColor: AppColors.fifthColor,
+
+//   // app bar theme colors
+//   appBarTheme: AppBarTheme(
+//     backgroundColor: AppColors.fourthColor,
+//     foregroundColor: AppColors.whiteColor,
+//     surfaceTintColor: Colors.transparent,
+//     centerTitle: true,
+//   ),
+
+//   // text
+//   textTheme: const TextTheme().copyWith(
+//     bodyMedium: TextStyle(
+//       color: AppColors.whiteColor,
+//       fontSize: 16,
+//       letterSpacing: 1,
+//     ),
+//     headlineMedium: TextStyle(
+//       color: AppColors.whiteColor,
+//       fontSize: 16,
+//       fontWeight: FontWeight.bold,
+//       letterSpacing: 1,
+//     ),
+//     titleMedium: TextStyle(
+//       color: AppColors.whiteColor,
+//       fontSize: 18,
+//       fontWeight: FontWeight.bold,
+//       letterSpacing: 2,
+//     ),
+//   ),
+
+//   // card theme
+//   cardTheme: CardThemeData(
+//     color: AppColors.thirdColor,
+//     surfaceTintColor: Colors.transparent,
+//     shape: RoundedRectangleBorder(
+//       borderRadius: BorderRadiusGeometry.circular(Sizes.p4),
+//     ),
+//     shadowColor: Colors.transparent,
+//     margin: const EdgeInsets.only(bottom: Sizes.p16),
+//   ),
+
+//   // input decoration theme
+//   inputDecorationTheme: InputDecorationTheme(
+//     filled: true,
+//     fillColor: AppColors.thirdColor.withValues(alpha: 0.5),
+//     border: InputBorder.none,
+//     labelStyle: TextStyle(color: AppColors.whiteColor),
+//     prefixIconColor: AppColors.whiteColor,
+//   ),
+
+//   elevatedButtonTheme: ElevatedButtonThemeData(
+//     style: ButtonStyle(
+//       backgroundColor: WidgetStateProperty.all<Color>(AppColors.fourthColor),
+//       // textStyle: TextStyle(color: )
+//     ),
+//   ),
+
+//   iconTheme: IconThemeData(color: AppColors.whiteColor, size: Sizes.p32),
+//   iconButtonTheme: IconButtonThemeData(
+//     style: ButtonStyle(
+//       iconColor: WidgetStateProperty.all<Color>(AppColors.whiteColor),
+//       iconSize: WidgetStateProperty.all<double>(Sizes.p32),
+//     ),
+//   ),
+// );

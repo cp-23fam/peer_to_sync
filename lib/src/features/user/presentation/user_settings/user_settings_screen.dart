@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:peer_to_sync/src/features/user/presentation/user_settings/profil
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({super.key});
@@ -18,6 +20,7 @@ class UserSettingsScreen extends StatefulWidget {
 }
 
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
+  int initialLabelIndex = 2;
   @override
   void initState() {
     super.initState();
@@ -148,6 +151,44 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               ),
                             ),
                           ),
+                          gapH16,
+                          Center(
+                            child: ToggleSwitch(
+                              minWidth: double.infinity,
+                              minHeight: 50.0,
+                              initialLabelIndex: initialLabelIndex,
+                              cornerRadius: 20.0,
+                              activeFgColor: Colors.white,
+                              inactiveBgColor: AppColors.secondColor,
+                              totalSwitches: 3,
+                              icons: [
+                                Icons.light_mode,
+                                Icons.dark_mode,
+                                Icons.settings,
+                              ],
+                              iconSize: 30.0,
+                              activeBgColors: [
+                                // [Colors.white.withAlpha(100)],
+                                [Colors.yellow.withAlpha(200)],
+                                [Colors.black],
+                                [Colors.blueGrey],
+                              ],
+                              onToggle: (index) {
+                                setState(() {
+                                  initialLabelIndex = index!;
+                                  index == 0
+                                      ? AdaptiveTheme.of(context).setLight()
+                                      : index == 1
+                                      ? AdaptiveTheme.of(context).setDark()
+                                      : AdaptiveTheme.of(context).setSystem();
+                                });
+                              },
+                            ),
+                          ),
+                          // StyledText(
+                          //   'You are using ${AdaptiveTheme.of(context).mode}',
+                          //   20.0,
+                          // ),
                           gapH16,
                           Center(
                             child: Container(
