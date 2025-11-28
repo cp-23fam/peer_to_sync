@@ -88,7 +88,7 @@ class RoomRepository {
     throw UnimplementedError;
   }
 
-  Future<void> joinRoom(RoomId id) async {
+  Future<void> joinRoom(RoomId id, {String? password}) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
