@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 import 'package:peer_to_sync/src/utils/fetch_token.dart';
@@ -119,6 +120,139 @@ class UserRepository {
     }
 
     debugPrint('$this signUp has unknown response : $res');
+    throw UnimplementedError;
+  }
+
+  Future<void> addFriend(String email) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final response = await dio.get(
+      '$_mainRoute/email/$email',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    final user = User.fromMap(response.data);
+
+    debugPrint('$this fetched user ${user.uid} by email');
+
+    final res = await dio.post(
+      '$_mainRoute/friends/add',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('Added user ${user.email}');
+      return;
+    }
+
+    debugPrint('$this addFriend has unknown response');
+    throw UnimplementedError;
+  }
+
+  Future<void> removeFriend(UserId uid) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final response = await dio.post(
+      '$_mainRoute/friends/$uid/remove',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (response.statusCode! == 200) {
+      debugPrint('Removed friend $uid');
+      return;
+    }
+
+    debugPrint('$this removeFriend has unknown response');
+    throw UnimplementedError;
+  }
+
+  Future<void> acceptFriend(UserId uid) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final response = await dio.post(
+      '$_mainRoute/friends/$uid/accept',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (response.statusCode! == 200) {
+      debugPrint('Accepted user $uid');
+      return;
+    }
+
+    debugPrint('$this acceptFriend has unknown response');
+    throw UnimplementedError;
+  }
+
+  Future<void> rejectFriend(UserId uid) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final response = await dio.post(
+      '$_mainRoute/friends/$uid/reject',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (response.statusCode! == 200) {
+      debugPrint('Rejected user $uid');
+      return;
+    }
+
+    debugPrint('$this rejectFriend has unknown response');
+    throw UnimplementedError;
+  }
+
+  Future<List<dynamic>> fetchFriendsList() async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final response = await dio.get(
+      '$_mainRoute/friends/list',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (response.statusCode! == 200) {
+      return List.from(response.data);
+    }
+
+    debugPrint('$this fetchFriendsList has unknown response');
+    throw UnimplementedError;
+  }
+
+  Future<List<dynamic>> fetchPendingList() async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException;
+    }
+
+    final response = await dio.get(
+      '$_mainRoute/pending/list',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (response.statusCode! == 200) {
+      return List.from(response.data);
+    }
+
+    debugPrint('$this fetchPendingList has unknown response');
     throw UnimplementedError;
   }
 

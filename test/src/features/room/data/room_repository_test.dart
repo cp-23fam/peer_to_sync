@@ -139,6 +139,7 @@ void main() {
         'user-1',
         20,
         RoomType.game,
+        RoomVisibility.public,
       );
 
       expect(
