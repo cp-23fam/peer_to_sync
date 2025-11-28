@@ -63,38 +63,88 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextFormField(
-                            // maxLength: 20,
-                            style: TextStyle(color: AppColors.whiteColor),
-                            decoration: InputDecoration(
-                              fillColor: AppColors.secondColor,
-                              labelText: 'Nom d\'utilisateur'.hardcoded,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p4),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(Sizes.p4),
+                                ),
+                                color: AppColors.secondColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.navBackgroundColor,
+                                    spreadRadius: 2,
+                                    blurRadius: 2,
+                                    offset: const Offset(3, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(Sizes.p4),
+                                child: Row(
+                                  children: [
+                                    gapW4,
+                                    Padding(
+                                      padding: const EdgeInsets.all(Sizes.p12),
+                                      child: Icon(
+                                        Icons.groups_2_outlined,
+                                        color: AppColors.whiteColor,
+                                        size: 45.0,
+                                      ),
+                                    ),
+                                    gapW16,
+                                    StyledText(
+                                      'Amis'.hardcoded,
+                                      Sizes.p24,
+                                      bold: true,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                           gapH16,
-                          TextFormField(
-                            // maxLength: 20,
-                            style: TextStyle(color: AppColors.whiteColor),
-                            decoration: InputDecoration(
-                              fillColor: AppColors.secondColor,
-                              labelText: 'Adresse mail'.hardcoded,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p4),
+                          GestureDetector(
+                            onTap: () {
+                              context.goNamed(RouteNames.edit.name);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(Sizes.p4),
+                                ),
+                                color: AppColors.secondColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.navBackgroundColor,
+                                    spreadRadius: 2,
+                                    blurRadius: 2,
+                                    offset: const Offset(3, 3),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          gapH16,
-                          TextFormField(
-                            // maxLength: 20,
-                            style: TextStyle(color: AppColors.whiteColor),
-                            decoration: InputDecoration(
-                              fillColor: AppColors.secondColor,
-                              labelText: 'Mot de passe'.hardcoded,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p4),
+                              child: Padding(
+                                padding: const EdgeInsets.all(Sizes.p4),
+                                child: Row(
+                                  children: [
+                                    gapW4,
+                                    Padding(
+                                      padding: const EdgeInsets.all(Sizes.p12),
+                                      child: Icon(
+                                        Icons.person_outline,
+                                        color: AppColors.whiteColor,
+                                        size: 50.0,
+                                      ),
+                                    ),
+                                    gapW16,
+                                    StyledText(
+                                      'Modifier le profil'.hardcoded,
+                                      Sizes.p24,
+                                      bold: true,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -154,16 +204,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 color: AppColors.redColor,
                 onPressed: () {
                   context.goNamed(RouteNames.home.name);
-                },
-              ),
-              gapW16,
-              Consumer(
-                builder: (context, ref, child) {
-                  return ChooseButton(
-                    text: 'Modifier',
-                    color: AppColors.greenColor,
-                    onPressed: () {},
-                  );
                 },
               ),
             ],
