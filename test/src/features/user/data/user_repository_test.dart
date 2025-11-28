@@ -4,6 +4,7 @@ import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 
@@ -23,6 +24,12 @@ void main() {
     userRepository = UserRepository(storageClient: storage, dioClient: dio);
   });
 
+  const token = 'abcd';
+
+  void prepareStorageMockToReturnTokenIfProvided(String? token) {
+    when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
+  }
+
   group('fetchCurrentUser', () {
     final user = {
       '_id': '691d822e15ab08bf78780ba1',
@@ -31,11 +38,6 @@ void main() {
       'friends': [],
       'pending': [],
     };
-    const token = 'abcd';
-
-    void prepareStorageMockToReturnTokenIfProvided(String? token) {
-      when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
-    }
 
     test('should return null when token is empty', () async {
       prepareStorageMockToReturnTokenIfProvided(null);
@@ -74,7 +76,7 @@ void main() {
 
       expect(
         () async => await userRepository.fetchCurrentUser(),
-        throwsA(UnimplementedError),
+        throwsA(isA<UnimplementedError>()),
       );
     });
   });
@@ -87,11 +89,6 @@ void main() {
       'friends': [],
       'pending': [],
     };
-    const token = 'abcd';
-
-    void prepareStorageMockToReturnTokenIfProvided(String? token) {
-      when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
-    }
 
     test('should return null when token is empty', () async {
       prepareStorageMockToReturnTokenIfProvided(null);
@@ -136,7 +133,7 @@ void main() {
 
       expect(
         () async => await userRepository.fetchUser('abcd'),
-        throwsA(UnimplementedError),
+        throwsA(isA<UnimplementedError>()),
       );
     });
   });
@@ -201,7 +198,180 @@ void main() {
       expect(
         () async =>
             await userRepository.logIn('test@example.com', 'Pa\$\$w0rd'),
-        throwsA(UnimplementedError),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+
+  group('logOut', () {
+    test('sould call storage to remove token', () async {
+      when(
+        () => storage.delete(key: 'token'),
+      ).thenAnswer((_) => Future.value());
+
+      await userRepository.logOut();
+
+      verify(() => storage.delete(key: 'token')).called(1);
+    });
+  });
+  group('signUp', () {
+    test('should return a user when status is 201 with correct data', () async {
+      dioAdapter.onPost(
+        '$apiPath/user/signup',
+        (server) => server.reply(201, {
+          '_id': '1',
+          'username': 'Fabrioche',
+          'email': 'fabian@ceff.ch',
+          'friends': [],
+          'pending': [],
+        }),
+      );
+
+      final result = await userRepository.signUp(
+        'Fabrioche',
+        'fabian@ceff.ch',
+        'Pa\$\$w0rd',
+      );
+      expect(
+        result,
+        const User(
+          uid: '1',
+          username: 'Fabrioche',
+          email: 'fabian@ceff.ch',
+          imageUrl: null,
+          friends: [],
+          pending: [],
+        ),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      dioAdapter.onPost(
+        '$apiPath/user/signup',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.signUp(
+          'Fabrioche',
+          'fabian@ceff.ch',
+          'Pa\$\$w0rd',
+        ),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+  group('addFriend', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.addFriend('fabian@ceff.ch'),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      const email = 'fabian@ceff.ch';
+
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onGet(
+        '$apiPath/user/email/$email',
+        (server) => server.reply(200, {
+          'uid': '1',
+          'username': 'Fabrioche',
+          'email': 'fabian@ceff.ch',
+          'friends': [],
+          'pending': [],
+        }),
+      );
+
+      dioAdapter.onPost(
+        '$apiPath/user/friends/add',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.addFriend(email),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+  group('removeFriend', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.removeFriend('1'),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      const id = 'user-1';
+
+      prepareStorageMockToReturnTokenIfProvided(token);
+
+      dioAdapter.onPost(
+        '$apiPath/user/friends/$id/remove',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.removeFriend(id),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+  group('acceptUser', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.acceptUser('1'),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      const id = 'user-1';
+
+      prepareStorageMockToReturnTokenIfProvided(token);
+
+      dioAdapter.onPost(
+        '$apiPath/user/friends/$id/accept',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.acceptUser(id),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+  group('rejectUser', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.rejectUser('1'),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      const id = 'user-1';
+
+      prepareStorageMockToReturnTokenIfProvided(token);
+
+      dioAdapter.onPost(
+        '$apiPath/user/friends/$id/reject',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.rejectUser(id),
+        throwsA(isA<UnimplementedError>()),
       );
     });
   });

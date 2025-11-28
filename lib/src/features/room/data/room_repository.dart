@@ -62,7 +62,7 @@ class RoomRepository {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final res = await dio.post(
@@ -85,14 +85,14 @@ class RoomRepository {
     }
 
     debugPrint('$this createRoom has unknown response : $res');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> joinRoom(RoomId id, {String? password}) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final res = await dio.post(
@@ -107,18 +107,18 @@ class RoomRepository {
 
     if (res.statusCode! == 403) {
       debugPrint('$this prevented user to joins room $id : Room is full');
-      throw NoSpaceLeftException;
+      throw NoSpaceLeftException();
     }
 
     debugPrint('User could not join room $id');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> quitRoom(RoomId id) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final res = await dio.post(
@@ -138,14 +138,14 @@ class RoomRepository {
     }
 
     debugPrint('User could not quit room $id');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> kickUser(RoomId id, UserId uid) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final res = await dio.post(
@@ -159,14 +159,14 @@ class RoomRepository {
     }
 
     debugPrint('User could not quit room $id');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> deleteRoom(RoomId id) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final res = await dio.delete(
@@ -180,7 +180,7 @@ class RoomRepository {
     }
 
     debugPrint('User could not delete room $id');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   @override

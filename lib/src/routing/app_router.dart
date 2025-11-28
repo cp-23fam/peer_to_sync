@@ -49,6 +49,7 @@ final router = GoRouter(
             if (snapshot.data == null) {
               return UserLoginScreen();
             } else {
+              // ? Should be build using a User parameter
               return UserSettingsScreen();
             }
           },

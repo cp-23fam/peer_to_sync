@@ -159,11 +159,11 @@ void main() {
   });
 
   group('joinRoom', () {
-    test('should throw LoggedOutException if token from storage is null', () {
+    test('should throw LoggedOutException() if token from storage is null', () {
       prepareStorageMockToReturnTokenIfProvided(null);
       expect(
         () async => await roomRepository.joinRoom('abcd'),
-        throwsA(LoggedOutException),
+        throwsA(isA<LoggedOutException>()),
       );
     });
 
@@ -180,7 +180,7 @@ void main() {
 
         expect(
           () async => await roomRepository.joinRoom(id),
-          throwsA(UnimplementedError),
+          throwsA(isA<UnimplementedError>()),
         );
       },
     );
@@ -196,16 +196,16 @@ void main() {
 
       expect(
         () async => await roomRepository.joinRoom(id),
-        throwsA(NoSpaceLeftException),
+        throwsA(isA<NoSpaceLeftException>()),
       );
     });
   });
   group('quitRoom', () {
-    test('should throw LoggedOutException if token from storage is null', () {
+    test('should throw LoggedOutException() if token from storage is null', () {
       prepareStorageMockToReturnTokenIfProvided(null);
       expect(
         () async => await roomRepository.quitRoom('abcd'),
-        throwsA(LoggedOutException),
+        throwsA(isA<LoggedOutException>()),
       );
     });
 
@@ -236,7 +236,7 @@ void main() {
 
         expect(
           () async => await roomRepository.quitRoom(id),
-          throwsA(UnimplementedError),
+          throwsA(isA<UnimplementedError>()),
         );
       },
     );
@@ -244,11 +244,11 @@ void main() {
   });
 
   group('kickPlayer', () {
-    test('should throw LoggedOutException if token from storage is null', () {
+    test('should throw LoggedOutException() if token from storage is null', () {
       prepareStorageMockToReturnTokenIfProvided(null);
       expect(
         () async => await roomRepository.kickUser('abcd', 'user-1'),
-        throwsA(LoggedOutException),
+        throwsA(isA<LoggedOutException>()),
       );
     });
 
@@ -266,18 +266,18 @@ void main() {
 
         expect(
           () async => await roomRepository.kickUser(id, userId),
-          throwsA(UnimplementedError),
+          throwsA(isA<UnimplementedError>()),
         );
       },
     );
   });
 
   group('deleteRoom', () {
-    test('should throw LoggedOutException if token from storage is null', () {
+    test('should throw LoggedOutException() if token from storage is null', () {
       prepareStorageMockToReturnTokenIfProvided(null);
       expect(
         () async => await roomRepository.deleteRoom('abcd'),
-        throwsA(LoggedOutException),
+        throwsA(isA<LoggedOutException>()),
       );
     });
 
@@ -294,7 +294,7 @@ void main() {
 
         expect(
           () async => await roomRepository.deleteRoom(id),
-          throwsA(UnimplementedError),
+          throwsA(isA<UnimplementedError>()),
         );
       },
     );

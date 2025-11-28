@@ -46,7 +46,7 @@ class UserRepository {
     }
 
     debugPrint('$this fetchCurrentUser has unknown response : $res');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<User?> fetchUser(UserId uid) async {
@@ -72,7 +72,7 @@ class UserRepository {
     }
 
     debugPrint('$this fetchCurrentUser has unknown response : $res');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<String> logIn(String email, String password) async {
@@ -100,7 +100,7 @@ class UserRepository {
     }
 
     debugPrint('$this logIn has unknown response : $res');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> logOut() async {
@@ -108,7 +108,7 @@ class UserRepository {
     await storage.delete(key: 'token');
   }
 
-  Future<User?> signUp(String username, String email, String password) async {
+  Future<User> signUp(String username, String email, String password) async {
     final res = await dio.post(
       '$_mainRoute/signup',
       data: {'username': username, 'email': email, 'password': password},
@@ -120,14 +120,14 @@ class UserRepository {
     }
 
     debugPrint('$this signUp has unknown response : $res');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> addFriend(String email) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final response = await dio.get(
@@ -150,14 +150,14 @@ class UserRepository {
     }
 
     debugPrint('$this addFriend has unknown response');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<void> removeFriend(UserId uid) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final response = await dio.post(
@@ -171,14 +171,14 @@ class UserRepository {
     }
 
     debugPrint('$this removeFriend has unknown response');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
-  Future<void> acceptFriend(UserId uid) async {
+  Future<void> acceptUser(UserId uid) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final response = await dio.post(
@@ -192,14 +192,14 @@ class UserRepository {
     }
 
     debugPrint('$this acceptFriend has unknown response');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
-  Future<void> rejectFriend(UserId uid) async {
+  Future<void> rejectUser(UserId uid) async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final response = await dio.post(
@@ -213,14 +213,14 @@ class UserRepository {
     }
 
     debugPrint('$this rejectFriend has unknown response');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<List<dynamic>> fetchFriendsList() async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final response = await dio.get(
@@ -233,14 +233,14 @@ class UserRepository {
     }
 
     debugPrint('$this fetchFriendsList has unknown response');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   Future<List<dynamic>> fetchPendingList() async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
-      throw LoggedOutException;
+      throw LoggedOutException();
     }
 
     final response = await dio.get(
@@ -253,7 +253,7 @@ class UserRepository {
     }
 
     debugPrint('$this fetchPendingList has unknown response');
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 
   @override
