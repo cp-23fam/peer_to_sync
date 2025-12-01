@@ -25,13 +25,14 @@ class RoomCard extends StatefulWidget {
 class _RoomCardState extends State<RoomCard> {
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
-        color: AppColors.thirdColor,
+        color: colors.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.navBackgroundColor,
+            color: colors.surface,
             spreadRadius: 2,
             blurRadius: 2,
             offset: const Offset(3, 2),
@@ -50,7 +51,7 @@ class _RoomCardState extends State<RoomCard> {
                     Container(
                       padding: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundIconColor,
+                        color: colors.iconBackground,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(5),
                         ),
@@ -58,7 +59,7 @@ class _RoomCardState extends State<RoomCard> {
                       child: Icon(
                         Icons.person_outline,
                         size: 38.0,
-                        color: AppColors.whiteColor,
+                        color: colors.onSurface,
                       ),
                     ),
                     gapW12,
@@ -96,7 +97,7 @@ class _RoomCardState extends State<RoomCard> {
                     Container(
                       padding: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundIconAccent,
+                        color: colors.iconAccent,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(5),
                         ),
@@ -107,7 +108,7 @@ class _RoomCardState extends State<RoomCard> {
                           Icon(
                             Icons.group,
                             size: Sizes.p32,
-                            color: AppColors.whiteColor,
+                            color: colors.onSurface,
                           ),
                           gapW8,
                           StyledText(
@@ -133,10 +134,10 @@ class _RoomCardState extends State<RoomCard> {
                           Radius.circular(Sizes.p4),
                         ),
                         color: widget.room.status == RoomStatus.playing
-                            ? AppColors.redColor.withAlpha(150)
+                            ? colors.error.withAlpha(150)
                             : widget.room.status == RoomStatus.waiting
-                            ? AppColors.orangeColor.withAlpha(150)
-                            : AppColors.greenColor.withAlpha(150),
+                            ? colors.orange.withAlpha(150)
+                            : colors.green.withAlpha(150),
                       ),
                       child: Center(
                         child: StyledText(
@@ -186,8 +187,8 @@ class _RoomCardState extends State<RoomCard> {
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all<Color>(
                               widget.room.users.length == widget.room.maxPlayers
-                                  ? AppColors.firstColor
-                                  : AppColors.greenColor,
+                                  ? colors.primary
+                                  : colors.green,
                             ),
                             shape:
                                 WidgetStateProperty.all<RoundedRectangleBorder>(

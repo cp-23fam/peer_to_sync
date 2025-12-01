@@ -26,12 +26,13 @@ class _RoomTypeListState extends State<RoomTypeList> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(Sizes.p8),
       child: Container(
         height: 180,
         padding: const EdgeInsets.all(Sizes.p16),
-        color: AppColors.thirdColor.withValues(alpha: 0.5),
+        color: colors.surface.withValues(alpha: 0.5),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -46,7 +47,7 @@ class _RoomTypeListState extends State<RoomTypeList> {
                   margin: const EdgeInsets.all(Sizes.p4),
                   padding: const EdgeInsets.all(Sizes.p4),
                   color: type == selectedType
-                      ? AppColors.goldColor
+                      ? colors.gold
                       : Colors.transparent,
                   child: GestureDetector(
                     onTap: () {
@@ -56,7 +57,7 @@ class _RoomTypeListState extends State<RoomTypeList> {
                       });
                     },
                     child: Container(
-                      color: AppColors.firstColor,
+                      color: colors.primary,
                       child: type == RoomType.game
                           ? const Icon(Icons.games_outlined, size: 50.0)
                           : type == RoomType.collab

@@ -7,11 +7,12 @@ import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
 Future<dynamic> loggedOutDialog(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: AppColors.secondColor,
+        backgroundColor: colors.secondary,
         title: StyledText('Vous n\'êtes pas connecté'.hardcoded, 30.0),
         content: Text(
           'Veuillez d\'abord vous connecter avant de pouvoir utiliser cette fonctionnalitée.'
@@ -21,10 +22,10 @@ Future<dynamic> loggedOutDialog(BuildContext context) {
           ChooseButton(
             onPressed: () => context.goNamed(RouteNames.user.name),
             text: 'Connexion',
-            color: AppColors.greenColor,
+            color: colors.green,
           ),
           ChooseButton(
-            color: AppColors.firstColor,
+            color: colors.primary,
             onPressed: () => Navigator.of(context).pop(),
             text: 'OK',
           ),
