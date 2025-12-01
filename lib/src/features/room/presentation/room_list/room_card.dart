@@ -154,11 +154,11 @@ class _RoomCardState extends State<RoomCard> {
                               widget.room.users.length == widget.room.maxPlayers
                               ? null
                               : () async {
-                                  await ref
-                                      .read(roomRepositoryProvider)
-                                      .joinRoom(widget.room.id)
-                                      .then(
-                                        (value) {
+                                  try {
+                                    await ref
+                                        .read(roomRepositoryProvider)
+                                        .joinRoom(widget.room.id)
+                                        .then((value) {
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
                                                 context.goNamed(
@@ -168,20 +168,14 @@ class _RoomCardState extends State<RoomCard> {
                                                   },
                                                 );
                                               });
-                                        },
-                                        onError: (e) {
-                                          if (e == LoggedOutException) {
-                                            WidgetsBinding.instance
-                                                .addPostFrameCallback(
-                                                  (_) =>
-                                                      loggedOutDialog(context),
-                                                );
-                                            return;
-                                          }
-
-                                          throw e;
-                                        },
-                                      );
+                                        });
+                                  } on LoggedOutException {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback(
+                                          (_) => loggedOutDialog(context),
+                                        );
+                                    return;
+                                  }
                                 },
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all<Color>(
