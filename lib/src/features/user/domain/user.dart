@@ -26,7 +26,7 @@ class User extends Equatable {
   final UserId uid;
   final String username;
   final String email;
-  final String? imageUrl;
+  final String imageUrl;
   final List<UserId> friends;
   final List<UserId> pending;
 

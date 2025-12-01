@@ -238,7 +238,7 @@ void main() {
           uid: '1',
           username: 'Fabrioche',
           email: 'fabian@ceff.ch',
-          imageUrl: null,
+          imageUrl: '',
           friends: [],
           pending: [],
         ),
