@@ -53,7 +53,7 @@ class RoomRepository {
 
   Future<Room> createRoom(
     String name,
-    String hostId,
+    UserId hostId,
     int maxPlayers,
     RoomType type,
     RoomVisibility visibility, {

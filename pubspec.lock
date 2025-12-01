@@ -368,6 +368,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  map_fields:
+    dependency: "direct main"
+    description:
+      name: map_fields
+      sha256: a504f118665aa3ee84656a714bc7c40ac2750e1edc1ace10714620fd8282b2d9
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   matcher:
     dependency: transitive
     description:
