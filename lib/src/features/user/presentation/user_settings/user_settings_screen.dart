@@ -58,10 +58,10 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       ),
                     ),
                     gapH24,
-                    const ProfilePicture(),
+                    ProfilePicture(user!.imageUrl),
                     Padding(
                       padding: const EdgeInsets.all(Sizes.p8),
-                      child: StyledText(user!.username, 32.0, bold: true),
+                      child: StyledText(user.username, 32.0, bold: true),
                     ),
                     gapH16,
                     Padding(

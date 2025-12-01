@@ -49,7 +49,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                       ),
                     ),
                     gapH24,
-                    const ProfilePicture(),
+                    ProfilePicture(user!.imageUrl),
                     gapH16,
                     Padding(
                       padding: const EdgeInsets.all(Sizes.p12),

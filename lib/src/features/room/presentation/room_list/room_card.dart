@@ -214,6 +214,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
@@ -267,10 +268,9 @@ class _RoomCardState extends State<RoomCard> {
                     color: colors.iconBackground,
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                   ),
-                  child: Icon(
-                    Icons.person_outline,
-                    size: 38.0,
-                    color: colors.onSurface,
+                  child: SmallUserImage(
+                    colors: colors,
+                    userId: widget.room.hostId,
                   ),
                 ),
                 gapW12,

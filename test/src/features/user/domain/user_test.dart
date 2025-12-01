@@ -6,7 +6,7 @@ void main() {
     uid: 'user-1',
     username: 'User1',
     email: 'test@example.com',
-    imageUrl: null,
+    imageUrl: '',
     friends: [],
     pending: [],
   );

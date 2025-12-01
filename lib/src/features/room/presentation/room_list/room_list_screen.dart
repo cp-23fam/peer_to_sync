@@ -7,6 +7,8 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_list/room_card.dart';
+import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/presentation/user_settings/profile_picture.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -47,14 +49,34 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   StyledText('Salles'.hardcoded, 30.0, bold: true, upper: true),
                   GestureDetector(
                     onTap: () => context.goNamed(RouteNames.user.name),
-                    child: CircleAvatar(
-                      backgroundColor: colors.iconBackground,
-                      radius: 28.0,
-                      child: Icon(
-                        Icons.person_outline,
-                        color: colors.onSurface,
-                        size: 40.0,
-                      ),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final userData = ref.watch(userInfosProvider);
+
+                        return userData.when(
+                          data: (user) {
+                            return ProfilePicture(user!.imageUrl, radius: 40.0);
+                          },
+                          error: (error, stackTrace) => CircleAvatar(
+                            backgroundColor: colors.secondary,
+                            radius: 40.0,
+                            child: Icon(
+                              Icons.close,
+                              color: colors.onSurface,
+                              size: 40.0,
+                            ),
+                          ),
+                          loading: () => CircleAvatar(
+                            backgroundColor: colors.secondary,
+                            radius: 40.0,
+                            child: Icon(
+                              Icons.person_outline,
+                              color: colors.onSurface,
+                              size: 40.0,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

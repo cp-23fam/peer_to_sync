@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
-class ProfilePicture extends StatefulWidget {
-  const ProfilePicture({super.key});
+class ProfilePicture extends StatelessWidget {
+  const ProfilePicture(this.imageUrl, {this.radius = 80.0, super.key});
 
-  @override
-  State<ProfilePicture> createState() => _ProfilePictureState();
-}
+  final String imageUrl;
+  final double radius;
 
-class _ProfilePictureState extends State<ProfilePicture> {
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
+    // final colors = Theme.of(context).colorScheme;
 
     return CircleAvatar(
-      backgroundColor: colors.secondary,
-      radius: 80.0,
-      child: Icon(Icons.person_outline, color: colors.onSurface, size: 95.0),
+      // backgroundColor: colors.secondary,
+      backgroundImage: NetworkImage(imageUrl),
+      onBackgroundImageError: (exception, stackTrace) =>
+          debugPrint('Error fetching imageUrl : $exception'),
+      radius: radius,
+      // child: Icon(Icons.person_outline, color: colors.onSurface, size: 95.0),
     );
   }
 }
