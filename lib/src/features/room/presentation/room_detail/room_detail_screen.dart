@@ -47,6 +47,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Consumer(
@@ -68,7 +69,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                     Container(
                       height: 80,
                       padding: const EdgeInsets.all(Sizes.p12),
-                      color: AppColors.navBackgroundColor,
+                      color: colors.surface,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
 
@@ -149,7 +150,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
       bottomNavigationBar: ClipRRect(
         child: Container(
           height: 64,
-          color: AppColors.navBackgroundColor,
+          color: colors.surface,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -157,7 +158,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                 builder: (context, ref, child) {
                   return ChooseButton(
                     text: 'Quitter',
-                    color: AppColors.redColor,
+                    color: colors.error,
                     onPressed: () async {
                       await ref
                           .read(roomRepositoryProvider)
@@ -173,7 +174,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
               gapW16,
               ChooseButton(
                 text: 'Lancer',
-                color: AppColors.greenColor,
+                color: colors.green,
                 onPressed: () {},
               ),
             ],

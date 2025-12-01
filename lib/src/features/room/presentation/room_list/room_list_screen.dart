@@ -32,6 +32,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -39,7 +40,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
             Container(
               height: 80,
               padding: const EdgeInsets.all(Sizes.p12),
-              color: AppColors.navBackgroundColor,
+              color: colors.surface,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -47,11 +48,11 @@ class _RoomListScreenState extends State<RoomListScreen> {
                   GestureDetector(
                     onTap: () => context.goNamed(RouteNames.user.name),
                     child: CircleAvatar(
-                      backgroundColor: AppColors.backgroundIconColor,
+                      backgroundColor: colors.iconBackground,
                       radius: 28.0,
                       child: Icon(
                         Icons.person_outline,
-                        color: AppColors.whiteColor,
+                        color: colors.onSurface,
                         size: 40.0,
                       ),
                     ),
@@ -63,17 +64,15 @@ class _RoomListScreenState extends State<RoomListScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: Sizes.p12),
               child: TextField(
-                style: TextStyle(color: AppColors.whiteColor),
+                style: TextStyle(color: colors.onSurface),
                 decoration: InputDecoration(
                   hintText: 'Rechercher une salle...',
-                  hintStyle: TextStyle(
-                    color: AppColors.whiteColor.withAlpha(150),
-                  ),
+                  hintStyle: TextStyle(color: colors.onSurface.withAlpha(150)),
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Sizes.p4),
                   ),
-                  fillColor: AppColors.firstColor,
+                  fillColor: colors.primary,
                 ),
                 onChanged: (value) {
                   setState(() => _searchQuery = value.toLowerCase());
@@ -122,13 +121,13 @@ class _RoomListScreenState extends State<RoomListScreen> {
       ),
       bottomNavigationBar: Container(
         height: 64,
-        color: AppColors.navBackgroundColor,
+        color: colors.surface,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ChooseButton(
               text: 'Créer une salle',
-              color: AppColors.greenColor,
+              color: colors.green,
               onPressed: () => context.goNamed(RouteNames.create.name),
             ),
           ],

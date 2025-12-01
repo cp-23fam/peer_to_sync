@@ -47,6 +47,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -54,7 +55,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
             Container(
               height: 80,
               padding: const EdgeInsets.all(Sizes.p12),
-              color: AppColors.navBackgroundColor,
+              color: colors.surface,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -85,9 +86,9 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                         return 'Veuillez entrer un nom de salle'.hardcoded;
                       },
                       // maxLength: 20,
-                      style: TextStyle(color: AppColors.whiteColor),
+                      style: TextStyle(color: colors.onSurface),
                       decoration: InputDecoration(
-                        fillColor: AppColors.secondColor,
+                        fillColor: colors.secondary,
                         labelText: 'Nom de la salle'.hardcoded,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Sizes.p4),
@@ -113,9 +114,9 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                         }
                         return 'Veuillez remplir ce champ'.hardcoded;
                       },
-                      style: TextStyle(color: AppColors.whiteColor),
+                      style: TextStyle(color: colors.onSurface),
                       decoration: InputDecoration(
-                        fillColor: AppColors.secondColor,
+                        fillColor: colors.secondary,
                         labelText: 'Nombre de participants'.hardcoded,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Sizes.p4),
@@ -150,13 +151,13 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
       bottomNavigationBar: ClipRRect(
         child: Container(
           height: 64,
-          color: AppColors.navBackgroundColor,
+          color: colors.surface,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ChooseButton(
                 text: 'Annuler',
-                color: AppColors.redColor,
+                color: colors.error,
                 onPressed: () {
                   context.goNamed(RouteNames.home.name);
                 },
@@ -166,7 +167,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                 builder: (context, ref, child) {
                   return ChooseButton(
                     text: 'Créer',
-                    color: AppColors.greenColor,
+                    color: colors.green,
                     onPressed: () async {
                       if (_formKey.currentState!.validate() &&
                           selectedType != null) {

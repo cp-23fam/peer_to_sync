@@ -22,19 +22,18 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
-        color: AppColors.secondColor,
+        color: colors.secondary,
         border: Border.all(
           width: 3.0,
-          color: !isHost
-              ? AppColors.goldColor.withAlpha(0)
-              : AppColors.goldColor,
+          color: !isHost ? colors.gold.withAlpha(0) : colors.gold,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.navBackgroundColor,
+            color: colors.surface,
             spreadRadius: 2,
             blurRadius: 2,
             offset: const Offset(3, 3),
@@ -58,14 +57,14 @@ class UserCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(Sizes.p8),
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundIconColor,
+                        color: colors.iconBackground,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(Sizes.p4),
                         ),
                       ),
                       child: Icon(
                         Icons.person_outline,
-                        color: AppColors.whiteColor,
+                        color: colors.onSurface,
                         size: 35.0,
                       ),
                     ),
@@ -73,13 +72,13 @@ class UserCard extends StatelessWidget {
                     StyledText(user.username, Sizes.p32, bold: true),
                     const Expanded(child: SizedBox()),
                     if (isHost)
-                      Icon(Icons.star, color: AppColors.goldColor, size: 45.0)
+                      Icon(Icons.star, color: colors.gold, size: 45.0)
                     else if (canControl)
                       IconButton(
                         onPressed: onKick,
                         icon: Icon(
                           Icons.delete,
-                          color: AppColors.redColor,
+                          color: colors.error,
                           size: 30.0,
                         ),
                       ),
@@ -94,14 +93,14 @@ class UserCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(Sizes.p8),
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundIconColor,
+                        color: colors.iconBackground,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(Sizes.p4),
                         ),
                       ),
                       child: Icon(
                         Icons.person_outline,
-                        color: AppColors.whiteColor,
+                        color: colors.onSurface,
                         size: 35.0,
                       ),
                     ),
@@ -109,7 +108,7 @@ class UserCard extends StatelessWidget {
                     const StyledText('. . .', Sizes.p32, bold: true),
                     const Expanded(child: SizedBox()),
                     if (isHost)
-                      Icon(Icons.star, color: AppColors.goldColor, size: 45.0),
+                      Icon(Icons.star, color: colors.gold, size: 45.0),
                   ],
                 );
               },
