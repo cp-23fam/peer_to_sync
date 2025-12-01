@@ -219,6 +219,8 @@ import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
@@ -259,25 +261,97 @@ class _RoomCardState extends State<RoomCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                        color: colors.iconBackground,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5),
+                Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: colors.iconBackground,
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: Icon(
+                    Icons.person_outline,
+                    size: 38.0,
+                    color: colors.onSurface,
+                  ),
+                ),
+                gapW12,
+                const Expanded(child: SizedBox()),
+                Container(
+                  padding: const EdgeInsets.all(2.0),
+                  decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: Stack(
+                    children: [
+                      Icon(Icons.group, size: 42.0, color: colors.surface),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14.0,
+                          vertical: 4.0,
+                        ),
+                        child: StyledText(
+                          '${widget.room.users.length}',
+                          20.0,
+                          bold: true,
                         ),
                       ),
-                      child: Icon(
-                        Icons.person_outline,
-                        size: 38.0,
-                        color: colors.onSurface,
-                      ),
-                    ),
-                    gapW12,
-                  ],
+                    ],
+                  ),
+                ),
+                gapW12,
+                Container(
+                  padding: const EdgeInsets.all(Sizes.p8),
+                  decoration: BoxDecoration(
+                    color: colors.background.withAlpha(150),
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: Icon(
+                    widget.room.type == RoomType.game
+                        ? Icons.games
+                        : widget.room.type == RoomType.collab
+                        ? Icons.handshake
+                        : Icons.question_mark,
+                    size: Sizes.p32,
+                    color: colors.onSurface,
+                  ),
+                ),
+                gapW12,
+                Container(
+                  padding: const EdgeInsets.all(Sizes.p8),
+                  decoration: BoxDecoration(
+                    color: widget.room.status == RoomStatus.playing
+                        ? colors.error.withAlpha(200)
+                        : widget.room.status == RoomStatus.waiting
+                        ? colors.orange.withAlpha(200)
+                        : colors.green.withAlpha(200),
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: Icon(
+                    widget.room.status == RoomStatus.playing
+                        ? Icons.close
+                        : widget.room.status == RoomStatus.waiting
+                        ? Icons.change_circle_outlined
+                        : Icons.check,
+                    size: Sizes.p32,
+                    color: colors.onSurface,
+                  ),
+                ),
+                gapW12,
+                Container(
+                  padding: const EdgeInsets.all(Sizes.p8),
+                  decoration: BoxDecoration(
+                    color: colors.background,
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: Icon(
+                    widget.room.visibility == RoomVisibility.public
+                        ? Icons.public
+                        : widget.room.visibility == RoomVisibility.private
+                        ? Icons.lock
+                        : Icons.groups_2_outlined,
+                    size: Sizes.p32,
+                    color: colors.onSurface,
+                  ),
                 ),
               ],
             ),
@@ -306,61 +380,14 @@ class _RoomCardState extends State<RoomCard> {
                     ),
                     gapH4,
                     StyledText(widget.room.name, 20.0),
-                    gapH8,
-                    Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                        color: colors.iconAccent,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          gapW4,
-                          Icon(
-                            Icons.group,
-                            size: Sizes.p32,
-                            color: colors.onSurface,
-                          ),
-                          gapW8,
-                          StyledText(
-                            '${widget.room.users.length} / ${widget.room.maxPlayers}',
-                            20.0,
-                          ),
-                          gapW8,
-                        ],
-                      ),
-                    ),
+                    // gapH8,
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    gapH32,
-                    Container(
-                      width: 140,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(Sizes.p4),
-                        ),
-                        color: widget.room.status == RoomStatus.playing
-                            ? colors.error.withAlpha(150)
-                            : widget.room.status == RoomStatus.waiting
-                            ? colors.orange.withAlpha(150)
-                            : colors.green.withAlpha(150),
-                      ),
-                      child: Center(
-                        child: StyledText(
-                          widget.room.status.name,
-                          16.0,
-                          bold: true,
-                        ),
-                      ),
-                    ),
-                    gapH12,
+                    gapH20,
                     Consumer(
                       builder: (context, ref, child) {
                         return ElevatedButton(
