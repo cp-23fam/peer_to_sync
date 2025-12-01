@@ -5,12 +5,13 @@ import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_c
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/room_detail_screen.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_list/room_list_screen.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/presentation/friends/nav/friends_nav_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_form/user_creation_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_form/user_login_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_form/user_update_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_settings/user_settings_screen.dart';
 
-enum RouteNames { home, create, detail, signup, user, edit }
+enum RouteNames { home, create, detail, signup, user, edit, friends }
 
 final router = GoRouter(
   routes: [
@@ -65,6 +66,11 @@ final router = GoRouter(
       path: '/edit',
       name: RouteNames.edit.name,
       builder: (context, state) => UserUpdateScreen(),
+    ),
+    GoRoute(
+      path: '/friends',
+      name: RouteNames.friends.name,
+      builder: (context, state) => FriendsNavScreen(),
     ),
   ],
 );

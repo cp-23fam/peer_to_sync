@@ -70,7 +70,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              context.goNamed(RouteNames.friends.name);
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.all(
