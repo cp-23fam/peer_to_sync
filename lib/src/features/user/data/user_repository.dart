@@ -23,6 +23,34 @@ class UserRepository {
   late final FlutterSecureStorage storage;
   late final Dio dio;
 
+  Future<List<User>> fetchUserList({int? maxUsers, int? page}) async {
+    // MaxUsers = 30
+    // Page = 0
+
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException();
+    }
+
+    final res = await dio.get(
+      _mainRoute,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode == 200) {
+      final users = <User>[];
+
+      res.data.forEach((d) => users.add(User.fromMap(d)));
+
+      debugPrint('$this has fetched ${users.length} users (page ${page ?? 0})');
+      return users;
+    }
+
+    debugPrint('$this fetchUserList has unknown response : $res');
+    throw UnimplementedError();
+  }
+
   Future<User?> fetchCurrentUser() async {
     final String? token = await fetchToken(storage);
 
@@ -31,7 +59,7 @@ class UserRepository {
     }
 
     final res = await dio.get(
-      _mainRoute,
+      '$_mainRoute/self',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
