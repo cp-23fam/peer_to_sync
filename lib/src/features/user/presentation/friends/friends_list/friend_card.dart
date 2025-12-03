@@ -8,10 +8,10 @@ import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/domain/user.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 
-class PendingCard extends StatelessWidget {
-  const PendingCard({required this.user, super.key});
+class FriendCard extends StatelessWidget {
+  const FriendCard({required this.friend, super.key});
 
-  final User user;
+  final User friend;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class PendingCard extends StatelessWidget {
         padding: const EdgeInsets.all(Sizes.p8),
         child: Consumer(
           builder: (context, ref, child) {
-            final userData = ref.watch(userProvider(user.uid));
+            final userData = ref.watch(userProvider(friend.uid));
 
             return userData.when(
               data: (user) {
@@ -44,22 +44,12 @@ class PendingCard extends StatelessWidget {
                     StyledText(user.username, Sizes.p32, bold: true),
                     const Expanded(child: SizedBox()),
                     CircleButton(
-                      icon: Icons.close,
+                      icon: Icons.delete,
                       color: colors.error,
                       onPressed: () async {
                         await ref
                             .read(userRepositoryProvider)
-                            .rejectUser(user.uid);
-                      },
-                    ),
-                    gapW12,
-                    CircleButton(
-                      icon: Icons.check,
-                      color: colors.green,
-                      onPressed: () async {
-                        await ref
-                            .read(userRepositoryProvider)
-                            .acceptUser(user.uid);
+                            .removeFriend(friend.uid);
                       },
                     ),
                     gapW4,

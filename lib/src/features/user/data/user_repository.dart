@@ -169,6 +169,7 @@ class UserRepository {
 
     final res = await dio.post(
       '$_mainRoute/friends/add',
+      data: {'email': email},
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
@@ -244,7 +245,7 @@ class UserRepository {
     throw UnimplementedError();
   }
 
-  Future<List<dynamic>> fetchFriendsList() async {
+  Future<List<User>> fetchFriendsList() async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
@@ -257,14 +258,18 @@ class UserRepository {
     );
 
     if (response.statusCode! == 200) {
-      return List.from(response.data);
+      final users = <User>[];
+
+      response.data.forEach((d) => users.add(User.fromMap(d)));
+
+      return users;
     }
 
     debugPrint('$this fetchFriendsList has unknown response');
     throw UnimplementedError();
   }
 
-  Future<List<dynamic>> fetchPendingList() async {
+  Future<List<User>> fetchPendingList() async {
     final String? token = await fetchToken(storage);
 
     if (token == null) {
@@ -277,7 +282,11 @@ class UserRepository {
     );
 
     if (response.statusCode! == 200) {
-      return List.from(response.data);
+      final users = <User>[];
+
+      response.data.forEach((d) => users.add(User.fromMap(d)));
+
+      return users;
     }
 
     debugPrint('$this fetchPendingList has unknown response');
@@ -300,8 +309,20 @@ final userInfosProvider = FutureProvider.autoDispose<User?>((ref) {
   return provider;
 });
 
-final pendingsProvider = FutureProvider.autoDispose<List<dynamic>>((ref) {
+final usersProvider = FutureProvider.autoDispose<List<User?>>((ref) {
+  final provider = ref.watch(userRepositoryProvider).fetchUserList();
+
+  return provider;
+});
+
+final pendingsProvider = FutureProvider.autoDispose<List<User>>((ref) {
   final provider = ref.watch(userRepositoryProvider).fetchPendingList();
+
+  return provider;
+});
+
+final friendsProvider = FutureProvider.autoDispose<List<User>>((ref) {
+  final provider = ref.watch(userRepositoryProvider).fetchFriendsList();
 
   return provider;
 });
