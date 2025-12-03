@@ -23,7 +23,23 @@ class _FriendsPendingListScreenState extends State<FriendsPendingListScreen> {
       child: Column(
         children: [
           gapH4,
-          StyledText('2 Demandes d\'amis', 20.0),
+          Consumer(
+            builder: (context, ref, child) {
+              final pendingData = ref.watch(pendingsProvider);
+              return pendingData.when(
+                data: (pendings) {
+                  return pendings.isEmpty
+                      ? const StyledText('', 20.0)
+                      // ? const StyledText('0 Demande d\'amis', 20.0)
+                      : pendings.length == 1
+                      ? StyledText('${pendings.length} Demande d\'amis', 20.0)
+                      : StyledText('${pendings.length} Demandes d\'amis', 20.0);
+                },
+                error: (error, st) => Center(child: Text(error.toString())),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              );
+            },
+          ),
           gapH12,
 
           Expanded(

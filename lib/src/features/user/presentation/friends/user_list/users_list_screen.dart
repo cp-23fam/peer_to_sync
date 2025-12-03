@@ -14,6 +14,7 @@ class UsersListScreen extends StatefulWidget {
 }
 
 class _UsersListScreenState extends State<UsersListScreen> {
+  String _searchQuery = '';
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -36,12 +37,35 @@ class _UsersListScreenState extends State<UsersListScreen> {
                 fillColor: colors.primary,
               ),
               onChanged: (value) {
-                // setState(() => _searchQuery = value.toLowerCase());
+                setState(() => _searchQuery = value.toLowerCase());
               },
             ),
           ),
           gapH12,
-          StyledText('28 Utilisateurs', 20.0),
+          Consumer(
+            builder: (context, ref, child) {
+              final usersData = ref.watch(usersProvider);
+              return usersData.when(
+                data: (users) {
+                  if (_searchQuery.isNotEmpty) {
+                    users = users.where((user) {
+                      return user!.username.toLowerCase().contains(
+                        _searchQuery,
+                      );
+                    }).toList();
+                  }
+                  return users.isEmpty
+                      ? const StyledText('', 20.0)
+                      // ? const StyledText('0 Utilisateur', 20.0)
+                      : users.length == 1
+                      ? StyledText('${users.length} Utilisateur', 20.0)
+                      : StyledText('${users.length} Utilisateurs', 20.0);
+                },
+                error: (error, st) => Center(child: Text(error.toString())),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              );
+            },
+          ),
           gapH12,
 
           Expanded(
@@ -50,10 +74,17 @@ class _UsersListScreenState extends State<UsersListScreen> {
                 final usersData = ref.watch(usersProvider);
                 return usersData.when(
                   data: (users) {
+                    if (_searchQuery.isNotEmpty) {
+                      users = users.where((user) {
+                        return user!.username.toLowerCase().contains(
+                          _searchQuery,
+                        );
+                      }).toList();
+                    }
                     return users.isEmpty
                         ? Center(
                             child: StyledText(
-                              'Aucune demande d\'ami trouvée.'.hardcoded,
+                              'Aucun utilisateur trouvé.'.hardcoded,
                               20.0,
                             ),
                           )

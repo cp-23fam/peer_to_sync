@@ -22,20 +22,36 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
       child: Column(
         children: [
           gapH4,
-          StyledText('1 Amis', 20.0),
+          Consumer(
+            builder: (context, ref, child) {
+              final friendData = ref.watch(friendsProvider);
+              return friendData.when(
+                data: (friends) {
+                  return friends.isEmpty
+                      ? const StyledText('', 20.0)
+                      // ? const StyledText('0 Ami', 20.0)
+                      : friends.length == 1
+                      ? StyledText('${friends.length} Ami', 20.0)
+                      : StyledText('${friends.length} Amis', 20.0);
+                },
+                error: (error, st) => Center(child: Text(error.toString())),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              );
+            },
+          ),
           gapH12,
 
           Expanded(
             child: Consumer(
               builder: (context, ref, child) {
-                final pendingData = ref.watch(friendsProvider);
+                final friendData = ref.watch(friendsProvider);
 
-                return pendingData.when(
+                return friendData.when(
                   data: (friends) {
                     return friends.isEmpty
                         ? Center(
                             child: StyledText(
-                              'Aucun ami trouvée.'.hardcoded,
+                              'Aucun ami trouvé.'.hardcoded,
                               20.0,
                             ),
                           )
