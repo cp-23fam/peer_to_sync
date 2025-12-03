@@ -230,6 +230,7 @@ extension ExtraColors on ColorScheme {
   Color get gold => const Color(0xFFFFB753); // Or
   Color get orange => const Color(0xFFD77D00); // Orange vif
   Color get green => const Color(0xFF1BA300); // Vert validation
+  Color get blue => const Color(0xFF07739A);
   Color get iconBackground => primaryContainer; // Fond icônes normal
   Color get iconAccent => secondaryContainer; // Fond icônes accent
 }

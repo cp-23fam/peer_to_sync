@@ -27,7 +27,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
   Widget roomsList() {
     return ListView.separated(
       itemBuilder: (context, index) => RoomCard(room: filteredRooms[index]),
-      separatorBuilder: (context, index) => gapH8,
+      separatorBuilder: (context, index) => gapH16,
       itemCount: filteredRooms.length,
     );
   }
