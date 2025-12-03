@@ -29,7 +29,7 @@ class MessageRepository {
 
     final res = await dio.post(
       _mainRoute,
-      data: {users: users, status: status},
+      data: {'users': users, 'status': status},
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
@@ -44,7 +44,7 @@ class MessageRepository {
   late final Dio dio;
   late final FlutterSecureStorage storage;
 
-  final String _mainRoute = '$apiUrl/synced_rooms';
+  final String _mainRoute = '$apiUrl/synced';
 
   Future<SyncedRoom<T, U>> fetchSyncedRoom<T, U>(SyncedRoomId id) async {
     final token = await _checkToken();
@@ -65,7 +65,7 @@ class MessageRepository {
   Future<void> sendNotified(SyncedRoomId id) async {
     final token = await _checkToken();
 
-    final res = await dio.post(
+    final res = await dio.patch(
       '$_mainRoute/$id/notified',
       options: Options(headers: {'Authorization': 'Brearer $token'}),
     );
@@ -91,7 +91,7 @@ class MessageRepository {
   Future<void> startMe(SyncedRoomId id) async {
     final token = await _checkToken();
 
-    final res = await dio.post(
+    final res = await dio.patch(
       '$_mainRoute/$id/start',
 
       options: Options(headers: {'Authorization': 'Brearer $token'}),
