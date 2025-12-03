@@ -218,6 +218,7 @@ import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
+import 'package:peer_to_sync/src/features/room/domain/no_space_left_exception.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
@@ -429,6 +430,8 @@ class _RoomCardState extends State<RoomCard> {
                                             (_) => loggedOutDialog(context),
                                           );
                                       return;
+                                    } on NoSpaceLeftException {
+                                      //
                                     }
                                   }
                                 },
