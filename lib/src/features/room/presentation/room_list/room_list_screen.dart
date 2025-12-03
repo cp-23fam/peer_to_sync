@@ -55,7 +55,22 @@ class _RoomListScreenState extends State<RoomListScreen> {
 
                         return userData.when(
                           data: (user) {
-                            return ProfilePicture(user!.imageUrl, radius: 40.0);
+                            if (user != null) {
+                              return ProfilePicture(
+                                user.imageUrl,
+                                radius: 40.0,
+                              );
+                            } else {
+                              return CircleAvatar(
+                                backgroundColor: colors.secondary,
+                                radius: 40.0,
+                                child: Icon(
+                                  Icons.login,
+                                  color: colors.onSurface,
+                                  size: 40.0,
+                                ),
+                              );
+                            }
                           },
                           error: (error, stackTrace) => CircleAvatar(
                             backgroundColor: colors.secondary,

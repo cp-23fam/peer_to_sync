@@ -242,7 +242,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ChooseButton(
-                text: 'Annuler',
+                text: 'Retour',
                 color: colors.error,
                 onPressed: () {
                   context.goNamed(RouteNames.home.name);

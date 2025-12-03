@@ -6,7 +6,7 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/presentation/friends/friends_list/friends_list_screen.dart';
-import 'package:peer_to_sync/src/features/user/presentation/friends/friends_request_list/friends_request_list_screen.dart';
+import 'package:peer_to_sync/src/features/user/presentation/friends/friends_pending_list/friends_pending_list_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/friends/nav/nav_bar.dart';
 import 'package:peer_to_sync/src/features/user/presentation/friends/user_list/users_list_screen.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
@@ -58,7 +58,7 @@ class _FriendsNavScreenState extends State<FriendsNavScreen> {
                 if (selectedTab == 0) {
                   return FriendsListScreen();
                 } else if (selectedTab == 1) {
-                  return FriendsRequestListScreen();
+                  return FriendsPendingListScreen();
                 } else {
                   return UsersListScreen();
                 }
@@ -75,7 +75,7 @@ class _FriendsNavScreenState extends State<FriendsNavScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ChooseButton(
-                text: 'Annuler',
+                text: 'Retour',
                 color: colors.error,
                 onPressed: () {
                   context.goNamed(RouteNames.user.name);

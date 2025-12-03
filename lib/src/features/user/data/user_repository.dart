@@ -18,7 +18,7 @@ class UserRepository {
     dio = dioClient ?? Dio(BaseOptions(validateStatus: (status) => true));
   }
 
-  final _mainRoute = '$apiUrl/user';
+  final _mainRoute = '$apiUrl/users';
 
   late final FlutterSecureStorage storage;
   late final Dio dio;
@@ -268,6 +268,12 @@ final userRepositoryProvider = Provider((ref) {
 
 final userInfosProvider = FutureProvider.autoDispose<User?>((ref) {
   final provider = ref.watch(userRepositoryProvider).fetchCurrentUser();
+
+  return provider;
+});
+
+final pendingsProvider = FutureProvider.autoDispose<List<dynamic>>((ref) {
+  final provider = ref.watch(userRepositoryProvider).fetchPendingList();
 
   return provider;
 });
