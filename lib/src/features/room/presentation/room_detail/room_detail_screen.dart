@@ -6,6 +6,8 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/no_user_card.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/user_card.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -71,11 +73,62 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       padding: const EdgeInsets.all(Sizes.p12),
                       color: colors.surface,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                        children: [StyledText(room.name, 36.0, bold: true)],
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(Sizes.p8),
+                            decoration: BoxDecoration(
+                              color: colors.background.withAlpha(150),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            child: Icon(
+                              room.type == RoomType.game
+                                  ? Icons.games
+                                  : room.type == RoomType.collab
+                                  ? Icons.handshake
+                                  : Icons.question_mark,
+                              size: Sizes.p32,
+                              color: colors.onSurface,
+                            ),
+                          ),
+
+                          StyledText(room.name, 36.0, bold: true),
+
+                          Container(
+                            padding: const EdgeInsets.all(Sizes.p8),
+                            decoration: BoxDecoration(
+                              color: room.visibility == RoomVisibility.friends
+                                  ? colors.blue
+                                  : colors.background,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            child: Icon(
+                              room.visibility == RoomVisibility.public
+                                  ? Icons.public
+                                  : room.visibility == RoomVisibility.private
+                                  ? Icons.lock
+                                  : Icons.groups_2_outlined,
+                              size: Sizes.p32,
+                              color: colors.onSurface,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    room.visibility == RoomVisibility.private
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: StyledText(
+                              'Code de la Room : ${room.password}',
+                              24.0,
+                            ),
+                          )
+                        : const SizedBox(),
                     gapH12,
                     Text('${room.users.length} / ${room.maxPlayers}'.hardcoded),
                     gapH12,

@@ -8,6 +8,7 @@ import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_type.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_type_list.dart';
+import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_visibility_list.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
@@ -23,16 +24,22 @@ class RoomCreationScreen extends StatefulWidget {
 
 class _RoomCreationScreenState extends State<RoomCreationScreen> {
   RoomType? selectedType = RoomType.values.map((e) => e).toList().first;
+  RoomVisibility? selectedVisibility = RoomVisibility.values
+      .map((e) => e)
+      .toList()
+      .first;
 
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController nameTextController;
   late final TextEditingController numberTextController;
+  late final TextEditingController passwordTextController;
 
   @override
   void initState() {
     nameTextController = TextEditingController();
     numberTextController = TextEditingController();
+    passwordTextController = TextEditingController();
 
     super.initState();
   }
@@ -41,6 +48,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
   void dispose() {
     nameTextController.dispose();
     numberTextController.dispose();
+    passwordTextController.dispose();
 
     super.dispose();
   }
@@ -129,6 +137,37 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                         if (type == newValue) selectedType = type;
                       }
                     }),
+                    RoomVisibilityList((newValue) {
+                      for (RoomVisibility visibility in RoomVisibility.values) {
+                        if (visibility == newValue) {
+                          setState(() {
+                            selectedVisibility = visibility;
+                          });
+                        }
+                      }
+                    }),
+                    gapH16,
+                    selectedVisibility == RoomVisibility.private
+                        ? TextFormField(
+                            controller: passwordTextController,
+                            validator: (value) {
+                              if (value != null && value.isNotEmpty) {
+                                return null;
+                              }
+
+                              return 'Veuillez entrer un mot de passe'
+                                  .hardcoded;
+                            },
+                            style: TextStyle(color: colors.onSurface),
+                            decoration: InputDecoration(
+                              fillColor: colors.secondary,
+                              labelText: 'Mot de passe de la room'.hardcoded,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(Sizes.p4),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
                     // FilterDropdown(
                     //   title: 'Type'.hardcoded,
                     //   selected: selectedType?.name,
@@ -189,8 +228,8 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
                               currentUser.uid,
                               int.parse(numberTextController.text),
                               selectedType!,
-                              RoomVisibility.public,
-                              password: null,
+                              selectedVisibility!,
+                              password: passwordTextController.text,
                             );
 
                         WidgetsBinding.instance.addPostFrameCallback((_) {

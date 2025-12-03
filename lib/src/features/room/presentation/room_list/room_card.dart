@@ -228,6 +228,7 @@ import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 import 'package:peer_to_sync/src/utils/logged_out_dialog.dart';
+import 'package:peer_to_sync/src/utils/private_room_dialog.dart';
 
 class RoomCard extends StatefulWidget {
   const RoomCard({required this.room, super.key});
@@ -398,20 +399,31 @@ class _RoomCardState extends State<RoomCard> {
                               ? null
                               : () async {
                                   try {
-                                    await ref
-                                        .read(roomRepositoryProvider)
-                                        .joinRoom(widget.room.id)
-                                        .then((value) {
-                                          WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
-                                                context.goNamed(
-                                                  RouteNames.detail.name,
-                                                  pathParameters: {
-                                                    'id': widget.room.id,
-                                                  },
-                                                );
-                                              });
-                                        });
+                                    if (widget.room.visibility ==
+                                        RoomVisibility.private) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback(
+                                            (_) => privateRoomDialog(
+                                              context,
+                                              widget.room,
+                                            ),
+                                          );
+                                      return;
+                                    } else {
+                                      await ref
+                                          .read(roomRepositoryProvider)
+                                          .joinRoom(widget.room.id);
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                            context.goNamed(
+                                              RouteNames.detail.name,
+                                              pathParameters: {
+                                                'id': widget.room.id,
+                                              },
+                                            );
+                                          });
+                                    }
                                   } on LoggedOutException {
                                     WidgetsBinding.instance
                                         .addPostFrameCallback(
