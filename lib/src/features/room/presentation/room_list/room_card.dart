@@ -398,18 +398,18 @@ class _RoomCardState extends State<RoomCard> {
                               widget.room.users.length == widget.room.maxPlayers
                               ? null
                               : () async {
-                                  try {
-                                    if (widget.room.visibility ==
-                                        RoomVisibility.private) {
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback(
-                                            (_) => privateRoomDialog(
-                                              context,
-                                              widget.room,
-                                            ),
-                                          );
-                                      return;
-                                    } else {
+                                  if (widget.room.visibility ==
+                                      RoomVisibility.private) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback(
+                                          (_) => privateRoomDialog(
+                                            context,
+                                            widget.room,
+                                          ),
+                                        );
+                                    return;
+                                  } else {
+                                    try {
                                       await ref
                                           .read(roomRepositoryProvider)
                                           .joinRoom(widget.room.id);
@@ -423,13 +423,13 @@ class _RoomCardState extends State<RoomCard> {
                                               },
                                             );
                                           });
+                                    } on LoggedOutException {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback(
+                                            (_) => loggedOutDialog(context),
+                                          );
+                                      return;
                                     }
-                                  } on LoggedOutException {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback(
-                                          (_) => loggedOutDialog(context),
-                                        );
-                                    return;
                                   }
                                 },
                           style: ButtonStyle(

@@ -96,7 +96,9 @@ class RoomRepository {
     }
 
     final res = await dio.post(
-      '$_mainRoute/$id/join',
+      password == null
+          ? '$_mainRoute/$id/join'
+          : '$_mainRoute/$id/join?password=$password',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
