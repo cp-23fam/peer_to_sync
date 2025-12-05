@@ -24,7 +24,7 @@ class ChooseButton extends StatelessWidget {
         elevation: 0,
         onPressed: onPressed,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        child: StyledText(text, 20.0),
+        child: StyledText(text, 20.0, white: true),
       ),
     );
   }

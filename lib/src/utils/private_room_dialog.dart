@@ -45,6 +45,9 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Sizes.p4),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(Sizes.p4),
+                  ),
                 ),
                 onChanged: (value) => password = value,
               ),

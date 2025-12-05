@@ -59,7 +59,7 @@ class _RoomListScreenState extends State<RoomListScreen> {
                             if (user != null) {
                               return ProfilePicture(
                                 user.imageUrl,
-                                radius: 40.0,
+                                radius: 28.0,
                               );
                             } else {
                               return CircleAvatar(
