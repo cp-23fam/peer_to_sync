@@ -358,15 +358,10 @@ final userRepositoryProvider = Provider((ref) {
   return UserRepository();
 });
 
-final userInfosProvider = StreamProvider.autoDispose<User?>((ref) async* {
-  final provider = await ref.watch(userRepositoryProvider).fetchCurrentUser();
+final userInfosProvider = FutureProvider.autoDispose<User?>((ref) {
+  final provider = ref.watch(userRepositoryProvider).fetchCurrentUser();
 
-  final timer = Timer.periodic(const Duration(seconds: 1), (_) {
-    ref.invalidateSelf();
-  });
-  ref.onDispose(timer.cancel);
-
-  yield provider;
+  return provider;
 });
 
 final usersProvider = StreamProvider.autoDispose<List<User?>>((ref) async* {
