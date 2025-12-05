@@ -36,7 +36,7 @@ class _RoomVisibilityListState extends State<RoomVisibilityList> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            StyledText('Visibilitée de la room :'.hardcoded, 16.0),
+            StyledText('Visibilitée de la salle :'.hardcoded, 16.0),
             gapH8,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

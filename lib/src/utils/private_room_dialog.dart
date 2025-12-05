@@ -18,7 +18,7 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
     builder: (context) {
       return AlertDialog(
         backgroundColor: colors.secondary,
-        title: StyledText('Veuillez entre le code de la room'.hardcoded, 30.0),
+        title: StyledText('Mot de passe'.hardcoded, 30.0),
         content: TextFormField(
           validator: (value) {
             if (value != null && value.isNotEmpty) {
@@ -30,7 +30,7 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
           style: TextStyle(color: colors.onSurface),
           decoration: InputDecoration(
             fillColor: colors.secondary,
-            labelText: 'Mot de passe de la room'.hardcoded,
+            labelText: 'Mot de passe de la salle'.hardcoded,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Sizes.p4),
             ),
@@ -53,14 +53,13 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
                     await ref
                         .read(roomRepositoryProvider)
                         .joinRoom(room.id, password: password);
-                    // .then((value) {
+
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       context.goNamed(
                         RouteNames.detail.name,
                         pathParameters: {'id': room.id},
                       );
                     });
-                    // });
                   }
                 },
                 text: 'Confirmer',

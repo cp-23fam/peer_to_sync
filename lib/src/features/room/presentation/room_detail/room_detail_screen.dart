@@ -124,7 +124,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         ? Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: StyledText(
-                              'Code de la Room : ${room.password}',
+                              'Mot de passe de la salle : ${room.password}',
                               24.0,
                             ),
                           )
