@@ -206,6 +206,28 @@ class UserRepository {
     throw UnimplementedError();
   }
 
+  Future<void> updateSelf(User user, String password) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException();
+    }
+
+    final res = await dio.put(
+      '$_mainRoute/self',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+      data: {'username': user.username, 'password': password},
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('User updated profile from $this');
+      return;
+    }
+
+    debugPrint('$this updateSelf has unknown response');
+    throw UnimplementedError();
+  }
+
   Future<void> addFriend(String email) async {
     final String? token = await fetchToken(storage);
 
