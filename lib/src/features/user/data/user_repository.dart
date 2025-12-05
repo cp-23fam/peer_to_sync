@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -309,22 +311,37 @@ final userInfosProvider = FutureProvider.autoDispose<User?>((ref) {
   return provider;
 });
 
-final usersProvider = FutureProvider.autoDispose<List<User?>>((ref) {
-  final provider = ref.watch(userRepositoryProvider).fetchUserList();
+final usersProvider = StreamProvider.autoDispose<List<User?>>((ref) async* {
+  final provider = await ref.watch(userRepositoryProvider).fetchUserList();
 
-  return provider;
+  final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    ref.invalidateSelf();
+  });
+  ref.onDispose(timer.cancel);
+
+  yield provider;
 });
 
-final pendingsProvider = FutureProvider.autoDispose<List<User>>((ref) {
-  final provider = ref.watch(userRepositoryProvider).fetchPendingList();
+final pendingsProvider = StreamProvider.autoDispose<List<User>>((ref) async* {
+  final provider = await ref.watch(userRepositoryProvider).fetchPendingList();
 
-  return provider;
+  final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    ref.invalidateSelf();
+  });
+  ref.onDispose(timer.cancel);
+
+  yield provider;
 });
 
-final friendsProvider = FutureProvider.autoDispose<List<User>>((ref) {
-  final provider = ref.watch(userRepositoryProvider).fetchFriendsList();
+final friendsProvider = StreamProvider.autoDispose<List<User>>((ref) async* {
+  final provider = await ref.watch(userRepositoryProvider).fetchFriendsList();
 
-  return provider;
+  final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    ref.invalidateSelf();
+  });
+  ref.onDispose(timer.cancel);
+
+  yield provider;
 });
 
 final userProvider = FutureProvider.family.autoDispose<User?, String>((
