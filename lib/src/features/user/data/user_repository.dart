@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
@@ -150,6 +151,28 @@ class UserRepository {
     }
 
     debugPrint('$this signUp has unknown response : $res');
+    throw UnimplementedError();
+  }
+
+  Future<void> updateProfilePicture(XFile file) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException();
+    }
+
+    final formData = FormData.fromMap({
+      'image': MultipartFile.fromBytes(await file.readAsBytes()),
+    });
+
+    final res = await dio.post('$_mainRoute/image', data: formData);
+
+    if (res.statusCode! == 200) {
+      debugPrint('User updated profile picture from $this');
+      return;
+    }
+
+    debugPrint('$this updateProfilePicture has unknown response');
     throw UnimplementedError();
   }
 
