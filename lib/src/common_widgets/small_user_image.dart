@@ -23,7 +23,7 @@ class SmallUserImage extends ConsumerWidget {
 
             image: DecorationImage(
               image: NetworkImage(user?.imageUrl ?? ''),
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
           ),

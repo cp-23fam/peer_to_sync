@@ -7,6 +7,7 @@ class StyledText extends StatelessWidget {
     this.fontSize, {
     this.upper = false,
     this.bold = false,
+    this.white = false,
     super.key,
   });
 
@@ -14,6 +15,7 @@ class StyledText extends StatelessWidget {
   final double fontSize;
   final bool upper;
   final bool bold;
+  final bool white;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class StyledText extends StatelessWidget {
     return Text(
       upper ? text.toUpperCase() : text,
       style: GoogleFonts.lato(
-        color: colors.onSurface,
+        color: white ? Colors.white : colors.onSurface,
         fontSize: fontSize,
         fontWeight: bold ? FontWeight.bold : FontWeight.normal,
       ),

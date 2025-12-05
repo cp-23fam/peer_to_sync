@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
-import 'package:peer_to_sync/src/features/user/presentation/user_settings/profile_picture.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -49,15 +47,6 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
     super.dispose();
   }
 
-  final _picker = ImagePicker();
-
-  pickImage(WidgetRef ref) async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      ref.read(userRepositoryProvider).updateProfilePicture(pickedFile);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -95,34 +84,6 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                         ),
                       ),
                       gapH24,
-                      Stack(
-                        children: [
-                          ProfilePicture(user.imageUrl),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 110, left: 110),
-                            child: GestureDetector(
-                              onTap: () {
-                                pickImage(ref);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(Sizes.p12),
-                                decoration: BoxDecoration(
-                                  color: colors.green,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(100),
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.edit,
-                                  size: Sizes.p32,
-                                  color: colors.onSurface,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      gapH16,
                       Padding(
                         padding: const EdgeInsets.all(Sizes.p12),
                         child: Column(

@@ -19,16 +19,19 @@ class NavBar extends StatelessWidget {
               Icons.group_outlined,
               isSelected: pageIndex == 0,
               onTap: () => onTap(0),
+              colors: colors,
             ),
             navItem(
               Icons.messenger_outline_rounded,
               isSelected: pageIndex == 1,
               onTap: () => onTap(1),
+              colors: colors,
             ),
             navItem(
               Icons.person_add_alt,
               isSelected: pageIndex == 2,
               onTap: () => onTap(2),
+              colors: colors,
             ),
           ],
         ),
@@ -36,13 +39,20 @@ class NavBar extends StatelessWidget {
     );
   }
 
-  Widget navItem(IconData icon, {required bool isSelected, Function()? onTap}) {
+  Widget navItem(
+    IconData icon, {
+    required bool isSelected,
+    Function()? onTap,
+    required ColorScheme colors,
+  }) {
     return Expanded(
       child: InkWell(
         onTap: onTap,
         child: Icon(
           icon,
-          color: isSelected ? Colors.white : Colors.white.withAlpha(100),
+          color: isSelected
+              ? colors.onSurface
+              : colors.onSurface.withAlpha(100),
           size: 40.0,
         ),
       ),
