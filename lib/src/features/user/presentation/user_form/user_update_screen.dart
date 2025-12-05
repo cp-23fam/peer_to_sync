@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -48,6 +52,12 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
     super.dispose();
   }
 
+  final _picker = ImagePicker();
+
+  pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -85,7 +95,33 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                         ),
                       ),
                       gapH24,
-                      ProfilePicture(user.imageUrl),
+                      Stack(
+                        children: [
+                          ProfilePicture(user.imageUrl),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 110, left: 110),
+                            child: GestureDetector(
+                              onTap: () {
+                                pickImage();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(Sizes.p12),
+                                decoration: BoxDecoration(
+                                  color: colors.green,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(100),
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.edit,
+                                  size: Sizes.p32,
+                                  color: colors.onSurface,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       gapH16,
                       Padding(
                         padding: const EdgeInsets.all(Sizes.p12),
