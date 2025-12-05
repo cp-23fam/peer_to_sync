@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -54,8 +51,11 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
 
   final _picker = ImagePicker();
 
-  pickImage() async {
+  pickImage(WidgetRef ref) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      ref.read(userRepositoryProvider).updateProfilePicture(pickedFile);
+    }
   }
 
   @override
@@ -102,7 +102,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                             padding: const EdgeInsets.only(top: 110, left: 110),
                             child: GestureDetector(
                               onTap: () {
-                                pickImage();
+                                pickImage(ref);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(Sizes.p12),

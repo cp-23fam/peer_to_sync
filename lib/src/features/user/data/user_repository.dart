@@ -165,7 +165,11 @@ class UserRepository {
       'image': MultipartFile.fromBytes(await file.readAsBytes()),
     });
 
-    final res = await dio.post('$_mainRoute/image', data: formData);
+    final res = await dio.post(
+      '$_mainRoute/image',
+      data: formData,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
 
     if (res.statusCode! == 200) {
       debugPrint('User updated profile picture from $this');
