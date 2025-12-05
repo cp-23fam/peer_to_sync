@@ -304,7 +304,7 @@ class _RoomCardState extends State<RoomCard> {
                 Container(
                   padding: const EdgeInsets.all(Sizes.p8),
                   decoration: BoxDecoration(
-                    color: colors.background.withAlpha(150),
+                    color: colors.surface.withAlpha(150),
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                   ),
                   child: Icon(
@@ -344,7 +344,7 @@ class _RoomCardState extends State<RoomCard> {
                   decoration: BoxDecoration(
                     color: widget.room.visibility == RoomVisibility.friends
                         ? colors.blue
-                        : colors.background,
+                        : colors.surface,
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                   ),
                   child: Icon(
