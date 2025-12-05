@@ -210,9 +210,9 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                     text: 'Modifier'.hardcoded,
                     color: colors.green,
                     onPressed: () async {
-                      setState(() {
-                        passwordError = null;
-                      });
+                      // setState(() {
+                      //   passwordError = null;
+                      // });
 
                       if (_key.currentState?.validate() ?? false) {
                         try {
@@ -228,11 +228,25 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                               );
 
                           if (usernameController.text != user.username) {
-                            // TODO: Change user infos
+                            await ref
+                                .read(userRepositoryProvider)
+                                .updateSelf(
+                                  user.copyWith(
+                                    username: usernameController.text,
+                                  ),
+                                  passwordConfirmController.text,
+                                );
                           }
 
-                          if (passwordConfirmController.text != '') {
-                            // TODO: Change user password
+                          if (confirmNewPasswordController.text != '') {
+                            await ref
+                                .read(userRepositoryProvider)
+                                .updateSelf(
+                                  user.copyWith(
+                                    username: usernameController.text,
+                                  ),
+                                  confirmNewPasswordController.text,
+                                );
                           }
 
                           WidgetsBinding.instance.addPostFrameCallback((_) {
