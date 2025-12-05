@@ -185,6 +185,27 @@ class UserRepository {
     throw UnimplementedError();
   }
 
+  Future<void> resetProfilePicture() async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException();
+    }
+
+    final res = await dio.post(
+      '$_mainRoute/image',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('User reset profile picture from $this');
+      return;
+    }
+
+    debugPrint('$this resetProfilePicture has unknown response');
+    throw UnimplementedError();
+  }
+
   Future<void> addFriend(String email) async {
     final String? token = await fetchToken(storage);
 
