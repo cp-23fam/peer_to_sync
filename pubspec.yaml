@@ -43,6 +43,7 @@ dependencies:
   email_validator: ^3.0.0
   toggle_switch: ^2.3.0
   adaptive_theme: ^3.7.2
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:
