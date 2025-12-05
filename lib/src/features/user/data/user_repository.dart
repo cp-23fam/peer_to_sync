@@ -161,14 +161,19 @@ class UserRepository {
       throw LoggedOutException();
     }
 
+    final bytes = await file.readAsBytes();
+
     final formData = FormData.fromMap({
-      'image': MultipartFile.fromBytes(await file.readAsBytes()),
+      'image': MultipartFile.fromBytes(bytes.toList(), filename: 'pp.png'),
     });
 
     final res = await dio.post(
       '$_mainRoute/image',
       data: formData,
-      options: Options(headers: {'Authorization': 'Bearer $token'}),
+      options: Options(
+        headers: {'Authorization': 'Bearer $token'},
+        contentType: 'multipart/form-data',
+      ),
     );
 
     if (res.statusCode! == 200) {
