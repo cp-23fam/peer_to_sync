@@ -322,7 +322,9 @@ class _RoomCardState extends State<RoomCard> {
                   decoration: BoxDecoration(
                     color: widget.room.status == RoomStatus.playing
                         ? colors.error.withAlpha(200)
-                        : widget.room.status == RoomStatus.waiting
+                        // : widget.room.status == RoomStatus.waiting
+                        // ? colors.orange.withAlpha(200)
+                        : widget.room.maxPlayers == widget.room.users.length
                         ? colors.orange.withAlpha(200)
                         : colors.green.withAlpha(200),
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -330,8 +332,10 @@ class _RoomCardState extends State<RoomCard> {
                   child: Icon(
                     widget.room.status == RoomStatus.playing
                         ? Icons.close
-                        : widget.room.status == RoomStatus.waiting
-                        ? Icons.change_circle_outlined
+                        // : widget.room.status == RoomStatus.waiting
+                        // ? Icons.change_circle_outlined
+                        : widget.room.maxPlayers == widget.room.users.length
+                        ? Icons.group_off
                         : Icons.check,
                     size: Sizes.p32,
                     color: colors.onSurface,

@@ -6,6 +6,7 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_list/room_card.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_settings/profile_picture.dart';
@@ -122,32 +123,89 @@ class _RoomListScreenState extends State<RoomListScreen> {
                 child: Consumer(
                   builder: (context, ref, child) {
                     final roomsData = ref.watch(roomListStreamProvider);
+                    final userData = ref.watch(userInfosProvider);
 
                     return roomsData.when(
                       data: (rooms) {
-                        if (_searchQuery.isNotEmpty) {
-                          rooms = rooms.where((room) {
-                            return room.name.toLowerCase().contains(
-                              _searchQuery,
-                            );
-                          }).toList();
-                        }
+                        return userData.when(
+                          data: (user) {
+                            if (user == null) {
+                              rooms = rooms
+                                  .where(
+                                    (room) =>
+                                        room.visibility ==
+                                            RoomVisibility.public ||
+                                        room.visibility ==
+                                            RoomVisibility.private,
+                                  )
+                                  .toList();
+                            } else {
+                              rooms = rooms.where((room) {
+                                if (room.visibility == RoomVisibility.public ||
+                                    room.visibility == RoomVisibility.private) {
+                                  return true;
+                                }
 
-                        filteredRooms = rooms;
+                                if (room.visibility == RoomVisibility.friends) {
+                                  return user.friends.contains(room.hostId);
+                                }
+                                return false;
+                              }).toList();
+                            }
 
-                        return rooms.isEmpty
-                            ? Center(
-                                child: StyledText(
-                                  'Aucune salle trouvée.'.hardcoded,
-                                  20.0,
-                                ),
-                              )
-                            : roomsList();
+                            if (_searchQuery.isNotEmpty) {
+                              rooms = rooms
+                                  .where(
+                                    (room) => room.name.toLowerCase().contains(
+                                      _searchQuery,
+                                    ),
+                                  )
+                                  .toList();
+                            }
+
+                            rooms.sort((a, b) {
+                              final aIsFriend =
+                                  // user?.friends.contains(a.hostId) ?? false;
+                                  user!.friends.contains(a.hostId)
+                                  ? a.visibility == RoomVisibility.friends
+                                        ? true
+                                        : false
+                                  : false;
+                              final bIsFriend =
+                                  // user?.friends.contains(b.hostId) ?? false;
+                                  user.friends.contains(b.hostId)
+                                  ? b.visibility == RoomVisibility.friends
+                                        ? true
+                                        : false
+                                  : false;
+
+                              if (aIsFriend && !bIsFriend) return -1;
+                              if (!aIsFriend && bIsFriend) return 1;
+
+                              return 0;
+                            });
+
+                            filteredRooms = rooms;
+
+                            return rooms.isEmpty
+                                ? Center(
+                                    child: StyledText(
+                                      'Aucune salle trouvée.'.hardcoded,
+                                      20,
+                                    ),
+                                  )
+                                : roomsList();
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (error, st) =>
+                              Center(child: Text(error.toString())),
+                        );
                       },
-                      error: (error, st) =>
-                          Center(child: Text(error.toString())),
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
+                      error: (error, st) =>
+                          Center(child: Text(error.toString())),
                     );
                   },
                 ),

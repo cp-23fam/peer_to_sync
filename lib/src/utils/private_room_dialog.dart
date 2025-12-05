@@ -6,38 +6,126 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
+import 'package:peer_to_sync/src/utils/logged_out_dialog.dart';
+
+// Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
+//   final colors = Theme.of(context).colorScheme;
+//   String password = '';
+//   return showDialog(
+//     context: context,
+//     builder: (context) {
+//       return AlertDialog(
+//         backgroundColor: colors.secondary,
+//         title: StyledText('Veuillez entre le code de la room'.hardcoded, 30.0),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             TextFormField(
+//               validator: (value) {
+//                 if (value != null && value.isNotEmpty) {
+//                   return null;
+//                 } else if (value != password) {
+//                   return 'Le mot de passe fourni est différent'.hardcoded;
+//                 } else {
+//                   return 'Veuillez entrer un mot de passe'.hardcoded;
+//                 }
+//               },
+//               style: TextStyle(color: colors.onSurface),
+//               decoration: InputDecoration(
+//                 fillColor: colors.secondary,
+//                 labelText: 'Mot de passe de la room'.hardcoded,
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(Sizes.p4),
+//                 ),
+//               ),
+//               onChanged: (value) {
+//                 password = value;
+//               },
+//             ),
+//           ],
+//         ),
+//         actions: [
+//           ChooseButton(
+//             color: colors.error,
+//             onPressed: () => Navigator.of(context).pop(),
+//             text: 'Annuler',
+//           ),
+//           Consumer(
+//             builder: (context, ref, child) {
+//               return ChooseButton(
+//                 onPressed: () async {
+//                   try {
+//                     if (room.password == password) {
+//                       await ref
+//                           .read(roomRepositoryProvider)
+//                           .joinRoom(room.id, password: password);
+//                       WidgetsBinding.instance.addPostFrameCallback((_) {
+//                         context.goNamed(
+//                           RouteNames.detail.name,
+//                           pathParameters: {'id': room.id},
+//                         );
+//                       });
+//                     } else {}
+//                   } on LoggedOutException {
+//                     WidgetsBinding.instance.addPostFrameCallback(
+//                       (_) => loggedOutDialog(context),
+//                     );
+//                     return;
+//                   }
+//                 },
+//                 text: 'Confirmer',
+//                 color: colors.green,
+//               );
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
 
 Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
   final colors = Theme.of(context).colorScheme;
+  final formKey = GlobalKey<FormState>();
   String password = '';
+
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         backgroundColor: colors.secondary,
-        title: StyledText('Veuillez entre le code de la room'.hardcoded, 30.0),
-        content: TextFormField(
-          validator: (value) {
-            if (value != null && value.isNotEmpty) {
-              return null;
-            }
-
-            return 'Veuillez entrer un mot de passe'.hardcoded;
-          },
-          style: TextStyle(color: colors.onSurface),
-          decoration: InputDecoration(
-            fillColor: colors.secondary,
-            labelText: 'Mot de passe de la room'.hardcoded,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Sizes.p4),
-            ),
+        title: StyledText('Veuillez entrer le code de la room'.hardcoded, 30.0),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Veuillez entrer un mot de passe'.hardcoded;
+                  }
+                  if (value != room.password) {
+                    return 'Mauvais code'.hardcoded;
+                  }
+                  return null;
+                },
+                style: TextStyle(color: colors.onSurface),
+                decoration: InputDecoration(
+                  labelText: 'Mot de passe de la room'.hardcoded,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(Sizes.p4),
+                  ),
+                ),
+                onChanged: (value) => password = value,
+              ),
+            ],
           ),
-          onChanged: (value) {
-            password = value;
-          },
         ),
         actions: [
           ChooseButton(
@@ -45,26 +133,32 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
             onPressed: () => Navigator.of(context).pop(),
             text: 'Annuler',
           ),
+
           Consumer(
             builder: (context, ref, child) {
               return ChooseButton(
+                text: 'Confirmer',
+                color: colors.green,
                 onPressed: () async {
-                  if (room.password == password) {
+                  if (!formKey.currentState!.validate()) return;
+
+                  try {
                     await ref
                         .read(roomRepositoryProvider)
                         .joinRoom(room.id, password: password);
-                    // .then((value) {
+
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       context.goNamed(
                         RouteNames.detail.name,
                         pathParameters: {'id': room.id},
                       );
                     });
-                    // });
+                  } on LoggedOutException {
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => loggedOutDialog(context),
+                    );
                   }
                 },
-                text: 'Confirmer',
-                color: colors.green,
               );
             },
           ),
