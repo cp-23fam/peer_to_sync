@@ -5,6 +5,7 @@ import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
+import 'package:peer_to_sync/src/features/user/domain/password_exception.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_settings/profile_picture.dart';
 import 'package:peer_to_sync/src/localization/string_hardcoded.dart';
 import 'package:peer_to_sync/src/routing/app_router.dart';
@@ -18,6 +19,35 @@ class UserUpdateScreen extends StatefulWidget {
 }
 
 class _UserUpdateScreenState extends State<UserUpdateScreen> {
+  final _key = GlobalKey<FormState>();
+
+  late TextEditingController usernameController;
+  late TextEditingController newPasswordController;
+  late TextEditingController confirmNewPasswordController;
+  late TextEditingController passwordConfirmController;
+
+  String? passwordError;
+
+  @override
+  void initState() {
+    usernameController = TextEditingController();
+    newPasswordController = TextEditingController();
+    confirmNewPasswordController = TextEditingController();
+    passwordConfirmController = TextEditingController();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    newPasswordController.dispose();
+    confirmNewPasswordController.dispose();
+    passwordConfirmController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -30,69 +60,129 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
 
             return userData.when(
               data: (user) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 80,
-                      padding: const EdgeInsets.all(Sizes.p12),
-                      color: colors.surface,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          StyledText(
-                            'Paramètres utilisateur'.hardcoded,
-                            30.0,
-                            bold: true,
-                            upper: true,
-                          ),
-                        ],
+                usernameController.value = TextEditingValue(
+                  text: user!.username,
+                );
+
+                return Form(
+                  key: _key,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 80,
+                        padding: const EdgeInsets.all(Sizes.p12),
+                        color: colors.surface,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StyledText(
+                              'Paramètres utilisateur'.hardcoded,
+                              30.0,
+                              bold: true,
+                              upper: true,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    gapH24,
-                    ProfilePicture(user!.imageUrl),
-                    gapH16,
-                    Padding(
-                      padding: const EdgeInsets.all(Sizes.p12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            style: TextStyle(color: colors.onSurface),
-                            decoration: InputDecoration(
-                              fillColor: colors.secondary,
-                              labelText: 'Nom d\'utilisateur'.hardcoded,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p4),
+                      gapH24,
+                      ProfilePicture(user.imageUrl),
+                      gapH16,
+                      Padding(
+                        padding: const EdgeInsets.all(Sizes.p12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                              controller: usernameController,
+                              validator: (value) {
+                                if (value == null || value == '') {
+                                  return 'Veuillez entrer un nom d\'utilisateur'
+                                      .hardcoded;
+                                }
+
+                                return null;
+                              },
+                              style: TextStyle(color: colors.onSurface),
+                              decoration: InputDecoration(
+                                fillColor: colors.secondary,
+                                labelText: 'Nom d\'utilisateur'.hardcoded,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(Sizes.p4),
+                                ),
                               ),
                             ),
-                          ),
-                          gapH16,
-                          TextFormField(
-                            style: TextStyle(color: colors.onSurface),
-                            decoration: InputDecoration(
-                              fillColor: colors.secondary,
-                              labelText: 'Adresse mail'.hardcoded,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p4),
+                            gapH16,
+                            const Divider(),
+                            gapH16,
+                            TextFormField(
+                              controller: newPasswordController,
+                              style: TextStyle(color: colors.onSurface),
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                fillColor: colors.onSurface, //colors.secondary,
+                                labelText: 'Nouveau mot de passe'.hardcoded,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(Sizes.p4),
+                                ),
                               ),
                             ),
-                          ),
-                          gapH16,
-                          TextFormField(
-                            style: TextStyle(color: colors.onSurface),
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              fillColor: colors.onSurface, //colors.secondary,
-                              labelText: 'Mot de passe'.hardcoded,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(Sizes.p4),
+                            gapH16,
+                            TextFormField(
+                              validator: (value) {
+                                if (newPasswordController.text != '' &&
+                                    (value == null || value == '')) {
+                                  return 'Veuillez confirmer votre nouveau mot de passe'
+                                      .hardcoded;
+                                }
+
+                                if (value != newPasswordController.text) {
+                                  return 'Les mots de passe ne correspondent pas'
+                                      .hardcoded;
+                                }
+
+                                return null;
+                              },
+                              controller: confirmNewPasswordController,
+                              style: TextStyle(color: colors.onSurface),
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                fillColor: colors.onSurface, //colors.secondary,
+                                labelText:
+                                    'Confirmer nouveau mot de passe'.hardcoded,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(Sizes.p4),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            gapH16,
+                            const Divider(),
+                            gapH16,
+                            TextFormField(
+                              forceErrorText: passwordError,
+                              controller: passwordConfirmController,
+                              validator: (value) {
+                                if (value == null || value == '') {
+                                  return 'Veuillez entrer votre mot de passe'
+                                      .hardcoded;
+                                }
+
+                                return null;
+                              },
+                              style: TextStyle(color: colors.onSurface),
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                fillColor: colors.onSurface, //colors.secondary,
+                                labelText: 'Mot de passe'.hardcoded,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(Sizes.p4),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
               error: (error, stackTrace) =>
@@ -110,7 +200,7 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ChooseButton(
-                text: 'Annuler',
+                text: 'Annuler'.hardcoded,
                 color: colors.error,
                 onPressed: () {
                   context.goNamed(RouteNames.user.name);
@@ -120,9 +210,44 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
               Consumer(
                 builder: (context, ref, child) {
                   return ChooseButton(
-                    text: 'Modifier',
+                    text: 'Modifier'.hardcoded,
                     color: colors.green,
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        passwordError = null;
+                      });
+
+                      if (_key.currentState?.validate() ?? false) {
+                        try {
+                          final user = await ref
+                              .read(userRepositoryProvider)
+                              .fetchCurrentUser();
+
+                          await ref
+                              .read(userRepositoryProvider)
+                              .logIn(
+                                user!.email,
+                                passwordConfirmController.text,
+                              );
+
+                          if (usernameController.text != user.username) {
+                            // TODO: Change user infos
+                          }
+
+                          if (passwordConfirmController.text != '') {
+                            // TODO: Change user password
+                          }
+
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            context.goNamed(RouteNames.user.name);
+                          });
+                        } on PasswordException {
+                          setState(() {
+                            passwordError = 'Mot de passe invalide'.hardcoded;
+                          });
+                        }
+                      }
+                    },
                   );
                 },
               ),

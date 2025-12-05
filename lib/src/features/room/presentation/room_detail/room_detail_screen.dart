@@ -79,7 +79,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           Container(
                             padding: const EdgeInsets.all(Sizes.p8),
                             decoration: BoxDecoration(
-                              color: colors.background.withAlpha(150),
+                              color: colors.surface.withAlpha(150),
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
                               ),
@@ -102,7 +102,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                             decoration: BoxDecoration(
                               color: room.visibility == RoomVisibility.friends
                                   ? colors.blue
-                                  : colors.background,
+                                  : colors.surface,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
                               ),
@@ -124,7 +124,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         ? Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: StyledText(
-                              'Code de la Room : ${room.password}',
+                              'Mot de passe de la salle : ${room.password}',
                               24.0,
                             ),
                           )

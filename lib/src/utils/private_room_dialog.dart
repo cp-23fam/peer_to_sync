@@ -12,82 +12,6 @@ import 'package:peer_to_sync/src/routing/app_router.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
 import 'package:peer_to_sync/src/utils/logged_out_dialog.dart';
 
-// Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
-//   final colors = Theme.of(context).colorScheme;
-//   String password = '';
-//   return showDialog(
-//     context: context,
-//     builder: (context) {
-//       return AlertDialog(
-//         backgroundColor: colors.secondary,
-//         title: StyledText('Veuillez entre le code de la room'.hardcoded, 30.0),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             TextFormField(
-//               validator: (value) {
-//                 if (value != null && value.isNotEmpty) {
-//                   return null;
-//                 } else if (value != password) {
-//                   return 'Le mot de passe fourni est différent'.hardcoded;
-//                 } else {
-//                   return 'Veuillez entrer un mot de passe'.hardcoded;
-//                 }
-//               },
-//               style: TextStyle(color: colors.onSurface),
-//               decoration: InputDecoration(
-//                 fillColor: colors.secondary,
-//                 labelText: 'Mot de passe de la room'.hardcoded,
-//                 border: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(Sizes.p4),
-//                 ),
-//               ),
-//               onChanged: (value) {
-//                 password = value;
-//               },
-//             ),
-//           ],
-//         ),
-//         actions: [
-//           ChooseButton(
-//             color: colors.error,
-//             onPressed: () => Navigator.of(context).pop(),
-//             text: 'Annuler',
-//           ),
-//           Consumer(
-//             builder: (context, ref, child) {
-//               return ChooseButton(
-//                 onPressed: () async {
-//                   try {
-//                     if (room.password == password) {
-//                       await ref
-//                           .read(roomRepositoryProvider)
-//                           .joinRoom(room.id, password: password);
-//                       WidgetsBinding.instance.addPostFrameCallback((_) {
-//                         context.goNamed(
-//                           RouteNames.detail.name,
-//                           pathParameters: {'id': room.id},
-//                         );
-//                       });
-//                     } else {}
-//                   } on LoggedOutException {
-//                     WidgetsBinding.instance.addPostFrameCallback(
-//                       (_) => loggedOutDialog(context),
-//                     );
-//                     return;
-//                   }
-//                 },
-//                 text: 'Confirmer',
-//                 color: colors.green,
-//               );
-//             },
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }
-
 Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
   final colors = Theme.of(context).colorScheme;
   final formKey = GlobalKey<FormState>();
@@ -98,7 +22,7 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
     builder: (context) {
       return AlertDialog(
         backgroundColor: colors.secondary,
-        title: StyledText('Veuillez entrer le code de la room'.hardcoded, 30.0),
+        title: StyledText('Mot de passe'.hardcoded, 30.0),
         content: Form(
           key: formKey,
           child: Column(
@@ -117,7 +41,7 @@ Future<dynamic> privateRoomDialog(BuildContext context, Room room) {
                 },
                 style: TextStyle(color: colors.onSurface),
                 decoration: InputDecoration(
-                  labelText: 'Mot de passe de la room'.hardcoded,
+                  labelText: 'Mot de passe de la salle'.hardcoded,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Sizes.p4),
                   ),

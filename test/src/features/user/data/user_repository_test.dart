@@ -35,6 +35,7 @@ void main() {
       '_id': '691d822e15ab08bf78780ba1',
       'email': 'test@example.com',
       'username': 'Fabrioche',
+      'imageUrl': 'https://localhost/storage/image/user-1',
       'friends': [],
       'pending': [],
     };
@@ -52,7 +53,7 @@ void main() {
         prepareStorageMockToReturnTokenIfProvided(token);
 
         dioAdapter.onGet(
-          '$apiPath/user',
+          '$apiPath/users/self',
           (server) => server.reply(401, {'message': 'Not authenticated'}),
         );
 
@@ -63,7 +64,10 @@ void main() {
 
     test('should return a User when status is 200', () async {
       prepareStorageMockToReturnTokenIfProvided(token);
-      dioAdapter.onGet('$apiPath/user', (server) => server.reply(200, user));
+      dioAdapter.onGet(
+        '$apiPath/users/self',
+        (server) => server.reply(200, user),
+      );
 
       final res = await userRepository.fetchCurrentUser();
       final result = User.fromMap(user);
@@ -72,7 +76,10 @@ void main() {
 
     test('should throw UnimplementedError when statusCode is unknown', () {
       prepareStorageMockToReturnTokenIfProvided(token);
-      dioAdapter.onGet('$apiPath/user', (server) => server.reply(600, {}));
+      dioAdapter.onGet(
+        '$apiPath/users/self',
+        (server) => server.reply(600, {}),
+      );
 
       expect(
         () async => await userRepository.fetchCurrentUser(),
@@ -86,6 +93,7 @@ void main() {
       '_id': '691d822e15ab08bf78780ba1',
       'email': 'test@example.com',
       'username': 'Fabrioche',
+      'imageUrl': 'https://localhost:3000/storage/images/user-1',
       'friends': [],
       'pending': [],
     };
@@ -103,7 +111,7 @@ void main() {
         prepareStorageMockToReturnTokenIfProvided(token);
 
         dioAdapter.onGet(
-          '$apiPath/user/$token',
+          '$apiPath/users/$token',
           (server) => server.reply(401, {'message': 'Not authenticated'}),
         );
 
@@ -115,7 +123,7 @@ void main() {
     test('should return a User when status is 200', () async {
       prepareStorageMockToReturnTokenIfProvided(token);
       dioAdapter.onGet(
-        '$apiPath/user/$token',
+        '$apiPath/users/$token',
         (server) => server.reply(200, user),
       );
 
@@ -127,7 +135,7 @@ void main() {
     test('should throw UnimplementedError when statusCode is unknown', () {
       prepareStorageMockToReturnTokenIfProvided(token);
       dioAdapter.onGet(
-        '$apiPath/user/$token',
+        '$apiPath/users/$token',
         (server) => server.reply(600, {}),
       );
 
@@ -149,7 +157,7 @@ void main() {
       prepareStorageMockToHandleWriteOn('abcd');
 
       dioAdapter.onPost(
-        '$apiPath/user/login',
+        '$apiPath/users/login',
         (server) => server.reply(200, {'token': 'abcd'}),
       );
       final result = await userRepository.logIn(
@@ -163,7 +171,7 @@ void main() {
       'should throw EmailException when status is 401 and message is "Unknown email"',
       () {
         dioAdapter.onPost(
-          '$apiPath/user/login',
+          '$apiPath/users/login',
           (server) => server.reply(401, {'message': 'Unknown email'}),
         );
         expect(
@@ -178,7 +186,7 @@ void main() {
       'should throw PasswordException when status is 401 and message is "Wrong password"',
       () {
         dioAdapter.onPost(
-          '$apiPath/user/login',
+          '$apiPath/users/login',
           (server) => server.reply(401, {'message': 'Wrong password'}),
         );
         expect(
@@ -191,7 +199,7 @@ void main() {
 
     test('should throw an error when status code is not handled', () {
       dioAdapter.onPost(
-        '$apiPath/user/login',
+        '$apiPath/users/login',
         (server) => server.reply(500, {}),
       );
 
@@ -217,11 +225,12 @@ void main() {
   group('signUp', () {
     test('should return a user when status is 201 with correct data', () async {
       dioAdapter.onPost(
-        '$apiPath/user/signup',
+        '$apiPath/users/signup',
         (server) => server.reply(201, {
           '_id': '1',
           'username': 'Fabrioche',
           'email': 'fabian@ceff.ch',
+          'imageUrl': '',
           'friends': [],
           'pending': [],
         }),
@@ -247,7 +256,7 @@ void main() {
 
     test('should throw UnimplementedError when statusCode is unknown', () {
       dioAdapter.onPost(
-        '$apiPath/user/signup',
+        '$apiPath/users/signup',
         (server) => server.reply(600, {}),
       );
 
@@ -276,18 +285,19 @@ void main() {
 
       prepareStorageMockToReturnTokenIfProvided(token);
       dioAdapter.onGet(
-        '$apiPath/user/email/$email',
+        '$apiPath/users/email/$email',
         (server) => server.reply(200, {
           'uid': '1',
           'username': 'Fabrioche',
           'email': 'fabian@ceff.ch',
+          'imageUrl': '',
           'friends': [],
           'pending': [],
         }),
       );
 
       dioAdapter.onPost(
-        '$apiPath/user/friends/add',
+        '$apiPath/users/friends/add',
         (server) => server.reply(600, {}),
       );
 
@@ -313,7 +323,7 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(token);
 
       dioAdapter.onPost(
-        '$apiPath/user/friends/$id/remove',
+        '$apiPath/users/friends/$id/remove',
         (server) => server.reply(600, {}),
       );
 
@@ -339,7 +349,7 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(token);
 
       dioAdapter.onPost(
-        '$apiPath/user/friends/$id/accept',
+        '$apiPath/users/friends/$id/accept',
         (server) => server.reply(600, {}),
       );
 
@@ -365,7 +375,7 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(token);
 
       dioAdapter.onPost(
-        '$apiPath/user/friends/$id/reject',
+        '$apiPath/users/friends/$id/reject',
         (server) => server.reply(600, {}),
       );
 
