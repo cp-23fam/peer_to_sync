@@ -8,6 +8,7 @@ extension ExtraColors on ColorScheme {
   Color get orange => const Color(0xFFD77D00); // Orange vif
   Color get green => const Color(0xFF1BA300); // Vert validation
   Color get blue => const Color(0xFF07739A);
+  Color get black => const Color(0xFF000000);
   Color get iconBackground => primaryContainer; // Fond icônes normal
   Color get iconAccent => secondaryContainer; // Fond icônes accent
 }
@@ -46,12 +47,14 @@ ThemeData lightTheme = ThemeData(
   colorScheme: const ColorScheme.light(
     primary: Color(0xFFBBBBBB), // Éléments principaux
     secondary: Color(0xFFCCCCCC), // Éléments secondaires
-    surface: Color(0xFFDDDDDD), // Cartes / containers
+    // surface: Color(0xFFDDDDDD), // Cartes / containers
+    surface: Color(0xFFF4F4F4), // Cartes / containers
     background: Colors.white, // Fond global
     error: Color(0xFFA30000), // Erreurs
   ),
 
-  scaffoldBackgroundColor: Colors.white,
+  // scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: Color(0xFFEEEEEE),
 
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
