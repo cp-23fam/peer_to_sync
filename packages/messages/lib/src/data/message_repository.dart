@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:messages/messages.dart';
 import 'package:messages/src/domain/json_storable.dart';
-import 'package:messages/src/domain/user_id.dart';
+import 'package:peer_to_sync/peer_to_sync.dart';
 
 class MessageRepository {
   MessageRepository({
@@ -211,6 +211,12 @@ final syncedFutureProvider = FutureProvider.family<SyncedRoom?, String>((
   id,
 ) {
   final provider = ref.watch(messageRepositoryProvider).fetchSyncedRoom(id);
+
+  return provider;
+});
+
+final getCurrentUser = FutureProvider.autoDispose<User?>((ref) {
+  final provider = ref.watch(userRepositoryProvider).fetchCurrentUser();
 
   return provider;
 });

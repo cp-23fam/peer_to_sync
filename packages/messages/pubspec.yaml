@@ -8,6 +8,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  peer_to_sync:
+    path: ../../
+
   collab:
     path: ../collab
 
