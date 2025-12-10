@@ -16,13 +16,13 @@ class SyncedRoom<O, S> extends Equatable {
     final status = map['status'];
 
     return SyncedRoom<O, S>(
-      id: map['id'],
+      id: map['_id'],
       started: map['started'] ?? false,
       users: List<String>.from(map['users']),
       objects: objects.map((o) => genericFromMap<O>(o)).toList(),
       status: status,
       userNotifyList: List<UserId>.from(map['userNotifyList']),
-      expirationTimeStamp: map['expirationTimeStamp']?.toInt() ?? 0,
+      expirationTimestamp: map['expirationTimestamp']?.toInt() ?? 0,
       widget: type.widget,
     );
   }
@@ -37,7 +37,7 @@ class SyncedRoom<O, S> extends Equatable {
     required this.objects,
     required this.status,
     required this.userNotifyList,
-    required this.expirationTimeStamp,
+    required this.expirationTimestamp,
     required this.widget,
   });
 
@@ -47,7 +47,7 @@ class SyncedRoom<O, S> extends Equatable {
   final List<O> objects;
   final S status;
   final List<UserId> userNotifyList;
-  final int expirationTimeStamp;
+  final int expirationTimestamp;
   final Widget widget;
 
   @override
@@ -57,13 +57,13 @@ class SyncedRoom<O, S> extends Equatable {
     final type = RoomType.values.firstWhere((t) => t.widget == widget);
 
     return {
-      'id': id,
+      '_id': id,
       'started': started,
       'users': users,
       'objects': objects.map((o) => genericToMap(o)),
       'status': genericToMap(status),
       'userNotifyList': userNotifyList,
-      'expirationTimeStamp': expirationTimeStamp,
+      'expirationTimestamp': expirationTimestamp,
       'type': type.name,
     };
   }
