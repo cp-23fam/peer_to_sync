@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:collab/collab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +20,11 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       name: RouteNames.home.name,
-      builder: (context, state) => RoomListScreen(),
+      builder: (context, state) =>
+          // ChatRoomScreen(
+          //   roomId: '693047ab48c4006cb56b5e23',
+          // ),
+          RoomListScreen(),
     ),
     GoRoute(
       path: '/create',
