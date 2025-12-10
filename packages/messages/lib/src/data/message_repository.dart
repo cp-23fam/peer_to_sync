@@ -1,13 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:messages/messages.dart';
+import 'package:messages/src/domain/user_id.dart';
 
-import 'package:peer_to_sync/src/constants/api_url.dart';
-import 'package:peer_to_sync/src/features/messages/domain/synced_room.dart';
-import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
-import 'package:peer_to_sync/src/features/user/domain/user.dart';
-import 'package:peer_to_sync/src/utils/fetch_token.dart';
-
+// TODO: Update API
 class MessageRepository {
   MessageRepository({
     @visibleForTesting Dio? dioClient,
@@ -17,36 +14,42 @@ class MessageRepository {
     dio = dioClient ?? Dio(BaseOptions(validateStatus: (status) => true));
   }
 
-  Future<SyncedRoom<T, U>> createSyncedRoom<T, U>(
-    List<UserId> users,
-    U status,
-  ) async {
-    final String? token = await fetchToken(storage);
+  late final Dio dio;
+  late final FlutterSecureStorage storage;
+
+  final String _mainRoute = 'localhost:3000/synced';
+
+  Future<String> _checkToken() async {
+    final String? token = await storage.read(key: 'token');
+    if (token != null) {
+      debugPrint('Token fetched');
+    }
 
     if (token == null) {
-      throw LoggedOutException();
+      throw Exception();
     }
+
+    return token;
+  }
+
+  Future<SyncedRoom> createSyncedRoom(List<UserId> users, RoomType type) async {
+    final String token = await _checkToken();
 
     final res = await dio.post(
       _mainRoute,
-      data: {'users': users, 'status': status},
+      data: {'users': users, 'type': type.name},
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode! == 201) {
-      return SyncedRoom<T, U>.fromMap(res.data);
+      return SyncedRoom.fromMap(res.data);
     }
 
     debugPrint('$this createSyncedRoom was given unknown response');
     throw UnimplementedError();
   }
 
-  late final Dio dio;
-  late final FlutterSecureStorage storage;
-
-  final String _mainRoute = '$apiUrl/synced';
-
-  Future<SyncedRoom<T, U>> fetchSyncedRoom<T, U>(SyncedRoomId id) async {
+  Future<SyncedRoom> fetchSyncedRoom(SyncedRoomId id) async {
     final token = await _checkToken();
 
     final res = await dio.get(
@@ -76,16 +79,6 @@ class MessageRepository {
 
     debugPrint('$this sendNotified was given an unknown response');
     throw UnimplementedError();
-  }
-
-  Future<String> _checkToken() async {
-    final token = await fetchToken(storage);
-
-    if (token == null) {
-      throw LoggedOutException();
-    }
-
-    return token;
   }
 
   Future<void> startMe(SyncedRoomId id) async {
@@ -174,14 +167,14 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<SyncedRoom<T, U>> overrideNow<T, U>(SyncedRoomId id) async {
-    final currentRoom = await fetchSyncedRoom<T, U>(id);
+  Future<SyncedRoom> overrideNow(SyncedRoomId id) async {
+    final currentRoom = await fetchSyncedRoom(id);
     sendNotified(id);
 
     return currentRoom;
   }
 
-  Future<dynamic> getChanges<T, U>(SyncedRoom<T, U> room) async {
+  Future<dynamic> getChanges(SyncedRoom room) async {
     final token = await _checkToken();
 
     final res = await dio.put(

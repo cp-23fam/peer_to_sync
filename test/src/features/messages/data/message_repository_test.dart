@@ -1,12 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
+import 'package:messages/messages.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:peer_to_sync/src/features/messages/data/message_repository.dart';
-import 'package:peer_to_sync/src/features/messages/domain/synced_room.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
 
 import '../../../mocks.dart';
+
+// TODO: Rework this
 
 void main() {
   const apiPath = 'http://localhost:3000';
@@ -36,7 +38,7 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(null);
 
       expect(
-        () async => await messageRepository.createSyncedRoom([], false),
+        () async => await messageRepository.createSyncedRoom([], RoomType.game),
         throwsA(isA<LoggedOutException>()),
       );
     });
@@ -47,10 +49,10 @@ void main() {
       dioAdapter.onPost('$apiPath/synced', (server) => server.reply(600, {}));
 
       expect(
-        () async => await messageRepository.createSyncedRoom<String, bool>([
+        () async => await messageRepository.createSyncedRoom([
           'user-1',
           'user-2',
-        ], false),
+        ], RoomType.game),
         throwsA(isA<UnimplementedError>()),
       );
     });
@@ -249,6 +251,8 @@ void main() {
       users: ['user-1', 'user-2'],
       objects: [],
       status: false,
+      expirationTimeStamp: -1,
+      widget: SizedBox(),
       userNotifyList: [],
     );
 

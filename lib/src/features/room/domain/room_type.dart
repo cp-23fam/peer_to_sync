@@ -1,1 +1,0 @@
-enum RoomType { game, collab }
