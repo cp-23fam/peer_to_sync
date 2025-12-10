@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:messages/messages.dart';
 import 'package:messages/src/domain/json_storable.dart';
-import 'package:messages/src/domain/user_id.dart';
+import 'package:peer_to_sync/peer_to_sync.dart';
 
 typedef SyncedRoomId = String;
 
