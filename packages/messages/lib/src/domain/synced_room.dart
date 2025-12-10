@@ -15,15 +15,17 @@ class SyncedRoom<O, S> extends Equatable {
     final objects = List<Map<String, dynamic>>.from(map['objects']);
     final status = map['status'];
 
+    final widget = SyncedType.getSyncedWidget(type, map['_id']);
+
     return SyncedRoom<O, S>(
-      id: map['id'],
+      id: map['_id'],
       started: map['started'] ?? false,
       users: List<String>.from(map['users']),
       objects: objects.map((o) => genericFromMap<O>(o)).toList(),
       status: status,
       userNotifyList: List<UserId>.from(map['userNotifyList']),
-      expirationTimeStamp: map['expirationTimeStamp']?.toInt() ?? 0,
-      widget: type.widget,
+      expirationTimestamp: map['expirationTimestamp']?.toInt() ?? 0,
+      widget: widget,
     );
   }
 
@@ -37,7 +39,7 @@ class SyncedRoom<O, S> extends Equatable {
     required this.objects,
     required this.status,
     required this.userNotifyList,
-    required this.expirationTimeStamp,
+    required this.expirationTimestamp,
     required this.widget,
   });
 
@@ -47,23 +49,23 @@ class SyncedRoom<O, S> extends Equatable {
   final List<O> objects;
   final S status;
   final List<UserId> userNotifyList;
-  final int expirationTimeStamp;
+  final int expirationTimestamp;
   final Widget widget;
 
   @override
   List<Object?> get props => [];
 
   Map<String, dynamic> toMap() {
-    final type = RoomType.values.firstWhere((t) => t.widget == widget);
+    final type = SyncedType.getTypeFromWidget(widget);
 
     return {
-      'id': id,
+      '_id': id,
       'started': started,
       'users': users,
       'objects': objects.map((o) => genericToMap(o)),
       'status': genericToMap(status),
       'userNotifyList': userNotifyList,
-      'expirationTimeStamp': expirationTimeStamp,
+      'expirationTimestamp': expirationTimestamp,
       'type': type.name,
     };
   }

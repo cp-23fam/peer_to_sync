@@ -251,7 +251,7 @@ void main() {
       users: ['user-1', 'user-2'],
       objects: [],
       status: false,
-      expirationTimeStamp: -1,
+      expirationTimestamp: -1,
       widget: SizedBox(),
       userNotifyList: [],
     );
