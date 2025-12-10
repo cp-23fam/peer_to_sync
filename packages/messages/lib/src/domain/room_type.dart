@@ -2,21 +2,6 @@ import 'package:collab/collab.dart';
 import 'package:flutter/widgets.dart';
 import 'package:messages/messages.dart';
 
-// enum RoomType {
-//   collab(object: String, status: String, widget: SizedBox()),
-//   game(object: String, status: String, widget: SizedBox());
-
-//   const RoomType({
-//     required this.object,
-//     required this.status,
-//     required this.widget,
-//   });
-
-//   final Type object;
-//   final Type status;
-//   final Widget widget;
-// }
-
 enum RoomType { collab, game }
 
 class SyncedType {
