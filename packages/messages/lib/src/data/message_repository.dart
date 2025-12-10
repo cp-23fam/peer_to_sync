@@ -122,17 +122,34 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<void> removeAt<T>(
+  Future<void> editAt<T>(
     SyncedRoomId id,
     int index,
-    T objectVerification,
+    T object,
+    int objectsLength,
   ) async {
     final token = await _checkToken();
 
     final res = await dio.post(
-      '$_mainRoute/$id/remove/$index',
-      data: {'object': genericToMap(objectVerification)},
-      options: Options(headers: {'Authorization': 'Bearer $token'}),
+      '$_mainRoute/$id/edit/$index?length=$objectsLength',
+      data: {'object': genericToMap(object)},
+      options: Options(headers: {'Authorization': 'Brearer $token'}),
+    );
+
+    if (res.statusCode == 200 || res.statusCode == 202) {
+      return;
+    }
+
+    debugPrint('$this removeAt was given an unknown response');
+    throw UnimplementedError();
+  }
+
+  Future<void> removeAt(SyncedRoomId id, int index, int objectslength) async {
+    final token = await _checkToken();
+
+    final res = await dio.post(
+      '$_mainRoute/$id/remove/$index?length=$objectslength',
+      options: Options(headers: {'Authorization': 'Brearer $token'}),
     );
 
     if (res.statusCode == 200 || res.statusCode == 202) {
