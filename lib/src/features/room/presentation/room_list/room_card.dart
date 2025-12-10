@@ -250,7 +250,7 @@ class _RoomCardState extends State<RoomCard> {
         color: colors.surface,
         boxShadow: [
           BoxShadow(
-            color: colors.surface,
+            color: colors.black.withAlpha(100),
             spreadRadius: 2,
             blurRadius: 2,
             offset: const Offset(3, 2),

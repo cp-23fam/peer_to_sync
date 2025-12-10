@@ -1,0 +1,12 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    prefer_const_constructors: true
+    avoid_positional_boolean_parameters: true
+    sort_constructors_first: true
+    avoid_void_async: true
+    prefer_const_declarations: true
+    unnecessary_async: true
+    unnecessary_ignore: true
