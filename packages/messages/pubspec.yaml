@@ -8,9 +8,13 @@ dependencies:
   flutter:
     sdk: flutter
 
+  collab:
+    path: ../collab
+
   equatable: ^2.0.7
   dio: ^5.9.0
   flutter_secure_storage: ^9.2.4
+  flutter_riverpod: ^3.0.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0

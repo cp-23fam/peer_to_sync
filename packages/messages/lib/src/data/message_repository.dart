@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:messages/messages.dart';
 import 'package:messages/src/domain/user_id.dart';
@@ -193,3 +194,7 @@ class MessageRepository {
   @override
   String toString() => 'MessageRepository';
 }
+
+final messageRepositoryProvider = Provider((ref) {
+  return MessageRepository();
+});

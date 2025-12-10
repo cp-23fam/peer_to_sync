@@ -1,11 +1,12 @@
+import 'package:collab/collab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:messages/messages.dart';
 import 'message_card.dart';
 
 class ChatRoomScreen extends StatefulWidget {
-  const ChatRoomScreen({super.key, required this.roomId});
-
-  final String roomId;
+  const ChatRoomScreen({super.key});
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomScreenState();
@@ -224,17 +225,23 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                         color: Colors.green,
                         shape: BoxShape.circle,
                       ),
-                      child: IconButton(
-                        icon: const Icon(Icons.send_rounded),
-                        // color: colors.onPrimary,
-                        color: Colors.white,
-                        iconSize: 26,
-                        onPressed: () {
-                          setState(() {});
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          return IconButton(
+                            icon: const Icon(Icons.send_rounded),
+                            // color: colors.onPrimary,
+                            color: Colors.white,
+                            iconSize: 26,
+                            onPressed: () {
+                              // ref.read(messageRepositoryProvider).sendThis('',Mail(id: '', message: 'message', userName: userName, userId: userId))
 
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scrollToBottom();
-                          });
+                              setState(() {});
+
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _scrollToBottom();
+                              });
+                            },
+                          );
                         },
                       ),
                     ),

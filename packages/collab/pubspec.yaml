@@ -7,6 +7,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  messages: 
+    path: ../messages
+
   flutter_riverpod: ^3.0.3
   go_router: ^17.0.0
   google_fonts: ^6.3.2
