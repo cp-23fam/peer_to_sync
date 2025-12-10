@@ -122,16 +122,33 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<void> removeAt<T>(
+  Future<void> editAt<T>(
     SyncedRoomId id,
     int index,
-    T objectVerification,
+    T object,
+    int objectsLength,
   ) async {
     final token = await _checkToken();
 
     final res = await dio.post(
-      '$_mainRoute/$id/remove/$index',
-      data: {'object': genericToMap(objectVerification)},
+      '$_mainRoute/$id/edit/$index?length=$objectsLength',
+      data: {'object': genericToMap(object)},
+      options: Options(headers: {'Authorization': 'Brearer $token'}),
+    );
+
+    if (res.statusCode == 200 || res.statusCode == 202) {
+      return;
+    }
+
+    debugPrint('$this removeAt was given an unknown response');
+    throw UnimplementedError();
+  }
+
+  Future<void> removeAt(SyncedRoomId id, int index, int objectslength) async {
+    final token = await _checkToken();
+
+    final res = await dio.post(
+      '$_mainRoute/$id/remove/$index?length=$objectslength',
       options: Options(headers: {'Authorization': 'Brearer $token'}),
     );
 
@@ -216,27 +233,14 @@ final syncedFutureProvider = FutureProvider.family<SyncedRoom?, String>((
   return provider;
 });
 
-final getCurrentUserProvider = FutureProvider.autoDispose<UserInfos>((
-  ref,
-) async {
-  final user = await ref.read(userRepositoryProvider).fetchCurrentUser();
+Future<UserInfos> getCurrrentUser(WidgetRef ref) async {
+  return UserInfos.fromUser(
+    (await ref.read(userRepositoryProvider).fetchCurrentUser())!,
+  );
+}
 
-  if (user == null) {
-    throw UnimplementedError();
-  }
-
-  return UserInfos.fromUser(user);
-});
-
-final getUserProvider = FutureProvider.family.autoDispose<UserInfos?, String>((
-  ref,
-  id,
-) async {
-  final user = await ref.read(userRepositoryProvider).fetchUser(id);
-
-  if (user == null) {
-    throw UnimplementedError();
-  }
-
-  return UserInfos.fromUser(user);
-});
+Future<UserInfos> getUser(WidgetRef ref, UserId id) async {
+  return UserInfos.fromUser(
+    (await ref.read(userRepositoryProvider).fetchUser(id))!,
+  );
+}
