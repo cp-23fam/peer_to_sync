@@ -1,9 +1,11 @@
 // FromMap
 import 'package:collab/collab.dart';
+import 'package:flutter/foundation.dart';
 
 typedef FromMap<T> = T Function(Map<String, dynamic> map);
 
 T genericFromMap<T>(Map<String, dynamic> map) {
+  debugPrint(T.runtimeType.toString());
   final creator = _fromMapConstructors[T];
 
   if (creator == null) {
@@ -17,6 +19,7 @@ T genericFromMap<T>(Map<String, dynamic> map) {
 typedef ToMap<T> = Map<String, dynamic> Function(T object);
 
 Map<String, dynamic> genericToMap<T>(T object) {
+  debugPrint(T.runtimeType.toString());
   final creator = _toMapConstructors[T];
 
   if (creator == null) {

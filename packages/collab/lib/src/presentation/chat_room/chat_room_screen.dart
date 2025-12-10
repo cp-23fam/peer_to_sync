@@ -1,4 +1,5 @@
 import 'package:collab/collab.dart';
+import 'package:collab/src/data/mail_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -265,7 +266,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                               ref
                                   .read(messageRepositoryProvider)
                                   .sendThis(
-                                    '',
+                                    widget.roomId,
                                     Mail(
                                       id: widget.roomId,
                                       message: _controller.text,

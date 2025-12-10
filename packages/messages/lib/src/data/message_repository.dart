@@ -35,7 +35,10 @@ class MessageRepository {
     return token;
   }
 
-  Future<SyncedRoom> createSyncedRoom(List<UserId> users, RoomType type) async {
+  Future<SyncedRoom<O, S>> createSyncedRoom<O, S>(
+    List<UserId> users,
+    RoomType type,
+  ) async {
     final String token = await _checkToken();
 
     final res = await dio.post(
@@ -52,7 +55,7 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<SyncedRoom> fetchSyncedRoom(SyncedRoomId id) async {
+  Future<SyncedRoom<O, S>> fetchSyncedRoom<O, S>(SyncedRoomId id) async {
     final token = await _checkToken();
 
     final res = await dio.get(
@@ -61,7 +64,7 @@ class MessageRepository {
     );
 
     if (res.statusCode == 200) {
-      return SyncedRoom.fromMap(res.data);
+      return SyncedRoom<O, S>.fromMap(res.data);
     }
 
     debugPrint('$this fetchSyncedRoom was given an unknown response');
@@ -211,16 +214,3 @@ final syncedFutureProvider = FutureProvider.family<SyncedRoom?, String>((
 
   return provider;
 });
-
-final syncedStreamProvider = StreamProvider.family
-    .autoDispose<SyncedRoom, String>((ref, id) {
-      var provider = ref.read(messageRepositoryProvider).fetchSyncedRoom(id);
-
-      final timer = Timer.periodic(const Duration(seconds: 1), (_) {
-        ref.invalidateSelf();
-      });
-
-      ref.onDispose(timer.cancel);
-
-      return provider.asStream();
-    });
