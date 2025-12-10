@@ -15,6 +15,8 @@ class SyncedRoom<O, S> extends Equatable {
     final objects = List<Map<String, dynamic>>.from(map['objects']);
     final status = map['status'];
 
+    final widget = SyncedType.getSyncedWidget(type, map['_id']);
+
     return SyncedRoom<O, S>(
       id: map['_id'],
       started: map['started'] ?? false,
@@ -23,7 +25,7 @@ class SyncedRoom<O, S> extends Equatable {
       status: status,
       userNotifyList: List<UserId>.from(map['userNotifyList']),
       expirationTimestamp: map['expirationTimestamp']?.toInt() ?? 0,
-      widget: type.widget,
+      widget: widget,
     );
   }
 
@@ -54,7 +56,7 @@ class SyncedRoom<O, S> extends Equatable {
   List<Object?> get props => [];
 
   Map<String, dynamic> toMap() {
-    final type = RoomType.values.firstWhere((t) => t.widget == widget);
+    final type = SyncedType.getTypeFromWidget(widget);
 
     return {
       '_id': id,
