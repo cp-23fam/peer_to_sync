@@ -3,6 +3,7 @@ import 'package:collab/src/data/mail_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:messages/messages.dart';
 import 'message_card.dart';
 
@@ -81,20 +82,41 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   );
                   return syncData.when(
                     data: (sync) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _scrollToBottom();
-                      });
-                      return ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemBuilder: (context, index) => MessageCard(
-                          message: sync.objects[index].message,
-                          isMe: false,
-                          userName: sync.objects[index].userName,
-                          userId: sync.objects[index].userId,
-                          timestamp: sync.objects[index].timestamp,
-                        ),
-                        itemCount: sync.objects.length,
+                      // if (sync.objects.length != )
+                      // WidgetsBinding.instance.addPostFrameCallback((_) {
+                      //   _scrollToBottom();
+                      // });
+
+                      return FutureBuilder(
+                        future: getCurrrentUser(ref),
+                        builder: (context, currentUser) {
+                          return ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.all(16),
+                            itemBuilder: (context, index) {
+                              // final user = await getUser(ref, sync.objects[index].userId);
+                              return FutureBuilder(
+                                future: getUser(
+                                  ref,
+                                  sync.objects[index].userId,
+                                ),
+                                builder: (context, user) {
+                                  return MessageCard(
+                                    message: sync.objects[index].message,
+                                    isMe:
+                                        currentUser.data!.uid ==
+                                        sync.objects[index].userId,
+                                    userName: sync.objects[index].userName,
+                                    userId: sync.objects[index].userId,
+                                    timestamp: sync.objects[index].timestamp,
+                                    imageUrl: user.data?.imageUrl ?? '',
+                                  );
+                                },
+                              );
+                            },
+                            itemCount: sync.objects.length,
+                          );
+                        },
                       );
                     },
                     loading: () =>
@@ -265,7 +287,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             // color: colors.onPrimary,
                             color: Colors.white,
                             iconSize: 26,
-                            onPressed: () {
+                            onPressed: () async {
+                              final user = await getCurrrentUser(ref);
+
                               ref
                                   .read(messageRepositoryProvider)
                                   .sendThis(
@@ -273,15 +297,15 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                     Mail(
                                       id: widget.roomId,
                                       message: _controller.text,
-                                      userName: 'Ryan',
-                                      userId: '692db3f611833316441edc73',
+                                      userName: user.username,
+                                      userId: user.uid,
+                                      timestamp: DateFormat(
+                                        'HH:mm',
+                                      ).format(DateTime.now()),
                                     ),
                                   );
-
                               setState(() {});
-
                               _controller.text = '';
-
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 _scrollToBottom();
                               });

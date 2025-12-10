@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 
 class MessageCard extends StatelessWidget {
   const MessageCard({
@@ -9,6 +8,7 @@ class MessageCard extends StatelessWidget {
     required this.isMe,
     required this.userName,
     required this.userId,
+    required this.imageUrl,
     this.timestamp,
   });
 
@@ -17,6 +17,7 @@ class MessageCard extends StatelessWidget {
   final String userName;
   final String userId;
   final String? timestamp;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +39,15 @@ class MessageCard extends StatelessWidget {
                 color: colors.primary,
 
                 image: DecorationImage(
-                  image: NetworkImage(''),
+                  image: NetworkImage(imageUrl),
                   fit: BoxFit.contain,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               ),
               child: const Icon(
                 Icons.person_outline,
-                // color: Colors.transparent,
-                color: Colors.white,
+                color: Colors.transparent,
+                // color: Colors.white,
                 size: 35.0,
               ),
             ),
@@ -125,15 +126,15 @@ class MessageCard extends StatelessWidget {
                 color: colors.primary,
 
                 image: DecorationImage(
-                  image: NetworkImage(''),
+                  image: NetworkImage(imageUrl),
                   fit: BoxFit.contain,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               ),
               child: const Icon(
                 Icons.person_outline,
-                // color: Colors.transparent,
-                color: Colors.white,
+                color: Colors.transparent,
+                // color: Colors.white,
                 size: 35.0,
               ),
             ),

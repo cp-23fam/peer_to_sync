@@ -67,7 +67,7 @@ class UserRepository {
     );
 
     if (res.data['message'] == null && res.statusCode! == 200) {
-      debugPrint('$this has fetched user User ${res.data['_id']}');
+      // debugPrint('$this has fetched user User ${res.data['_id']}');
       return User.fromMap(res.data);
     }
 
