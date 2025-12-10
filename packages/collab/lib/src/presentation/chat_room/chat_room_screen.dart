@@ -81,6 +81,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   );
                   return syncData.when(
                     data: (sync) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _scrollToBottom();
+                      });
                       return ListView.builder(
                         controller: _scrollController,
                         padding: const EdgeInsets.all(16),
@@ -276,6 +279,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                   );
 
                               setState(() {});
+
+                              _controller.text = '';
 
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 _scrollToBottom();
