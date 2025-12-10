@@ -1,8 +1,7 @@
-// ignore: unused_import
-import 'package:collab/collab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:messages/messages.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_creation/room_creation_screen.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/room_detail_screen.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_list/room_list_screen.dart';
@@ -13,18 +12,14 @@ import 'package:peer_to_sync/src/features/user/presentation/user_form/user_login
 import 'package:peer_to_sync/src/features/user/presentation/user_form/user_update_screen.dart';
 import 'package:peer_to_sync/src/features/user/presentation/user_settings/user_settings_screen.dart';
 
-enum RouteNames { home, create, detail, signup, user, edit, friends }
+enum RouteNames { home, create, detail, signup, user, edit, friends, inside }
 
 final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
       name: RouteNames.home.name,
-      builder: (context, state) =>
-          // ChatRoomScreen(
-          //   roomId: '693047ab48c4006cb56b5e23',
-          // ),
-          RoomListScreen(),
+      builder: (context, state) => RoomListScreen(),
     ),
     GoRoute(
       path: '/create',
@@ -36,6 +31,22 @@ final router = GoRouter(
       name: RouteNames.detail.name,
       builder: (context, state) =>
           RoomDetailScreen(roomId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/in/:id',
+      name: RouteNames.inside.name,
+      builder: (context, state) => Consumer(
+        builder: (context, ref, child) {
+          final roomData = ref.watch(
+            syncedFutureProvider(state.pathParameters['id']!),
+          );
+          return roomData.when(
+            data: (room) => room!.widget,
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, st) => Center(child: Text(error.toString())),
+          );
+        },
+      ),
     ),
     GoRoute(
       path: '/user',

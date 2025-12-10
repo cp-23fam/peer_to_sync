@@ -20,15 +20,15 @@ import 'package:messages/messages.dart';
 enum RoomType { collab, game }
 
 class SyncedType {
-  static final widgets = <String, Widget>{
-    RoomType.collab.name: const SizedBox(),
-    RoomType.game.name: const SizedBox(),
+  static final widgets = <String, Type>{
+    RoomType.collab.name: ChatRoomScreen,
+    RoomType.game.name: SizedBox,
   };
 
   static Widget getSyncedWidget(RoomType type, SyncedRoomId id) {
     switch (type) {
       case RoomType.collab:
-        return const SizedBox();
+        return ChatRoomScreen(roomId: id);
       case RoomType.game:
         return const SizedBox();
     }
@@ -36,7 +36,7 @@ class SyncedType {
 
   static RoomType getTypeFromWidget(Widget widget) {
     final index = SyncedType.widgets.values.toList().indexWhere(
-      (v) => widget.runtimeType == v.runtimeType,
+      (v) => widget.runtimeType == v,
     );
 
     return RoomType.values.elementAt(index);

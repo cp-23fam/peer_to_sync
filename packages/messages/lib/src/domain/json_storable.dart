@@ -1,4 +1,6 @@
 // FromMap
+import 'package:collab/collab.dart';
+
 typedef FromMap<T> = T Function(Map<String, dynamic> map);
 
 T genericFromMap<T>(Map<String, dynamic> map) {
@@ -27,8 +29,10 @@ Map<String, dynamic> genericToMap<T>(T object) {
 //
 final Map<Type, FromMap<dynamic>> _fromMapConstructors = {
   // Example: (map) => Example.fromMap(map),
+  Mail: (map) => Mail.fromMap(map),
 };
 
 final Map<Type, ToMap<dynamic>> _toMapConstructors = {
   // Example: (object) => Example.toMap(object),
+  Mail: (object) => Mail.toMap(object),
 };

@@ -6,7 +6,9 @@ import 'package:messages/messages.dart';
 import 'message_card.dart';
 
 class ChatRoomScreen extends StatefulWidget {
-  const ChatRoomScreen({super.key});
+  const ChatRoomScreen({super.key, required this.roomId});
+
+  final String roomId;
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomScreenState();
@@ -61,6 +63,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     onPressed: () {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         context.goNamed('home');
+                        // Navigator.of(context).pop();
                       });
                     },
                     icon: Icon(Icons.arrow_back, size: 40.0),
@@ -70,98 +73,125 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               ),
             ),
             Expanded(
-              child: ListView(
-                controller: _scrollController,
-                padding: const EdgeInsets.all(16),
-                children: [
-                  MessageCard(
-                    message: "Salut, comment ça va ?",
-                    isMe: false,
-                    userName: "Leo",
-                    userId: "692db3f611833316441edc73",
-                    timestamp: "12:40",
-                  ),
-                  MessageCard(
-                    message: "Super et toi !",
-                    isMe: true,
-                    userName: "Ryan",
-                    userId: "myUserId",
-                    timestamp: "12:41",
-                  ),
-                  MessageCard(
-                    message: "Yo les gens",
-                    isMe: false,
-                    userName: "Dragon",
-                    userId: "myUserId",
-                    timestamp: "12:43",
-                  ),
-                  MessageCard(
-                    message:
-                        "Tu n'étais pas sensé faire ta présentation sur l'étude de marché pour demain Dragon ?",
-                    isMe: false,
-                    userName: "Leo",
-                    userId: "692db3f611833316441edc73",
-                    timestamp: "12:45",
-                  ),
-                  MessageCard(
-                    message: "Si mais j'ai trop la flemme : (",
-                    isMe: false,
-                    userName: "Dragon",
-                    userId: "myUserId",
-                    timestamp: "12:45",
-                  ),
-                  MessageCard(
-                    message: "On a une présentation demain ?",
-                    isMe: true,
-                    userName: "Ryan",
-                    userId: "myUserId",
-                    timestamp: "12:46",
-                  ),
-                  MessageCard(
-                    message: "Oui, le prof en à parlé mercredi passé",
-                    isMe: false,
-                    userName: "Volcano",
-                    userId: "myUserId",
-                    timestamp: "12:48",
-                  ),
-                  MessageCard(
-                    message:
-                        "Mais je n'étais pas là ce jour là, j'avais un cours de Piano",
-                    isMe: true,
-                    userName: "Ryan",
-                    userId: "myUserId",
-                    timestamp: "12:46",
-                  ),
-                  MessageCard(
-                    message: "Personne ne t'as prévenu ?",
-                    isMe: false,
-                    userName: "Leo",
-                    userId: "myUserId",
-                    timestamp: "12:49",
-                  ),
-                  MessageCard(
-                    message: "C'étais à qui de le prévenir ?",
-                    isMe: false,
-                    userName: "Dragon",
-                    userId: "myUserId",
-                    timestamp: "12:49",
-                  ),
-                  MessageCard(
-                    message: "Toi non ?",
-                    isMe: false,
-                    userName: "Leo",
-                    userId: "myUserId",
-                    timestamp: "12:50",
-                  ),
-                  MessageCard(
-                    message:
-                        "Me***, c'est fort possible. J'étais mort se jour là",
-                    isMe: false,
-                    userName: "Dragon",
-                    userId: "myUserId",
-                    timestamp: "12:55",
-                  ),
-                ],
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final syncData = ref.watch(
+                    syncedStreamProvider(widget.roomId),
+                  );
+                  return syncData.when(
+                    data: (sync) {
+                      return ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.all(16),
+                        itemBuilder: (context, index) => MessageCard(
+                          message: sync.objects[index].message,
+                          isMe: false,
+                          userName: sync.objects[index].userName,
+                          userId: sync.objects[index].userId,
+                          timestamp: sync.objects[index].timestamp,
+                        ),
+                        itemCount: sync.objects.length,
+                      );
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, st) => Center(child: Text(error.toString())),
+                  );
+                  // ListView(
+                  //   controller: _scrollController,
+                  //   padding: const EdgeInsets.all(16),
+                  //   // children: [
+                  //   //   MessageCard(
+                  //   //     message: "Salut, comment ça va ?",
+                  //   //     isMe: false,
+                  //   //     userName: "Leo",
+                  //   //     userId: "692db3f611833316441edc73",
+                  //   //     timestamp: "12:40",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "Super et toi !",
+                  //   //     isMe: true,
+                  //   //     userName: "Ryan",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:41",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "Yo les gens",
+                  //   //     isMe: false,
+                  //   //     userName: "Dragon",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:43",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message:
+                  //   //         "Tu n'étais pas sensé faire ta présentation sur l'étude de marché pour demain Dragon ?",
+                  //   //     isMe: false,
+                  //   //     userName: "Leo",
+                  //   //     userId: "692db3f611833316441edc73",
+                  //   //     timestamp: "12:45",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "Si mais j'ai trop la flemme : (",
+                  //   //     isMe: false,
+                  //   //     userName: "Dragon",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:45",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "On a une présentation demain ?",
+                  //   //     isMe: true,
+                  //   //     userName: "Ryan",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:46",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "Oui, le prof en à parlé mercredi passé",
+                  //   //     isMe: false,
+                  //   //     userName: "Volcano",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:48",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message:
+                  //   //         "Mais je n'étais pas là ce jour là, j'avais un cours de Piano",
+                  //   //     isMe: true,
+                  //   //     userName: "Ryan",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:46",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "Personne ne t'as prévenu ?",
+                  //   //     isMe: false,
+                  //   //     userName: "Leo",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:49",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "C'étais à qui de le prévenir ?",
+                  //   //     isMe: false,
+                  //   //     userName: "Dragon",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:49",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message: "Toi non ?",
+                  //   //     isMe: false,
+                  //   //     userName: "Leo",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:50",
+                  //   //   ),
+                  //   //   MessageCard(
+                  //   //     message:
+                  //   //         "Me***, c'est fort possible. J'étais mort se jour là",
+                  //   //     isMe: false,
+                  //   //     userName: "Dragon",
+                  //   //     userId: "myUserId",
+                  //   //     timestamp: "12:55",
+                  //   //   ),
+                  //   // ],
+                  //   children: [],
+                  // );
+                },
               ),
             ),
           ],
@@ -200,7 +230,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                         maxLines: 5,
                         style: TextStyle(color: colors.onSurface),
                         decoration: InputDecoration(
-                          // hintText: "Écrire un message...",
                           hintStyle: TextStyle(
                             color: colors.onSurface.withAlpha(153),
                           ),
@@ -233,7 +262,17 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             color: Colors.white,
                             iconSize: 26,
                             onPressed: () {
-                              // ref.read(messageRepositoryProvider).sendThis('',Mail(id: '', message: 'message', userName: userName, userId: userId))
+                              ref
+                                  .read(messageRepositoryProvider)
+                                  .sendThis(
+                                    '',
+                                    Mail(
+                                      id: widget.roomId,
+                                      message: _controller.text,
+                                      userName: 'Ryan',
+                                      userId: '692db3f611833316441edc73',
+                                    ),
+                                  );
 
                               setState(() {});
 

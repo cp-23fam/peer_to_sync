@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +20,7 @@ class MessageRepository {
   late final Dio dio;
   late final FlutterSecureStorage storage;
 
-  final String _mainRoute = 'localhost:3000/synced';
+  final String _mainRoute = 'http://localhost:3000/synced';
 
   Future<String> _checkToken() async {
     final String? token = await storage.read(key: 'token');
@@ -38,7 +40,7 @@ class MessageRepository {
 
     final res = await dio.post(
       _mainRoute,
-      data: {'users': users, 'type': type.name},
+      data: {'users': users, 'type': type.name, 'status': false},
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
@@ -198,3 +200,25 @@ class MessageRepository {
 final messageRepositoryProvider = Provider((ref) {
   return MessageRepository();
 });
+
+final syncedFutureProvider = FutureProvider.family<SyncedRoom?, String>((
+  ref,
+  id,
+) {
+  final provider = ref.watch(messageRepositoryProvider).fetchSyncedRoom(id);
+
+  return provider;
+});
+
+final syncedStreamProvider = StreamProvider.family
+    .autoDispose<SyncedRoom, String>((ref, id) {
+      var provider = ref.read(messageRepositoryProvider).fetchSyncedRoom(id);
+
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        ref.invalidateSelf();
+      });
+
+      ref.onDispose(timer.cancel);
+
+      return provider.asStream();
+    });
