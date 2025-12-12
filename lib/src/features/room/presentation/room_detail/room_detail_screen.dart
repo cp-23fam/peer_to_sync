@@ -254,7 +254,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                                           .createSyncedRoom(
                                             room!.name,
                                             room.users,
-                                            RoomType.collab,
+                                            room.type,
                                           );
 
                                       await ref

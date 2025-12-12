@@ -1,13 +1,14 @@
 import 'package:collab/collab.dart';
 import 'package:flutter/widgets.dart';
 import 'package:messages/messages.dart';
+import 'package:sync_clash/sync_clash.dart';
 
 enum RoomType { collab, game }
 
 class SyncedType {
   static final widgets = <String, Type>{
     RoomType.collab.name: ChatRoomScreen,
-    RoomType.game.name: SizedBox,
+    RoomType.game.name: GameScreen,
   };
 
   static Widget getSyncedWidget(RoomType type, SyncedRoomId id) {
@@ -15,7 +16,7 @@ class SyncedType {
       case RoomType.collab:
         return ChatRoomScreen(roomId: id);
       case RoomType.game:
-        return const SizedBox();
+        return const GameScreen();
     }
   }
 

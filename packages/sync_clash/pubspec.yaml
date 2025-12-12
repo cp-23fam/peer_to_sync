@@ -1,0 +1,39 @@
+name: sync_clash
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  messages: 
+    path: ../messages
+
+  cupertino_icons: ^1.0.8
+  firebase_auth: ^6.1.1
+  firebase_core: ^4.2.0
+  cloud_firestore: ^6.0.3
+  flutter_riverpod: ^3.0.3
+  go_router: ^17.0.0
+  sign_button: ^2.0.6
+  email_validator: ^3.0.0
+  http: ^1.5.0
+  flame: ^1.33.0
+  auto_size_text: ^3.0.0
+  google_sign_in: ^7.2.0
+  google_sign_in_android: ^7.2.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
