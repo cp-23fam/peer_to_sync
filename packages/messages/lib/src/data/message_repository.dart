@@ -30,7 +30,7 @@ class MessageRepository {
     }
 
     if (token == null) {
-      throw Exception();
+      throw LoggedOutException();
     }
 
     return token;

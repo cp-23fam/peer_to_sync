@@ -168,7 +168,7 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(null);
 
       expect(
-        () async => await messageRepository.removeAt(id, 0, 'my-object'),
+        () async => await messageRepository.removeAt(id, 0, 1),
         throwsA(isA<LoggedOutException>()),
       );
     });
@@ -179,12 +179,12 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(token);
 
       dioAdapter.onPatch(
-        '$apiPath/synced/$id/remove/$index',
+        '$apiPath/synced/$id/remove/$index?length=1',
         (server) => server.reply(600, {}),
       );
 
       expect(
-        () async => await messageRepository.removeAt(id, index, 'my-object'),
+        () async => await messageRepository.removeAt(id, index, 1),
         throwsA(isA<UnimplementedError>()),
       );
     });
