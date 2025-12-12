@@ -42,8 +42,19 @@ final router = GoRouter(
           );
           return roomData.when(
             data: (room) => room!.widget,
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, st) => Center(child: Text(error.toString())),
+            loading: () => const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+            error: (error, st) => Builder(
+              builder: (context) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.goNamed(RouteNames.home.name);
+                });
+
+                // debugPrint(st.toString());
+                return Scaffold(body: Center(child: Text(error.toString())));
+              },
+            ),
           );
         },
       ),
