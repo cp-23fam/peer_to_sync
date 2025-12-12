@@ -88,6 +88,28 @@ class RoomRepository {
     throw UnimplementedError();
   }
 
+  Future<void> overrideRoom(RoomId id, Room room) async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException();
+    }
+
+    final res = await dio.put(
+      '$_mainRoute/$id',
+      data: room.toMap(),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode! == 200) {
+      debugPrint('$this replaced room $id');
+      return;
+    }
+
+    debugPrint('$this overrideRoom has unknown response : $res');
+    throw UnimplementedError();
+  }
+
   Future<void> joinRoom(RoomId id, {String? password}) async {
     final String? token = await fetchToken(storage);
 

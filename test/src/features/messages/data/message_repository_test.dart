@@ -38,7 +38,11 @@ void main() {
       prepareStorageMockToReturnTokenIfProvided(null);
 
       expect(
-        () async => await messageRepository.createSyncedRoom([], RoomType.game),
+        () async => await messageRepository.createSyncedRoom(
+          'Test room',
+          [],
+          RoomType.game,
+        ),
         throwsA(isA<LoggedOutException>()),
       );
     });
@@ -49,7 +53,7 @@ void main() {
       dioAdapter.onPost('$apiPath/synced', (server) => server.reply(600, {}));
 
       expect(
-        () async => await messageRepository.createSyncedRoom([
+        () async => await messageRepository.createSyncedRoom('Test room', [
           'user-1',
           'user-2',
         ], RoomType.game),
@@ -248,6 +252,7 @@ void main() {
     const synced = SyncedRoom(
       id: id,
       started: false,
+      name: 'Test room',
       users: ['user-1', 'user-2'],
       objects: [],
       status: false,
