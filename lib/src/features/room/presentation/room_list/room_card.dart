@@ -443,7 +443,9 @@ class _RoomCardState extends State<RoomCard> {
                                 },
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all<Color>(
-                              widget.room.users.length == widget.room.maxPlayers
+                              widget.room.users.length ==
+                                          widget.room.maxPlayers ||
+                                      widget.room.status != RoomStatus.waiting
                                   ? colors.primary
                                   : colors.green,
                             ),
