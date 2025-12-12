@@ -61,7 +61,7 @@ class MessageRepository {
 
     final res = await dio.get(
       '$_mainRoute/$id',
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {
@@ -77,7 +77,7 @@ class MessageRepository {
 
     final res = await dio.patch(
       '$_mainRoute/$id/notified',
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {
@@ -94,7 +94,7 @@ class MessageRepository {
     final res = await dio.patch(
       '$_mainRoute/$id/start',
 
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {
@@ -111,7 +111,7 @@ class MessageRepository {
     final res = await dio.post(
       '$_mainRoute/$id/add',
       data: {'object': genericToMap(object)},
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {
@@ -166,7 +166,7 @@ class MessageRepository {
     final res = await dio.post(
       '$_mainRoute/$id/status',
       data: {'status': genericToMap(status)},
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {
@@ -182,7 +182,7 @@ class MessageRepository {
 
     final res = await dio.post(
       '$_mainRoute/$id/notify',
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {
@@ -205,7 +205,7 @@ class MessageRepository {
 
     final res = await dio.put(
       '$_mainRoute/${room.id}/changes',
-      options: Options(headers: {'Authorization': 'Brearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
     if (res.statusCode == 200) {

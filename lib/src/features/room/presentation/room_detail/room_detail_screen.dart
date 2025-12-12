@@ -227,23 +227,26 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
               gapW16,
               Consumer(
                 builder: (context, ref, child) {
+                  final roomData = ref.watch(roomProvider(widget.roomId));
                   return ChooseButton(
                     text: 'Lancer',
                     color: colors.green,
-                    onPressed: () async {
-                      final synced = await ref
-                          .read(messageRepositoryProvider)
-                          .createSyncedRoom([
-                            '692db3f611833316441edc73',
-                          ], RoomType.collab);
+                    onPressed: roomData.when(
+                      data: (room) => () async {
+                        final synced = await ref
+                            .read(messageRepositoryProvider)
+                            .createSyncedRoom(room!.users, RoomType.collab);
 
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.goNamed(
-                          RouteNames.inside.name,
-                          pathParameters: {'id': synced.id},
-                        );
-                      });
-                    },
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          context.goNamed(
+                            RouteNames.inside.name,
+                            pathParameters: {'id': synced.id},
+                          );
+                        });
+                      },
+                      loading: () => null,
+                      error: (error, stackTrace) => null,
+                    ),
                   );
                 },
               ),
