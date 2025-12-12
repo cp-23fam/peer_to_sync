@@ -20,6 +20,7 @@ class SyncedRoom<O, S> extends Equatable {
     return SyncedRoom<O, S>(
       id: map['_id'],
       started: map['started'] ?? false,
+      name: map['name'],
       users: List<String>.from(map['users']),
       objects: objects.map((o) => genericFromMap<O>(o)).toList(),
       status: status,
@@ -35,6 +36,7 @@ class SyncedRoom<O, S> extends Equatable {
   const SyncedRoom({
     required this.id,
     required this.started,
+    required this.name,
     required this.users,
     required this.objects,
     required this.status,
@@ -45,6 +47,7 @@ class SyncedRoom<O, S> extends Equatable {
 
   final SyncedRoomId id;
   final bool started;
+  final String name;
   final List<UserId> users;
   final List<O> objects;
   final S status;
@@ -53,7 +56,17 @@ class SyncedRoom<O, S> extends Equatable {
   final Widget widget;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+    id,
+    started,
+    name,
+    users,
+    objects,
+    status,
+    userNotifyList,
+    expirationTimestamp,
+    widget,
+  ];
 
   Map<String, dynamic> toMap() {
     final type = SyncedType.getTypeFromWidget(widget);
@@ -61,6 +74,7 @@ class SyncedRoom<O, S> extends Equatable {
     return {
       '_id': id,
       'started': started,
+      'name': name,
       'users': users,
       'objects': objects.map((o) => genericToMap(o)),
       'status': genericToMap(status),

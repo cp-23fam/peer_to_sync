@@ -93,6 +93,7 @@ void main() {
         );
 
         final res = await roomRepository.fetchRoom(id);
+
         expect(
           res,
           const Room(
@@ -109,6 +110,7 @@ void main() {
       },
     );
   });
+
   const token = 'abcd';
 
   void prepareStorageMockToReturnTokenIfProvided(String? token) {
@@ -116,6 +118,23 @@ void main() {
   }
 
   group('createRoom', () {
+    test(
+      'should throw LoggedOutException() when token from storage is null',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(null);
+        expect(
+          () async => await roomRepository.createRoom(
+            'Test room',
+            'user-1',
+            20,
+            RoomType.game,
+            RoomVisibility.public,
+          ),
+          throwsA(isA<LoggedOutException>()),
+        );
+      },
+    );
+
     test('should return created room when status is 201', () async {
       prepareStorageMockToReturnTokenIfProvided(token);
 
@@ -156,16 +175,36 @@ void main() {
         ),
       );
     });
+
+    test('should throw Unimplemented error when status code is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+
+      dioAdapter.onPost('$apiPath/rooms', (server) => server.reply(600, {}));
+
+      expect(
+        () async => await roomRepository.createRoom(
+          'Test room',
+          'user-1',
+          20,
+          RoomType.game,
+          RoomVisibility.public,
+        ),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
   });
 
   group('joinRoom', () {
-    test('should throw LoggedOutException() if token from storage is null', () {
-      prepareStorageMockToReturnTokenIfProvided(null);
-      expect(
-        () async => await roomRepository.joinRoom('abcd'),
-        throwsA(isA<LoggedOutException>()),
-      );
-    });
+    test(
+      'should throw LoggedOutException() when token from storage is null',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(null);
+        expect(
+          () async => await roomRepository.joinRoom('abcd'),
+          throwsA(isA<LoggedOutException>()),
+        );
+      },
+    );
 
     test(
       'should throw Unimplemented error if status code is different from 200',
@@ -201,13 +240,16 @@ void main() {
     });
   });
   group('quitRoom', () {
-    test('should throw LoggedOutException() if token from storage is null', () {
-      prepareStorageMockToReturnTokenIfProvided(null);
-      expect(
-        () async => await roomRepository.quitRoom('abcd'),
-        throwsA(isA<LoggedOutException>()),
-      );
-    });
+    test(
+      'should throw LoggedOutException() when token from storage is null',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(null);
+        expect(
+          () async => await roomRepository.quitRoom('abcd'),
+          throwsA(isA<LoggedOutException>()),
+        );
+      },
+    );
 
     test(
       'should throw Unimplemented error if status code is different from 200',
@@ -244,13 +286,16 @@ void main() {
   });
 
   group('kickPlayer', () {
-    test('should throw LoggedOutException() if token from storage is null', () {
-      prepareStorageMockToReturnTokenIfProvided(null);
-      expect(
-        () async => await roomRepository.kickUser('abcd', 'user-1'),
-        throwsA(isA<LoggedOutException>()),
-      );
-    });
+    test(
+      'should throw LoggedOutException() when token from storage is null',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(null);
+        expect(
+          () async => await roomRepository.kickUser('abcd', 'user-1'),
+          throwsA(isA<LoggedOutException>()),
+        );
+      },
+    );
 
     test(
       'should throw Unimplemented error if status code is different from 204',
@@ -273,13 +318,16 @@ void main() {
   });
 
   group('deleteRoom', () {
-    test('should throw LoggedOutException() if token from storage is null', () {
-      prepareStorageMockToReturnTokenIfProvided(null);
-      expect(
-        () async => await roomRepository.deleteRoom('abcd'),
-        throwsA(isA<LoggedOutException>()),
-      );
-    });
+    test(
+      'should throw LoggedOutException() when token from storage is null',
+      () {
+        prepareStorageMockToReturnTokenIfProvided(null);
+        expect(
+          () async => await roomRepository.deleteRoom('abcd'),
+          throwsA(isA<LoggedOutException>()),
+        );
+      },
+    );
 
     test(
       'should throw Unimplemented error if status code is different from 204',

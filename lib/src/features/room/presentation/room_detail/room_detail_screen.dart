@@ -235,7 +235,11 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       data: (room) => () async {
                         final synced = await ref
                             .read(messageRepositoryProvider)
-                            .createSyncedRoom(room!.users, RoomType.collab);
+                            .createSyncedRoom(
+                              room!.name,
+                              room.users,
+                              RoomType.collab,
+                            );
 
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           context.goNamed(

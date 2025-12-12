@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:messages/messages.dart';
 import 'package:messages/src/domain/json_storable.dart';
-import 'package:messages/src/domain/user_infos.dart';
 import 'package:peer_to_sync/peer_to_sync.dart';
 
 class MessageRepository {
@@ -37,6 +36,7 @@ class MessageRepository {
   }
 
   Future<SyncedRoom<O, S>> createSyncedRoom<O, S>(
+    String name,
     List<UserId> users,
     RoomType type,
   ) async {
@@ -44,7 +44,7 @@ class MessageRepository {
 
     final res = await dio.post(
       _mainRoute,
-      data: {'users': users, 'type': type.name, 'status': false},
+      data: {'users': users, 'type': type.name, 'status': false, 'name': name},
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
