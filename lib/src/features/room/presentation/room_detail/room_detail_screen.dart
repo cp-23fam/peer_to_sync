@@ -66,6 +66,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                   return const Center(child: SizedBox());
                 }
 
+                if (room.redirectionId != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.goNamed(
+                      RouteNames.inside.name,
+                      pathParameters: {'id': room.redirectionId!},
+                    );
+                  });
+                }
+
                 return Column(
                   children: [
                     Container(
@@ -228,29 +237,53 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
               Consumer(
                 builder: (context, ref, child) {
                   final roomData = ref.watch(roomProvider(widget.roomId));
-                  return ChooseButton(
-                    text: 'Lancer',
-                    color: colors.green,
-                    onPressed: roomData.when(
-                      data: (room) => () async {
-                        final synced = await ref
-                            .read(messageRepositoryProvider)
-                            .createSyncedRoom(
-                              room!.name,
-                              room.users,
-                              RoomType.collab,
-                            );
+                  final userData = ref.watch(userInfosProvider);
+                  return roomData.when(
+                    data: (room) {
+                      return userData.when(
+                        data: (user) {
+                          return user!.uid == room!.hostId
+                              ? ChooseButton(
+                                  text: 'Lancer',
+                                  color: colors.green,
+                                  onPressed: roomData.when(
+                                    data: (room) => () async {
+                                      final synced = await ref
+                                          .read(messageRepositoryProvider)
+                                          .createSyncedRoom(
+                                            room!.name,
+                                            room.users,
+                                            RoomType.collab,
+                                          );
 
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          context.goNamed(
-                            RouteNames.inside.name,
-                            pathParameters: {'id': synced.id},
-                          );
-                        });
-                      },
-                      loading: () => null,
-                      error: (error, stackTrace) => null,
-                    ),
+                                      // await ref
+                                      //     .read(messageRepositoryProvider)
+                                      //     .startMe(room.id);
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                            context.goNamed(
+                                              RouteNames.inside.name,
+                                              pathParameters: {'id': synced.id},
+                                            );
+                                          });
+                                    },
+                                    loading: () => null,
+                                    error: (error, stackTrace) => null,
+                                  ),
+                                )
+                              : const SizedBox();
+                        },
+                        error: (error, stackTrace) =>
+                            Center(child: Text(error.toString())),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    error: (error, stackTrace) =>
+                        Center(child: Text(error.toString())),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                   );
                 },
               ),

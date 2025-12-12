@@ -70,22 +70,25 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     },
                     icon: Icon(Icons.arrow_back, size: 40.0),
                   ),
-                  // Consumer(
-                  //   builder: (context, ref, child) {
-                  //     final syncData = ref.watch(
-                  //       syncedStreamProvider(widget.roomId),
-                  //     );
-                  //     return syncData.when(data: (sync) {
-                  Text('', style: TextStyle(fontSize: 36.0)),
-                  //;
-
-                  //   },
-                  // loading: () =>
-                  //     const Center(child: CircularProgressIndicator()),
-                  // error: (error, st) => Center(child: Text(error.toString())),
-                  // );
-                  // },
-                  // ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final syncData = ref.watch(
+                        syncedStreamProvider(widget.roomId),
+                      );
+                      return syncData.when(
+                        data: (sync) {
+                          return Text(
+                            sync.name,
+                            style: TextStyle(fontSize: 36.0),
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (error, st) =>
+                            Center(child: Text(error.toString())),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
