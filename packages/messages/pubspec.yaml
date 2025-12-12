@@ -13,6 +13,8 @@ dependencies:
 
   collab:
     path: ../collab
+  sync_clash:
+    path: ../sync_clash
 
   equatable: ^2.0.7
   dio: ^5.9.0
