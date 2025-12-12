@@ -30,6 +30,27 @@ void main() {
     when(() => storage.read(key: 'token')).thenAnswer((_) async => token);
   }
 
+  group('fetchUserList', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.fetchUserList(),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onGet('$apiPath/users', (server) => server.reply(600, {}));
+
+      expect(
+        () async => await userRepository.fetchUserList(),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+
   group('fetchCurrentUser', () {
     final user = {
       '_id': '691d822e15ab08bf78780ba1',
@@ -266,6 +287,112 @@ void main() {
           'fabian@ceff.ch',
           'Pa\$\$w0rd',
         ),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+
+  group('resetProfilePicture', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.resetProfilePicture(),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onPost(
+        '$apiPath/users/image',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.resetProfilePicture(),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+
+  group('updateSelf', () {
+    const password = 'Pa\$\$w0rd';
+    const user = User(
+      uid: 'abcd',
+      username: 'Fabrioche',
+      email: 'fabian@ceff.ch',
+      imageUrl: '',
+      friends: [],
+      pending: [],
+    );
+
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.updateSelf(user, password),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onPut(
+        '$apiPath/users/self',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.updateSelf(user, password),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+
+  group('fetchFriendsList', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.fetchFriendsList(),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onPost(
+        '$apiPath/users/friends/list',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.fetchFriendsList(),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+  });
+
+  group('fetchPendingList', () {
+    test('should throw LoggedOutException() when token is null', () {
+      prepareStorageMockToReturnTokenIfProvided(null);
+
+      expect(
+        () async => await userRepository.fetchPendingList(),
+        throwsA(isA<LoggedOutException>()),
+      );
+    });
+
+    test('should throw UnimplementedError when statusCode is unknown', () {
+      prepareStorageMockToReturnTokenIfProvided(token);
+      dioAdapter.onPost(
+        '$apiPath/users/pending/list',
+        (server) => server.reply(600, {}),
+      );
+
+      expect(
+        () async => await userRepository.fetchPendingList(),
         throwsA(isA<UnimplementedError>()),
       );
     });

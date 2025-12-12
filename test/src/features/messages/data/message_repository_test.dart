@@ -8,8 +8,6 @@ import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart'
 
 import '../../../mocks.dart';
 
-// TODO: Rework this
-
 void main() {
   const apiPath = 'http://localhost:3000';
 
