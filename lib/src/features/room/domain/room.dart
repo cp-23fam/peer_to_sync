@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 import 'package:messages/messages.dart';
 
 import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
@@ -68,7 +67,7 @@ class Room extends Equatable {
     RoomType? type,
     RoomVisibility? visibility,
     String? password,
-    ValueGetter<String?>? redirectionId,
+    SyncedRoomId? redirectionId,
   }) {
     return Room(
       id: id ?? this.id,
@@ -80,9 +79,7 @@ class Room extends Equatable {
       type: type ?? this.type,
       visibility: visibility ?? this.visibility,
       password: password ?? this.password,
-      redirectionId: redirectionId != null
-          ? redirectionId()
-          : this.redirectionId,
+      redirectionId: redirectionId ?? this.redirectionId,
     );
   }
 

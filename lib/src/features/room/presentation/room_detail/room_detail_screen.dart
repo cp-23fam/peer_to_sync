@@ -7,6 +7,7 @@ import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/room/data/room_repository.dart';
 import 'package:peer_to_sync/src/features/room/domain/room.dart';
+import 'package:peer_to_sync/src/features/room/domain/room_status.dart';
 import 'package:peer_to_sync/src/features/room/domain/room_visibility.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/no_user_card.dart';
 import 'package:peer_to_sync/src/features/room/presentation/room_detail/user_card.dart';
@@ -236,7 +237,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
               gapW16,
               Consumer(
                 builder: (context, ref, child) {
-                  final roomData = ref.watch(roomProvider(widget.roomId));
+                  final roomData = ref.watch(roomStreamProvider(widget.roomId));
                   final userData = ref.watch(userInfosProvider);
                   return roomData.when(
                     data: (room) {
@@ -256,9 +257,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                                             RoomType.collab,
                                           );
 
-                                      // await ref
-                                      //     .read(messageRepositoryProvider)
-                                      //     .startMe(room.id);
+                                      await ref
+                                          .read(roomRepositoryProvider)
+                                          .overrideRoom(
+                                            room.id,
+                                            room.copyWith(
+                                              redirectionId: synced.id,
+                                              status: RoomStatus.playing,
+                                            ),
+                                          );
 
                                       WidgetsBinding.instance
                                           .addPostFrameCallback((_) {

@@ -400,7 +400,9 @@ class _RoomCardState extends State<RoomCard> {
                       builder: (context, ref, child) {
                         return ElevatedButton(
                           onPressed:
-                              widget.room.users.length == widget.room.maxPlayers
+                              (widget.room.users.length ==
+                                      widget.room.maxPlayers ||
+                                  widget.room.status != RoomStatus.waiting)
                               ? null
                               : () async {
                                   if (widget.room.visibility ==
