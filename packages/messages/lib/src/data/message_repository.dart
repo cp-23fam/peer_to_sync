@@ -72,6 +72,22 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
+  Future<void> renewSynced(SyncedRoomId id) async {
+    final token = await _checkToken();
+
+    final res = await dio.patch(
+      '$_mainRoute/$id/renew',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode == 200) {
+      return;
+    }
+
+    debugPrint('$this renewSynced was given an unknown response');
+    throw UnimplementedError();
+  }
+
   Future<void> sendNotified(SyncedRoomId id) async {
     final token = await _checkToken();
 
