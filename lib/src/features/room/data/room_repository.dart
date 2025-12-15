@@ -33,7 +33,10 @@ class RoomRepository {
 
     final res = await dio.get(_mainRoute);
 
-    res.data.forEach((d) => rooms.add(Room.fromMap(d)));
+    for (dynamic d in res.data) {
+      rooms.add(Room.fromMap(d));
+    }
+    // res.data.forEach((d) => rooms.add(Room.fromMap(d)));
     debugPrint('${rooms.length} room(s) fetched from $this');
 
     return rooms;

@@ -40,8 +40,13 @@ final router = GoRouter(
           final roomData = ref.watch(
             syncedFutureProvider(state.pathParameters['id']!),
           );
+
           return roomData.when(
-            data: (room) => room!.widget,
+            data: (room) {
+              ref.read(messageRepositoryProvider).renewSynced(room!.id);
+
+              return room.widget;
+            },
             loading: () => const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             ),

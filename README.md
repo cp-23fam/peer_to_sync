@@ -25,9 +25,9 @@ POC de technologie pour créer des applications synchronisées entre tous les cl
 
 ### API
 
-La communicaton avec la BDD se fait avec une API REST, le tout est géré par _Express_ qui va stocker et envoxer les données sur un _Mongo DB_
+La communication avec la BDD se fait avec une API REST, le tout est géré par *Express* qui va stocker et envoyer les données sur un *Mongo DB*
 
-La liste des routes disponible et leur cas d'utilisation est généré par _Swagger_, pour avoir une documentation simple mais complète de l'API
+La liste des routes disponible et leur cas d'utilisation sont générés par *Swagger*, pour avoir une documentation simple mais complète de l'API.
 
 ### Flutter
-L'organisation du code et le fonctionnement de celui ci est détaillé dans le Wiki du GitHub.
+L'organisation du code et le fonctionnement de celui-ci sont détaillés dans le Wiki du GitHub.

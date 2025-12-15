@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:messages/messages.dart';
 import 'package:peer_to_sync/src/constants/api_url.dart';
 import 'package:peer_to_sync/src/features/user/domain/email_exception.dart';
 import 'package:peer_to_sync/src/features/user/domain/logged_out_exception.dart';
@@ -80,6 +81,26 @@ class UserRepository {
     throw UnimplementedError();
   }
 
+  Future<List<SyncedRoom>> fetchCurrentSynced() async {
+    final String? token = await fetchToken(storage);
+
+    if (token == null) {
+      throw LoggedOutException();
+    }
+
+    final res = await dio.get(
+      '$apiUrl/synced',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    if (res.statusCode == 200) {
+      return res.data.forEach((d) => SyncedRoom.fromMap(d));
+    }
+
+    debugPrint('$this fetchCurrentSynced has unknown response');
+    throw UnimplementedError();
+  }
+
   Future<User?> fetchUser(UserId uid) async {
     final String? token = await fetchToken(storage);
 
@@ -102,7 +123,7 @@ class UserRepository {
       return null;
     }
 
-    debugPrint('$this fetchCurrentUser has unknown response : $res');
+    debugPrint('$this fetchUser has unknown response : $res');
     throw UnimplementedError();
   }
 

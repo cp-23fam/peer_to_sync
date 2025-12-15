@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -57,8 +58,9 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
           builder: (context, ref, child) {
             final userData = ref.watch(userInfosProvider);
 
-            return userData.when(
-              data: (user) {
+            return AsyncValueWidget(
+              asyncValue: userData,
+              onData: (user) {
                 usernameController.value = TextEditingValue(
                   text: user!.username,
                 );
@@ -182,9 +184,6 @@ class _UserUpdateScreenState extends State<UserUpdateScreen> {
                   ),
                 );
               },
-              error: (error, stackTrace) =>
-                  Center(child: Text(error.toString())),
-              loading: () => const Center(child: CircularProgressIndicator()),
             );
           },
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
 import 'package:peer_to_sync/src/theme/theme.dart';
@@ -14,8 +15,9 @@ class SmallUserImage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userProvider(userId));
 
-    return userData.when(
-      data: (user) {
+    return AsyncValueWidget(
+      asyncValue: userData,
+      onData: (user) {
         return Container(
           padding: const EdgeInsets.all(Sizes.p8),
           decoration: BoxDecoration(
@@ -34,21 +36,7 @@ class SmallUserImage extends ConsumerWidget {
           ),
         );
       },
-      error: (error, stackTrace) {
-        return Container(
-          padding: const EdgeInsets.all(Sizes.p8),
-          decoration: BoxDecoration(
-            color: colors.iconBackground,
-            borderRadius: const BorderRadius.all(Radius.circular(Sizes.p4)),
-          ),
-          child: Icon(
-            Icons.person_outline,
-            color: colors.onSurface,
-            size: 35.0,
-          ),
-        );
-      },
-      loading: () {
+      onLoading: () {
         return Container(
           padding: const EdgeInsets.all(Sizes.p8),
           decoration: BoxDecoration(

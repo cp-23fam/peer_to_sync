@@ -12,7 +12,7 @@ void main() {
     users: ['user-1'],
     maxPlayers: 20,
     status: RoomStatus.waiting,
-    type: RoomType.game,
+    type: RoomType.synclash,
     visibility: RoomVisibility.public,
   );
   const roomMap = {

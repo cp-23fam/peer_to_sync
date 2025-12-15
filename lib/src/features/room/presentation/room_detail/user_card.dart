@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -47,8 +48,9 @@ class UserCard extends StatelessWidget {
           builder: (context, ref, child) {
             final userData = ref.watch(userProvider(userId));
 
-            return userData.when(
-              data: (user) {
+            return AsyncValueWidget(
+              asyncValue: userData,
+              onData: (user) {
                 if (user == null) {
                   return const NoUserCard();
                 }
@@ -73,9 +75,7 @@ class UserCard extends StatelessWidget {
                   ],
                 );
               },
-              error: (error, stackTrace) =>
-                  Center(child: Text(error.toString())),
-              loading: () {
+              onLoading: () {
                 return Row(
                   children: [
                     Container(

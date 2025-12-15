@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
@@ -35,8 +36,9 @@ class FriendCard extends StatelessWidget {
           builder: (context, ref, child) {
             final userData = ref.watch(userProvider(friend.uid));
 
-            return userData.when(
-              data: (user) {
+            return AsyncValueWidget(
+              asyncValue: userData,
+              onData: (user) {
                 return Row(
                   children: [
                     SmallUserImage(colors: colors, userId: user!.uid),
@@ -56,9 +58,7 @@ class FriendCard extends StatelessWidget {
                   ],
                 );
               },
-              error: (error, stackTrace) =>
-                  Center(child: Text(error.toString())),
-              loading: () {
+              onLoading: () {
                 return Row(
                   children: [
                     Container(

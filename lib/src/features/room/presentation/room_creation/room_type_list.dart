@@ -36,37 +36,36 @@ class _RoomTypeListState extends State<RoomTypeList> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            StyledText('Type de la room :'.hardcoded, 16.0),
+            StyledText('Type d\'activitée :'.hardcoded, 16.0),
             gapH8,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: availableTypes.map((type) {
-                return Container(
-                  height: 80,
-                  width: 80,
-                  margin: const EdgeInsets.all(Sizes.p4),
-                  padding: const EdgeInsets.all(Sizes.p4),
-                  color: type == selectedType
-                      ? colors.gold
-                      : Colors.transparent,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.atSelection(type);
-                        selectedType = type;
-                      });
-                    },
-                    child: Container(
-                      color: colors.primary,
-                      child: type == RoomType.game
-                          ? const Icon(Icons.games_outlined, size: 50.0)
-                          : type == RoomType.collab
-                          ? const Icon(Icons.handshake, size: 50.0)
-                          : const Icon(Icons.question_mark, size: 50.0),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: availableTypes.map((type) {
+                  return Container(
+                    height: 80,
+                    width: 80,
+                    margin: const EdgeInsets.all(Sizes.p4),
+                    padding: const EdgeInsets.all(Sizes.p4),
+                    color: type == selectedType
+                        ? colors.gold
+                        : Colors.transparent,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          widget.atSelection(type);
+                          selectedType = type;
+                        });
+                      },
+                      child: Container(
+                        color: colors.primary,
+                        child: Icon(type.icon, size: 50.0),
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
             gapH8,
             StyledText(selectedType.name, 12.0, upper: true),

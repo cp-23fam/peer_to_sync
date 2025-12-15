@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -54,8 +55,9 @@ class _RoomListScreenState extends State<RoomListScreen> {
                       builder: (context, ref, child) {
                         final userData = ref.watch(userInfosProvider);
 
-                        return userData.when(
-                          data: (user) {
+                        return AsyncValueWidget(
+                          asyncValue: userData,
+                          onData: (user) {
                             if (user != null) {
                               return ProfilePicture(
                                 user.imageUrl,
@@ -73,20 +75,20 @@ class _RoomListScreenState extends State<RoomListScreen> {
                               );
                             }
                           },
-                          error: (error, stackTrace) => CircleAvatar(
-                            backgroundColor: colors.secondary,
-                            radius: 40.0,
-                            child: Icon(
-                              Icons.close,
-                              color: colors.onSurface,
-                              size: 40.0,
-                            ),
-                          ),
-                          loading: () => CircleAvatar(
+                          onLoading: () => CircleAvatar(
                             backgroundColor: colors.secondary,
                             radius: 40.0,
                             child: Icon(
                               Icons.person_outline,
+                              color: colors.onSurface,
+                              size: 40.0,
+                            ),
+                          ),
+                          onError: (e, st) => CircleAvatar(
+                            backgroundColor: colors.secondary,
+                            radius: 40.0,
+                            child: Icon(
+                              Icons.close,
                               color: colors.onSurface,
                               size: 40.0,
                             ),
@@ -125,87 +127,78 @@ class _RoomListScreenState extends State<RoomListScreen> {
                     final roomsData = ref.watch(roomListStreamProvider);
                     final userData = ref.watch(userInfosProvider);
 
-                    return roomsData.when(
-                      data: (rooms) {
-                        return userData.when(
-                          data: (user) {
-                            if (user == null) {
-                              rooms = rooms
-                                  .where(
-                                    (room) =>
-                                        room.visibility ==
-                                            RoomVisibility.public ||
-                                        room.visibility ==
-                                            RoomVisibility.private,
-                                  )
-                                  .toList();
-                            } else {
-                              rooms = rooms.where((room) {
-                                if (room.visibility == RoomVisibility.public ||
-                                    room.visibility == RoomVisibility.private) {
-                                  return true;
-                                }
+                    return AsyncValueWidget(
+                      asyncValue: roomsData,
+                      onData: (rooms) => AsyncValueWidget(
+                        asyncValue: userData,
+                        onData: (user) {
+                          if (user == null) {
+                            rooms = rooms
+                                .where(
+                                  (room) =>
+                                      room.visibility ==
+                                          RoomVisibility.public ||
+                                      room.visibility == RoomVisibility.private,
+                                )
+                                .toList();
+                          } else {
+                            rooms = rooms.where((room) {
+                              if (room.visibility == RoomVisibility.public ||
+                                  room.visibility == RoomVisibility.private) {
+                                return true;
+                              }
 
-                                if (room.visibility == RoomVisibility.friends) {
-                                  return user.friends.contains(room.hostId);
-                                }
-                                return false;
-                              }).toList();
-                            }
+                              if (room.visibility == RoomVisibility.friends) {
+                                return user.friends.contains(room.hostId);
+                              }
+                              return false;
+                            }).toList();
+                          }
 
-                            if (_searchQuery.isNotEmpty) {
-                              rooms = rooms
-                                  .where(
-                                    (room) => room.name.toLowerCase().contains(
-                                      _searchQuery,
-                                    ),
-                                  )
-                                  .toList();
-                            }
+                          if (_searchQuery.isNotEmpty) {
+                            rooms = rooms
+                                .where(
+                                  (room) => room.name.toLowerCase().contains(
+                                    _searchQuery,
+                                  ),
+                                )
+                                .toList();
+                          }
 
-                            rooms.sort((a, b) {
-                              final aIsFriend =
-                                  // user?.friends.contains(a.hostId) ?? false;
-                                  user!.friends.contains(a.hostId)
-                                  ? a.visibility == RoomVisibility.friends
-                                        ? true
-                                        : false
-                                  : false;
-                              final bIsFriend =
-                                  // user?.friends.contains(b.hostId) ?? false;
-                                  user.friends.contains(b.hostId)
-                                  ? b.visibility == RoomVisibility.friends
-                                        ? true
-                                        : false
-                                  : false;
+                          rooms.sort((a, b) {
+                            final aIsFriend =
+                                // user?.friends.contains(a.hostId) ?? false;
+                                user!.friends.contains(a.hostId)
+                                ? a.visibility == RoomVisibility.friends
+                                      ? true
+                                      : false
+                                : false;
+                            final bIsFriend =
+                                // user?.friends.contains(b.hostId) ?? false;
+                                user.friends.contains(b.hostId)
+                                ? b.visibility == RoomVisibility.friends
+                                      ? true
+                                      : false
+                                : false;
 
-                              if (aIsFriend && !bIsFriend) return -1;
-                              if (!aIsFriend && bIsFriend) return 1;
+                            if (aIsFriend && !bIsFriend) return -1;
+                            if (!aIsFriend && bIsFriend) return 1;
 
-                              return 0;
-                            });
+                            return 0;
+                          });
 
-                            filteredRooms = rooms;
+                          filteredRooms = rooms;
 
-                            return rooms.isEmpty
-                                ? Center(
-                                    child: StyledText(
-                                      'Aucune salle trouvée.'.hardcoded,
-                                      20,
-                                    ),
-                                  )
-                                : roomsList();
-                          },
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()),
-                          error: (error, st) =>
-                              Center(child: Text(error.toString())),
-                        );
-                      },
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (error, st) =>
-                          Center(child: Text(error.toString())),
+                          return rooms.isEmpty
+                              ? Center(
+                                  child: StyledText(
+                                    'Aucune salle trouvée.'.hardcoded,
+                                    20,
+                                  ),
+                                )
+                              : roomsList();
+                        },
+                      ),
                     );
                   },
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -25,8 +26,10 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
           Consumer(
             builder: (context, ref, child) {
               final friendData = ref.watch(friendsProvider);
-              return friendData.when(
-                data: (friends) {
+
+              return AsyncValueWidget(
+                asyncValue: friendData,
+                onData: (friends) {
                   return friends.isEmpty
                       ? const StyledText('', 20.0)
                       // ? const StyledText('0 Ami', 20.0)
@@ -34,8 +37,6 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                       ? StyledText('${friends.length} Ami', 20.0)
                       : StyledText('${friends.length} Amis', 20.0);
                 },
-                error: (error, st) => Center(child: Text(error.toString())),
-                loading: () => const Center(child: CircularProgressIndicator()),
               );
             },
           ),
@@ -46,8 +47,9 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
               builder: (context, ref, child) {
                 final friendData = ref.watch(friendsProvider);
 
-                return friendData.when(
-                  data: (friends) {
+                return AsyncValueWidget(
+                  asyncValue: friendData,
+                  onData: (friends) {
                     return friends.isEmpty
                         ? Center(
                             child: StyledText(
@@ -62,9 +64,6 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
                             itemCount: friends.length,
                           );
                   },
-                  error: (error, st) => Center(child: Text(error.toString())),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
                 );
               },
             ),
