@@ -37,7 +37,7 @@ void main() {
           status: RoomStatus.waiting,
           maxPlayers: 20,
           visibility: RoomVisibility.public,
-          type: RoomType.game,
+          type: RoomType.synclash,
         ),
         Room(
           id: '2',
@@ -47,7 +47,7 @@ void main() {
           status: RoomStatus.waiting,
           maxPlayers: 4,
           visibility: RoomVisibility.friends,
-          type: RoomType.game,
+          type: RoomType.synclash,
         ),
         Room(
           id: '3',
@@ -58,7 +58,7 @@ void main() {
           maxPlayers: 2,
           visibility: RoomVisibility.private,
           password: '1234',
-          type: RoomType.game,
+          type: RoomType.synclash,
         ),
       ];
 
@@ -104,7 +104,7 @@ void main() {
             status: RoomStatus.waiting,
             maxPlayers: 20,
             visibility: RoomVisibility.public,
-            type: RoomType.game,
+            type: RoomType.synclash,
           ),
         );
       },
@@ -127,7 +127,7 @@ void main() {
             'Test room',
             'user-1',
             20,
-            RoomType.game,
+            RoomType.synclash,
             RoomVisibility.public,
           ),
           throwsA(isA<LoggedOutException>()),
@@ -157,7 +157,7 @@ void main() {
         'Test room',
         'user-1',
         20,
-        RoomType.game,
+        RoomType.synclash,
         RoomVisibility.public,
       );
 
@@ -171,7 +171,7 @@ void main() {
           status: RoomStatus.waiting,
           maxPlayers: 20,
           visibility: RoomVisibility.public,
-          type: RoomType.game,
+          type: RoomType.synclash,
         ),
       );
     });
@@ -186,7 +186,7 @@ void main() {
           'Test room',
           'user-1',
           20,
-          RoomType.game,
+          RoomType.synclash,
           RoomVisibility.public,
         ),
         throwsA(isA<UnimplementedError>()),

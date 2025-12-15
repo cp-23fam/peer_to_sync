@@ -39,7 +39,7 @@ void main() {
         () async => await messageRepository.createSyncedRoom(
           'Test room',
           [],
-          RoomType.game,
+          RoomType.synclash,
         ),
         throwsA(isA<LoggedOutException>()),
       );
@@ -54,7 +54,7 @@ void main() {
         () async => await messageRepository.createSyncedRoom('Test room', [
           'user-1',
           'user-2',
-        ], RoomType.game),
+        ], RoomType.synclash),
         throwsA(isA<UnimplementedError>()),
       );
     });

@@ -82,7 +82,7 @@ class _RoomCreationScreenState extends State<RoomCreationScreen> {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFormField(
                       controller: nameTextController,

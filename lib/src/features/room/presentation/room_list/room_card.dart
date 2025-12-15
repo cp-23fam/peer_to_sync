@@ -214,7 +214,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:messages/messages.dart';
 import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -308,11 +307,7 @@ class _RoomCardState extends State<RoomCard> {
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                   ),
                   child: Icon(
-                    widget.room.type == RoomType.game
-                        ? Icons.games
-                        : widget.room.type == RoomType.collab
-                        ? Icons.handshake
-                        : Icons.question_mark,
+                    widget.room.type.icon,
                     size: Sizes.p32,
                     color: colors.onSurface,
                   ),

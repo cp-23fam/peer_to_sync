@@ -95,11 +95,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                               ),
                             ),
                             child: Icon(
-                              room.type == RoomType.game
-                                  ? Icons.games
-                                  : room.type == RoomType.collab
-                                  ? Icons.handshake
-                                  : Icons.question_mark,
+                              room.type.icon,
                               size: Sizes.p32,
                               color: colors.onSurface,
                             ),
