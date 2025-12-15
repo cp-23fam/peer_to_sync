@@ -214,6 +214,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/small_user_image.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -371,13 +372,12 @@ class _RoomCardState extends State<RoomCard> {
                           userProvider(widget.room.hostId),
                         );
 
-                        return userData.when(
-                          data: (user) => user != null
+                        return AsyncValueWidget(
+                          asyncValue: userData,
+                          onData: (user) => user != null
                               ? StyledText(user.username, 20.0)
                               : StyledText('Inconnu'.hardcoded, 20.0),
-                          error: (error, stackTrace) =>
-                              StyledText(error.toString(), 20.0),
-                          loading: () => const StyledText('...', 20.0),
+                          onLoading: () => const StyledText('...', 20.0),
                         );
                       },
                     ),

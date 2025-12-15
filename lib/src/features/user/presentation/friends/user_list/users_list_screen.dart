@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -45,8 +46,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
           Consumer(
             builder: (context, ref, child) {
               final usersData = ref.watch(usersProvider);
-              return usersData.when(
-                data: (users) {
+              return AsyncValueWidget(
+                asyncValue: usersData,
+                onData: (users) {
                   if (_searchQuery.isNotEmpty) {
                     users = users.where((user) {
                       return user!.username.toLowerCase().contains(
@@ -61,8 +63,6 @@ class _UsersListScreenState extends State<UsersListScreen> {
                       ? StyledText('${users.length} Utilisateur', 20.0)
                       : StyledText('${users.length} Utilisateurs', 20.0);
                 },
-                error: (error, st) => Center(child: Text(error.toString())),
-                loading: () => const Center(child: CircularProgressIndicator()),
               );
             },
           ),
@@ -72,8 +72,10 @@ class _UsersListScreenState extends State<UsersListScreen> {
             child: Consumer(
               builder: (context, ref, child) {
                 final usersData = ref.watch(usersProvider);
-                return usersData.when(
-                  data: (users) {
+
+                return AsyncValueWidget(
+                  asyncValue: usersData,
+                  onData: (users) {
                     if (_searchQuery.isNotEmpty) {
                       users = users.where((user) {
                         return user!.username.toLowerCase().contains(
@@ -95,9 +97,6 @@ class _UsersListScreenState extends State<UsersListScreen> {
                             itemCount: users.length,
                           );
                   },
-                  error: (error, st) => Center(child: Text(error.toString())),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
                 );
               },
             ),

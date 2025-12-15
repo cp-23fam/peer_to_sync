@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
 import 'package:peer_to_sync/src/features/user/data/user_repository.dart';
@@ -26,8 +27,9 @@ class _FriendsPendingListScreenState extends State<FriendsPendingListScreen> {
           Consumer(
             builder: (context, ref, child) {
               final pendingData = ref.watch(pendingsProvider);
-              return pendingData.when(
-                data: (pendings) {
+              return AsyncValueWidget(
+                asyncValue: pendingData,
+                onData: (pendings) {
                   return pendings.isEmpty
                       ? const StyledText('', 20.0)
                       // ? const StyledText('0 Demande d\'amis', 20.0)
@@ -35,8 +37,6 @@ class _FriendsPendingListScreenState extends State<FriendsPendingListScreen> {
                       ? StyledText('${pendings.length} Demande d\'amis', 20.0)
                       : StyledText('${pendings.length} Demandes d\'amis', 20.0);
                 },
-                error: (error, st) => Center(child: Text(error.toString())),
-                loading: () => const Center(child: CircularProgressIndicator()),
               );
             },
           ),
@@ -47,8 +47,9 @@ class _FriendsPendingListScreenState extends State<FriendsPendingListScreen> {
               builder: (context, ref, child) {
                 final pendingData = ref.watch(pendingsProvider);
 
-                return pendingData.when(
-                  data: (pendings) {
+                return AsyncValueWidget(
+                  asyncValue: pendingData,
+                  onData: (pendings) {
                     return pendings.isEmpty
                         ? Center(
                             child: StyledText(
@@ -63,9 +64,6 @@ class _FriendsPendingListScreenState extends State<FriendsPendingListScreen> {
                             itemCount: pendings.length,
                           );
                   },
-                  error: (error, st) => Center(child: Text(error.toString())),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
                 );
               },
             ),

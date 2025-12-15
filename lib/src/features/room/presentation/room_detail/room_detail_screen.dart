@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:messages/messages.dart';
+import 'package:peer_to_sync/src/common_widgets/async_value_widget.dart';
 import 'package:peer_to_sync/src/common_widgets/choose_button.dart';
 import 'package:peer_to_sync/src/common_widgets/styled_text.dart';
 import 'package:peer_to_sync/src/constants/app_sizes.dart';
@@ -57,8 +58,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
           builder: (context, ref, child) {
             final roomData = ref.watch(roomStreamProvider(widget.roomId));
 
-            return roomData.when(
-              data: (room) {
+            return AsyncValueWidget(
+              asyncValue: roomData,
+              onData: (room) {
                 if (room == null) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     context.goNamed(RouteNames.home.name);
@@ -142,8 +144,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       builder: (context, ref, child) {
                         final userData = ref.watch(userInfosProvider);
 
-                        return userData.when(
-                          data: (user) {
+                        return AsyncValueWidget(
+                          asyncValue: userData,
+                          onData: (user) {
                             if (!room.users.contains(user!.uid)) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 context.goNamed(RouteNames.home.name);
@@ -173,9 +176,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                               ),
                             );
                           },
-                          error: (error, stackTrace) =>
-                              Center(child: Text(error.toString())),
-                          loading: () {
+                          onLoading: () {
                             return Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(Sizes.p8),
@@ -199,9 +200,6 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                   ],
                 );
               },
-              error: (error, stackTrace) =>
-                  Center(child: Text(error.toString())),
-              loading: () => const Center(child: CircularProgressIndicator()),
             );
           },
         ),
@@ -235,58 +233,49 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                 builder: (context, ref, child) {
                   final roomData = ref.watch(roomStreamProvider(widget.roomId));
                   final userData = ref.watch(userInfosProvider);
-                  return roomData.when(
-                    data: (room) {
-                      return userData.when(
-                        data: (user) {
-                          return user!.uid == room!.hostId
-                              ? ChooseButton(
-                                  text: 'Lancer',
-                                  color: colors.green,
-                                  onPressed: roomData.when(
-                                    data: (room) => () async {
-                                      final synced = await ref
-                                          .read(messageRepositoryProvider)
-                                          .createSyncedRoom(
-                                            room!.name,
-                                            room.users,
-                                            room.type,
-                                          );
 
-                                      await ref
-                                          .read(roomRepositoryProvider)
-                                          .overrideRoom(
-                                            room.id,
-                                            room.copyWith(
-                                              redirectionId: synced.id,
-                                              status: RoomStatus.playing,
-                                            ),
-                                          );
+                  return AsyncValueWidget(
+                    asyncValue: roomData,
+                    onData: (room) => AsyncValueWidget(
+                      asyncValue: userData,
+                      onData: (user) {
+                        return user!.uid == room!.hostId
+                            ? ChooseButton(
+                                text: 'Lancer',
+                                color: colors.green,
 
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                            context.goNamed(
-                                              RouteNames.inside.name,
-                                              pathParameters: {'id': synced.id},
-                                            );
-                                          });
-                                    },
-                                    loading: () => null,
-                                    error: (error, stackTrace) => null,
-                                  ),
-                                )
-                              : const SizedBox();
-                        },
-                        error: (error, stackTrace) =>
-                            Center(child: Text(error.toString())),
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                      );
-                    },
-                    error: (error, stackTrace) =>
-                        Center(child: Text(error.toString())),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                                onPressed: () async {
+                                  final synced = await ref
+                                      .read(messageRepositoryProvider)
+                                      .createSyncedRoom(
+                                        room.name,
+                                        room.users,
+                                        room.type,
+                                      );
+
+                                  await ref
+                                      .read(roomRepositoryProvider)
+                                      .overrideRoom(
+                                        room.id,
+                                        room.copyWith(
+                                          redirectionId: synced.id,
+                                          status: RoomStatus.playing,
+                                        ),
+                                      );
+
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) {
+                                    context.goNamed(
+                                      RouteNames.inside.name,
+                                      pathParameters: {'id': synced.id},
+                                    );
+                                  });
+                                },
+                              )
+                            : const SizedBox();
+                      },
+                    ),
                   );
                 },
               ),
