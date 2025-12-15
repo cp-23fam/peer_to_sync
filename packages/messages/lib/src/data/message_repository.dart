@@ -105,7 +105,7 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<void> sendThis<T>(SyncedRoomId id, T object) async {
+  Future<void> sendThis<O>(SyncedRoomId id, O object) async {
     final token = await _checkToken();
 
     final res = await dio.post(
@@ -122,10 +122,10 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<void> editAt<T>(
+  Future<void> editAt<O>(
     SyncedRoomId id,
     int index,
-    T object,
+    O object,
     int objectsLength,
   ) async {
     final token = await _checkToken();
@@ -160,7 +160,7 @@ class MessageRepository {
     throw UnimplementedError();
   }
 
-  Future<void> newStatus<U>(SyncedRoomId id, U status) async {
+  Future<void> newStatus<S>(SyncedRoomId id, S status) async {
     final token = await _checkToken();
 
     final res = await dio.post(
