@@ -26,10 +26,7 @@ class Player extends PositionComponent {
   final double cellSize = 54;
 
   void moveToCell(Vector2 cell) {
-    position = Vector2(
-      cell.x * cellSize + cellSize / 2,
-      cell.y * cellSize + cellSize / 2,
-    );
+    position = Vector2(cell.x * cellSize, cell.y * cellSize);
   }
 
   void moveToPixel(Vector2 cell) {
@@ -39,6 +36,6 @@ class Player extends PositionComponent {
   @override
   void render(Canvas canvas) {
     final paint = Paint()..color = color;
-    canvas.drawCircle(Offset(size.x / 2, size.y / 2), size.x / 2, paint);
+    canvas.drawCircle(Offset(size.x + 5, size.y + 5), size.x / 2, paint);
   }
 }
