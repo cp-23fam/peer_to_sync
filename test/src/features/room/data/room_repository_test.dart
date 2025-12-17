@@ -88,7 +88,7 @@ void main() {
             'status': 'waiting',
             'maxPlayers': 20,
             'visibility': 'public',
-            'type': 'game',
+            'type': 'synclash',
           }),
         );
 
@@ -147,7 +147,7 @@ void main() {
           'users': ['user-1'],
           'status': 'waiting',
           'maxPlayers': 20,
-          'type': 'game',
+          'type': 'synclash',
           'visibility': 'public',
           'redirectionId': null,
         }),

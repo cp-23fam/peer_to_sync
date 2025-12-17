@@ -44,7 +44,12 @@ class MessageRepository {
 
     final res = await dio.post(
       _mainRoute,
-      data: {'users': users, 'type': type.name, 'status': false, 'name': name},
+      data: {
+        'users': users,
+        'type': type.name,
+        'status': {'status': false},
+        'name': name,
+      },
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 

@@ -13,7 +13,7 @@ class SyncedRoom<O, S> extends Equatable {
     final type = RoomType.values.firstWhere((t) => t.name == map['type']);
 
     final objects = List<Map<String, dynamic>>.from(map['objects']);
-    final status = map['status'];
+    final status = genericFromMap<S>(map['status']);
 
     final widget = SyncedType.getSyncedWidget(type, map['_id']);
 
