@@ -168,14 +168,14 @@ class _RoomListScreenState extends State<RoomListScreen> {
                           rooms.sort((a, b) {
                             final aIsFriend =
                                 // user?.friends.contains(a.hostId) ?? false;
-                                user!.friends.contains(a.hostId)
+                                user?.friends.contains(a.hostId) ?? false
                                 ? a.visibility == RoomVisibility.friends
                                       ? true
                                       : false
                                 : false;
                             final bIsFriend =
                                 // user?.friends.contains(b.hostId) ?? false;
-                                user.friends.contains(b.hostId)
+                                user?.friends.contains(b.hostId) ?? false
                                 ? b.visibility == RoomVisibility.friends
                                       ? true
                                       : false

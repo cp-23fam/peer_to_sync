@@ -84,8 +84,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                         },
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
-                        error: (error, st) =>
-                            Center(child: Text(error.toString())),
+                        error: (error, st) {
+                          debugPrint(st.toString());
+                          return Center(child: Text(error.toString()));
+                        },
                       );
                     },
                   ),

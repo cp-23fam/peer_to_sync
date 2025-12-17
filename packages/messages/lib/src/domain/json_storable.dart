@@ -1,15 +1,14 @@
 // FromMap
 import 'package:collab/collab.dart';
-import 'package:flutter/foundation.dart';
+import 'package:sync_clash/sync_clash.dart';
 
 typedef FromMap<T> = T Function(Map<String, dynamic> map);
 
 T genericFromMap<T>(Map<String, dynamic> map) {
-  debugPrint(T.runtimeType.toString());
   final creator = _fromMapConstructors[T];
 
   if (creator == null) {
-    throw UnimplementedError();
+    return map as T;
   }
 
   return creator(map) as T;
@@ -19,7 +18,6 @@ T genericFromMap<T>(Map<String, dynamic> map) {
 typedef ToMap<T> = Map<String, dynamic> Function(T object);
 
 Map<String, dynamic> genericToMap<T>(T object) {
-  debugPrint(T.runtimeType.toString());
   final creator = _toMapConstructors[T];
 
   if (creator == null) {
@@ -33,9 +31,13 @@ Map<String, dynamic> genericToMap<T>(T object) {
 final Map<Type, FromMap<dynamic>> _fromMapConstructors = {
   // Example: (map) => Example.fromMap(map),
   Mail: (map) => Mail.fromMap(map),
+  Game: (map) => Game.fromMap(map),
+  GameStatus: (map) => gameStatusMapToEnum(map),
 };
 
 final Map<Type, ToMap<dynamic>> _toMapConstructors = {
   // Example: (object) => Example.toMap(object),
   Mail: (object) => Mail.toMap(object),
+  Game: (object) => Game.toMap(object),
+  GameStatus: (object) => gameStatusObjectToMap(object),
 };

@@ -36,13 +36,13 @@ class Game {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  static Map<String, dynamic> toMap(Game game) {
     return <String, dynamic>{
-      'timestamp': timestamp,
-      'players': players.map((x) => x.toMap()).toList(),
-      'blocked': blocked,
+      'timestamp': game.timestamp,
+      'players': game.players.map((x) => x.toMap()).toList(),
+      'blocked': game.blocked,
     };
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(this));
 }

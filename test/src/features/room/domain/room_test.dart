@@ -22,7 +22,7 @@ void main() {
     'users': ['user-1'],
     'maxPlayers': 20,
     'status': 'waiting',
-    'type': 'game',
+    'type': 'synclash',
     'visibility': 'public',
     'password': null,
     'redirectionId': null,

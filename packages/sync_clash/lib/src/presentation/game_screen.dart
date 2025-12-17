@@ -1,10 +1,15 @@
-import 'package:flame/game.dart';
+import 'package:flame/game.dart' hide Game;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:messages/messages.dart';
+import 'package:sync_clash/src/game/data/game_providers.dart';
 import 'package:sync_clash/src/game/my_game.dart';
 import 'package:sync_clash/sync_clash.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({required this.syncedId, super.key});
+
+  final SyncedRoomId syncedId;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -12,7 +17,6 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   late final MyGame _game;
-  GameStatus _status = GameStatus.choosing;
 
   final String playerId = 'player_0';
 
@@ -22,9 +26,9 @@ class _GameScreenState extends State<GameScreen> {
   // Vector2 _playerPosition = Vector2(4, 4);
   // Vector2? _targetPosition;
 
-  bool get canValidate => _status == GameStatus.choosing
+  bool canValidate = true;
   // && _selectedAction != PlayerAction.none
-  ;
+  // bool get canValidate => _game.status == GameStatus.choosing;
 
   @override
   void initState() {
@@ -37,16 +41,45 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildGameView(),
-            const SizedBox(height: 16),
-            _buildLifeWidget(),
-            const SizedBox(height: 24),
-            _buildActionPad(),
-            const SizedBox(height: 16),
-            _buildValidateButton(),
-          ],
+        child: Consumer(
+          builder: (context, ref, child) {
+            final syncedData = ref.watch(gameStreamProvider(widget.syncedId));
+
+            return syncedData.when(
+              data: (synced) {
+                if (synced.started == false) {
+                  ref
+                      .read(messageRepositoryProvider)
+                      .newStatus(widget.syncedId, GameStatus.starting);
+                  // ref
+                  //     .read(messageRepositoryProvider)
+                  //     .sendThis<Game>(widget.syncedId, Game());
+                  ref.read(messageRepositoryProvider).startMe(widget.syncedId);
+                }
+
+                if (synced.status == GameStatus.choosing && !canValidate) {
+                  canValidate = true;
+                }
+
+                return Column(
+                  children: [
+                    _buildGameView(),
+                    const SizedBox(height: 16),
+                    _buildLifeWidget(),
+                    const SizedBox(height: 24),
+                    _buildActionPad(),
+                    const SizedBox(height: 16),
+                    _buildValidateButton(),
+                  ],
+                );
+              },
+              error: (error, stackTrace) {
+                debugPrint(stackTrace.toString());
+                return Center(child: Text(error.toString()));
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+            );
+          },
         ),
       ),
     );
@@ -131,11 +164,7 @@ class _GameScreenState extends State<GameScreen> {
         children: [
           FloatingActionButton(
             heroTag: label,
-            backgroundColor: canValidate
-                ? isSelected
-                      ? color
-                      : color.withOpacity(0.4)
-                : Colors.grey.withOpacity(0.4),
+            backgroundColor: isSelected ? color : color.withOpacity(0.4),
             onPressed: () {
               setState(() {
                 if (canValidate) {
@@ -161,7 +190,10 @@ class _GameScreenState extends State<GameScreen> {
       ),
       onPressed: () => _onValidate(),
       // canValidate ? _onValidate : null,
-      child: const Text('Valider', style: TextStyle(fontSize: 18)),
+      child: const Text(
+        'Valider',
+        style: TextStyle(fontSize: 18, color: Colors.white),
+      ),
     );
   }
 
@@ -169,7 +201,7 @@ class _GameScreenState extends State<GameScreen> {
     _game.validateTurn(playerId);
 
     setState(() {
-      // _status = GameStatus.showing;
+      canValidate = !canValidate;
       _selectedAction = PlayerAction.none;
     });
   }

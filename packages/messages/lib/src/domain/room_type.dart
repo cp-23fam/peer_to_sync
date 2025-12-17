@@ -23,7 +23,7 @@ class SyncedType {
       case RoomType.chatroom:
         return ChatRoomScreen(roomId: id);
       case RoomType.synclash:
-        return const GameScreen();
+        return GameScreen(syncedId: id);
     }
   }
 
