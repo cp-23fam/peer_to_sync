@@ -31,6 +31,7 @@ class _RoomTypeListState extends State<RoomTypeList> {
       padding: const EdgeInsets.all(Sizes.p8),
       child: Container(
         height: 180,
+        width: double.infinity,
         padding: const EdgeInsets.all(Sizes.p16),
         color: colors.surface.withValues(alpha: 0.5),
         child: Column(

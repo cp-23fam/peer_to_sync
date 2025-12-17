@@ -144,7 +144,7 @@ class _GameScreenState extends State<GameScreen> {
                 }
               });
             },
-            child: Icon(icon, size: 32),
+            child: Icon(icon, size: 32, color: Colors.white),
           ),
           const SizedBox(height: 4),
           Text(label, style: const TextStyle(color: Colors.white)),

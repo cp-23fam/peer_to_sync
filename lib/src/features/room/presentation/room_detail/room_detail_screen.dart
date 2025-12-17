@@ -132,8 +132,22 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         ? Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: StyledText(
-                              'Mot de passe de la salle : ${room.password}',
+                              'Mot de passe de la salle :',
                               24.0,
+                            ),
+                          )
+                        : const SizedBox(),
+                    room.visibility == RoomVisibility.private
+                        ? Container(
+                            decoration: BoxDecoration(
+                              color: colors.primary,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20.0),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: StyledText('${room.password}', 16.0),
                             ),
                           )
                         : const SizedBox(),

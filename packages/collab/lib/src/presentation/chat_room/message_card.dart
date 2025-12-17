@@ -40,7 +40,7 @@ class MessageCard extends StatelessWidget {
 
                 image: DecorationImage(
                   image: NetworkImage(imageUrl),
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               ),
@@ -93,7 +93,6 @@ class MessageCard extends StatelessWidget {
                     ),
                   if (!isMe) const SizedBox(height: 4),
 
-                  // MESSAGE
                   Text(
                     message,
                     style: GoogleFonts.lato(
@@ -101,9 +100,7 @@ class MessageCard extends StatelessWidget {
                       color: isMe ? colors.onSurface : colors.onSurface,
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   if (timestamp != null)
                     Text(
                       timestamp!,
@@ -127,7 +124,7 @@ class MessageCard extends StatelessWidget {
 
                 image: DecorationImage(
                   image: NetworkImage(imageUrl),
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               ),

@@ -4,8 +4,8 @@ import 'package:messages/messages.dart';
 import 'package:sync_clash/sync_clash.dart';
 
 enum RoomType {
-  chatroom(icon: Icons.handshake),
-  synclash(icon: Icons.games_outlined);
+  chatroom(icon: Icons.message_rounded),
+  synclash(icon: Icons.gamepad);
 
   const RoomType({required this.icon});
 

@@ -112,7 +112,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             controller: _scrollController,
                             padding: const EdgeInsets.all(16),
                             itemBuilder: (context, index) {
-                              // final user = await getUser(ref, sync.objects[index].userId);
                               return FutureBuilder(
                                 future: getUser(
                                   ref,
@@ -242,100 +241,89 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         ),
       ),
       bottomNavigationBar: SafeArea(
-        child:
-            // Container(
-            // height: 64,
-            // color: colors.surface,
-            // child:
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: colors.surface,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
                 ),
-                decoration: BoxDecoration(
-                  color: colors.surface,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(50),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _controller,
-                        minLines: 1,
-                        maxLines: 5,
-                        style: TextStyle(color: colors.onSurface),
-                        decoration: InputDecoration(
-                          hintStyle: TextStyle(
-                            color: colors.onSurface.withAlpha(153),
-                          ),
-                          filled: true,
-                          fillColor: colors.secondary.withAlpha(51),
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 16,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-
-                    Container(
-                      decoration: BoxDecoration(
-                        // color: colors.primary,
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Consumer(
-                        builder: (context, ref, child) {
-                          return IconButton(
-                            icon: const Icon(Icons.send_rounded),
-                            // color: colors.onPrimary,
-                            color: Colors.white,
-                            iconSize: 26,
-                            onPressed: () async {
-                              final user = await getCurrrentUser(ref);
-
-                              ref
-                                  .read(messageRepositoryProvider)
-                                  .sendThis(
-                                    widget.roomId,
-                                    Mail(
-                                      id: widget.roomId,
-                                      message: _controller.text,
-                                      userName: user.username,
-                                      userId: user.uid,
-                                      timestamp: DateFormat(
-                                        'HH:mm',
-                                      ).format(DateTime.now()),
-                                    ),
-                                  );
-                              setState(() {});
-                              _controller.text = '';
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _scrollToBottom();
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _controller,
+                    minLines: 1,
+                    maxLines: 5,
+                    style: TextStyle(color: colors.onSurface),
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(
+                        color: colors.onSurface.withAlpha(153),
+                      ),
+                      filled: true,
+                      fillColor: colors.secondary.withAlpha(51),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      return IconButton(
+                        icon: const Icon(Icons.send_rounded),
+                        color: Colors.white,
+                        iconSize: 26,
+                        onPressed: () async {
+                          final user = await getCurrrentUser(ref);
+                          ref
+                              .read(messageRepositoryProvider)
+                              .sendThis(
+                                widget.roomId,
+                                Mail(
+                                  id: widget.roomId,
+                                  message: _controller.text,
+                                  userName: user.username,
+                                  userId: user.uid,
+                                  timestamp: DateFormat(
+                                    'HH:mm',
+                                  ).format(DateTime.now()),
+                                ),
+                              );
+                          setState(() {});
+                          _controller.text = '';
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _scrollToBottom();
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         // ),
       ),
     );
